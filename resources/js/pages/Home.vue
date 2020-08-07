@@ -1,5 +1,5 @@
 <template>
-    <div class="container content">
+    <div class="jumbotron jumbotron-fluid bg-transparent">
         <p style="font-size: 18px;">
             Informageek adalah sebuah platfrom berbasis website yang dapat digunakan
             <br>sebagai media dalam berbagi informasi tentang teknologi dan informasi. 
@@ -8,53 +8,26 @@
         </p>
         <div class="row">
             <div class="col-sm-6">
-                <button class="join">
-                    <router-link class="nav-link" :to="{name: 'register'}">
-                        <p>Bergabung Sekarang</p>
-                    </router-link>
-                </button>
+                <router-link class="btn btn-warning btn-lg rounded-pill join px-4 py-2" :to="{name: 'register'}">Bergabung Sekarang</router-link>
             </div>
             <div class="col-sm-6">
                 <div class="image">
-                    <img :src="'/media/home-img.png'" >
+                    <img :src="'/media/home-img.png'"  class="img-fluid">
                 </div>
             </div>
-        </div>
-        <div class="footer">
-            <p>Copyright Informageek 2020</p>
-            <!-- <p>Teknik Informatika UIN Bandung</p> -->
         </div>
     </div>
 </template>
 
 <style>
 .join{
-    background: #FEDE2B;
-    border-radius: 35px;
-    width: 350px;
-    height: 65px;
-    border: 0;
-}
-.join p{
     font-style: normal;
     font-weight: 600;
     font-size: 26px;
     line-height: 39px;
-    /* identical to box height */
-
     text-align: center;
     margin: 0;
     color: #232B38;
-}
-.content{
-    margin-top: 100px;
-}
-.footer{
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    justify-content: space-between;
-    align-items: center;
 }
 </style>
 

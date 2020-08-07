@@ -1924,6 +1924,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -1941,33 +1946,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2051,6 +2029,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6536,7 +6525,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.join{\r\n    background: #FEDE2B;\r\n    border-radius: 35px;\r\n    width: 350px;\r\n    height: 65px;\r\n    border: 0;\n}\n.join p{\r\n    font-style: normal;\r\n    font-weight: 600;\r\n    font-size: 26px;\r\n    line-height: 39px;\r\n    /* identical to box height */\r\n\r\n    text-align: center;\r\n    margin: 0;\r\n    color: #232B38;\n}\n.content{\r\n    margin-top: 100px;\n}\n.footer{\r\n    display: flex;\r\n    position: fixed;\r\n    bottom: 0;\r\n    justify-content: space-between;\r\n    align-items: center;\n}\r\n", ""]);
+exports.push([module.i, "\n.join{\r\n    font-style: normal;\r\n    font-weight: 600;\r\n    font-size: 26px;\r\n    line-height: 39px;\r\n    text-align: center;\r\n    margin: 0;\r\n    color: #232B38;\n}\r\n", ""]);
 
 // exports
 
@@ -38361,17 +38350,35 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "nav",
-      {
-        staticClass:
-          "navbar navbar-expand-lg navbar-light bg-light flex-md-row-reverse"
-      },
-      [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "container" }, [
+  return _c(
+    "div",
+    {
+      staticClass: "container d-flex flex-column justify-content-between vh-100"
+    },
+    [
+      _c(
+        "nav",
+        {
+          staticClass:
+            "navbar navbar-expand-lg navbar-light bg-transparent flex-md-row-reverse border-bottom"
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "navbar-brand logo",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                }
+              }
+            },
+            [_vm._v("INFORMAGEEK")]
+          ),
+          _vm._v(" "),
           _c(
             "div",
             {
@@ -38445,27 +38452,15 @@ var render = function() {
                 )
               ])
             ]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "navbar-brand logo",
-              attrs: { href: "#" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                }
-              }
-            },
-            [_vm._v("INFORMAGEEK")]
           )
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "container py-3" }, [_c("router-view")], 1)
-  ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", [_c("router-view")], 1),
+      _vm._v(" "),
+      _vm._m(1)
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -38487,6 +38482,18 @@ var staticRenderFns = [
       },
       [_c("span", { staticClass: "navbar-toggler-icon" })]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("footer", [
+      _c("div", { staticClass: "d-flex justify-content-between" }, [
+        _c("p", [_c("i", [_vm._v("Copyright Informageek 2020")])]),
+        _vm._v(" "),
+        _c("p", [_c("i", [_vm._v("Teknik Informatika UIN Bandung")])])
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -38517,15 +38524,47 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Forgot Page")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an Forgot page.\n                "
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "offset-md-3 col-md-6" }, [
+        _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
+          _c("div", { staticClass: "card-body p-5 text-center" }, [
+            _c("form", { staticClass: "w-75 mx-auto", attrs: { action: "" } }, [
+              _c("h1", { staticClass: "mb-4" }, [_vm._v("Forgot Password")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "username",
+                    id: "username",
+                    placeholder: "Username"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "email",
+                    id: "email",
+                    placeholder: "Email"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("Submit")]
               )
             ])
           ])
@@ -38555,34 +38594,41 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container content" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm-6" }, [
+  return _c(
+    "div",
+    { staticClass: "jumbotron jumbotron-fluid bg-transparent" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
         _c(
-          "button",
-          { staticClass: "join" },
+          "div",
+          { staticClass: "col-sm-6" },
           [
             _c(
               "router-link",
-              { staticClass: "nav-link", attrs: { to: { name: "register" } } },
-              [_c("p", [_vm._v("Bergabung Sekarang")])]
+              {
+                staticClass:
+                  "btn btn-warning btn-lg rounded-pill join px-4 py-2",
+                attrs: { to: { name: "register" } }
+              },
+              [_vm._v("Bergabung Sekarang")]
             )
           ],
           1
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-6" }, [
-        _c("div", { staticClass: "image" }, [
-          _c("img", { attrs: { src: "/media/home-img.png" } })
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-6" }, [
+          _c("div", { staticClass: "image" }, [
+            _c("img", {
+              staticClass: "img-fluid",
+              attrs: { src: "/media/home-img.png" }
+            })
+          ])
         ])
       ])
-    ]),
-    _vm._v(" "),
-    _vm._m(1)
-  ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -38603,14 +38649,6 @@ var staticRenderFns = [
       ),
       _c("br"),
       _vm._v("saling berinteraksi dan saling berbagi informasi.\n    ")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "footer" }, [
-      _c("p", [_vm._v("Copyright Informageek 2020")])
     ])
   }
 ]
@@ -38687,17 +38725,73 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Register Page")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an Register Page.\n                "
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "offset-md-3 col-md-6" }, [
+        _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
+          _c("div", { staticClass: "card-body p-5 text-center" }, [
+            _c("form", { staticClass: "w-75 mx-auto", attrs: { action: "" } }, [
+              _c("h1", { staticClass: "mb-4" }, [_vm._v("Register")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "username",
+                    id: "username",
+                    placeholder: "Username"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "email",
+                    id: "email",
+                    placeholder: "Email"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "password",
+                    id: "password",
+                    placeholder: "Password"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "confirm",
+                    id: "confirm",
+                    placeholder: "Confirm Password"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "mt-4 btn btn-warning rounded-pill btn-block submit p-3",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("Submit")]
               )
             ])
           ])
@@ -54404,8 +54498,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Website\Informageek\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Website\Informageek\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Project\informageek\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Project\informageek\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
