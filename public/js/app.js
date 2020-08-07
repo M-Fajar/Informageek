@@ -2012,6 +2012,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -38366,17 +38371,17 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c(
-            "a",
+            "router-link",
             {
               staticClass: "navbar-brand logo",
-              attrs: { href: "#" },
+              attrs: { to: { name: "home" } },
               on: {
                 click: function($event) {
                   $event.preventDefault()
                 }
               }
             },
-            [_vm._v("INFORMAGEEK")]
+            [_vm._v("\n      INFORMAGEEK\n    ")]
           ),
           _vm._v(" "),
           _c(
@@ -38389,7 +38394,7 @@ var render = function() {
               _c("ul", { staticClass: "navbar-nav" }, [
                 _c(
                   "li",
-                  { staticClass: "nav-item active" },
+                  { staticClass: "nav-item" },
                   [
                     _c(
                       "router-link",
@@ -38413,7 +38418,7 @@ var render = function() {
                         staticClass: "nav-link",
                         attrs: { to: { name: "login" } }
                       },
-                      [_vm._v("Login")]
+                      [_vm._v("Masuk")]
                     )
                   ],
                   1
@@ -38429,7 +38434,7 @@ var render = function() {
                         staticClass: "nav-link",
                         attrs: { to: { name: "register" } }
                       },
-                      [_vm._v("Register")]
+                      [_vm._v("Daftar")]
                     )
                   ],
                   1
@@ -38445,7 +38450,7 @@ var render = function() {
                         staticClass: "nav-link",
                         attrs: { to: { name: "forgot" } }
                       },
-                      [_vm._v("Forgot Password")]
+                      [_vm._v("Lupa Sandi")]
                     )
                   ],
                   1
@@ -38453,7 +38458,8 @@ var render = function() {
               ])
             ]
           )
-        ]
+        ],
+        1
       ),
       _vm._v(" "),
       _c("div", [_c("router-view")], 1),
@@ -38680,15 +38686,47 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Login Page")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an Login Page.\n                "
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "offset-md-3 col-md-6" }, [
+        _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
+          _c("div", { staticClass: "card-body p-5 text-center" }, [
+            _c("form", { staticClass: "w-75 mx-auto", attrs: { action: "" } }, [
+              _c("h1", { staticClass: "mb-4" }, [_vm._v("Login")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "username",
+                    id: "username",
+                    placeholder: "Username"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control form-control-lg rounded-pill bg-dark text-light text-center",
+                  attrs: {
+                    type: "text",
+                    name: "password",
+                    id: "password",
+                    placeholder: "Password"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("LOGIN")]
               )
             ])
           ])
@@ -54498,8 +54536,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Project\informageek\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Project\informageek\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\Website\Informageek\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Website\Informageek\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

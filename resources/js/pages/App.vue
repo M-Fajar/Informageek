@@ -5,21 +5,24 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <a @click.prevent="" class="navbar-brand logo" href="#">INFORMAGEEK</a>
+      <router-link :to="{name: 'home'}" class="navbar-brand logo" @click.prevent="">
+        INFORMAGEEK
+      </router-link>
+      
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item active">
+          <li class="nav-item">
             <router-link class="nav-link" :to="{name: 'home'}">Selamat Datang</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'login'}">Login</router-link>
+            <router-link class="nav-link" :to="{name: 'login'}">Masuk</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'register'}">Register</router-link>
+            <router-link class="nav-link" :to="{name: 'register'}">Daftar</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'forgot'}">Forgot Password</router-link>
+            <router-link class="nav-link" :to="{name: 'forgot'}">Lupa Sandi</router-link>
           </li>
         </ul>
       </div>
