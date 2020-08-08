@@ -9,7 +9,7 @@
 							<input type="text" name="username" id="username" class="form-control form-control-lg rounded-pill bg-dark text-light text-center" placeholder="Username">
 						</div>
 						<div class="form-group">
-							<input type="text" name="password" id="password" class="form-control form-control-lg rounded-pill bg-dark text-light text-center" placeholder="Password">
+							<input type="password" name="password" id="password" class="form-control form-control-lg rounded-pill bg-dark text-light text-center" placeholder="Password">
 						</div>
 						<button class="mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3" type="submit">LOGIN</button>
 					</form>
