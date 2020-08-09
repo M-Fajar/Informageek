@@ -28,6 +28,10 @@ Route::group(['middleware'=>['auth','checkRole:admin'],'prefix'=>'admin'],functi
 });
 Route::group(['middleware'=>['auth','checkRole:user,userplus']],function(){
     Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
-    });
+});
+
+Route::group(['prefix'=>'/message', 'middleware'=>['checkRole:user,userplus'], 'as' => 'message'], function () {
+	Route::get('/', 'User\MessageController@index');
+});
 
 //Route Frontend
