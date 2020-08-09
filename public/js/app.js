@@ -1929,7 +1929,63 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      errors: [],
+      username: null,
+      email: null,
+      modalConfirm: false
+    };
+  },
+  methods: {
+    sendEmail: function sendEmail(e) {
+      this.errors = [];
+
+      if (!this.username) {
+        this.errors.push("Username harus diisi");
+      }
+
+      if (!this.email) {
+        this.errors.push("Email harus diisi");
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push('Email tidak Valid');
+      }
+
+      if (this.errors.length) {
+        this.modalConfirm = false;
+      }
+
+      if (!this.errors.length) {
+        this.modalConfirm = true;
+        this.errors = [];
+      }
+
+      e.preventDefault();
+    },
+    validEmail: function validEmail(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
   }
@@ -2017,7 +2073,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      errors: [],
+      username: null,
+      password: null
+    };
+  },
+  methods: {
+    loginCheck: function loginCheck(e) {
+      this.errors = [];
+
+      if (!this.username) {
+        this.errors.push("Username harus diisi");
+      }
+
+      if (!this.password) {
+        this.password.push("Password harus diisi");
+      }
+
+      if (!this.errors.length) {
+        return true;
+      }
+
+      e.preventDefault();
+    }
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
   }
@@ -2061,7 +2149,63 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      errors: [],
+      username: null,
+      email: null,
+      password: null,
+      confirm: null
+    };
+  },
+  methods: {
+    // Mengecek form
+    checkForm: function checkForm(e) {
+      // Array error berfungsi untuk menampung error
+      this.errors = []; // Mengecek username
+
+      if (!this.username) {
+        this.errors.push("Username harus diisi");
+      } // Mengecek email
+
+
+      if (!this.email) {
+        this.errors.push('Email required.');
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push('Email tidak Valid');
+      } // Mengecek password
+
+
+      if (!this.password) {
+        this.errors.push('Password harus diisi');
+
+        if (this.password < 8) {
+          this.errors.push('Password kurang dari 8');
+        }
+      } else if (this.password != this.confirm) {
+        this.errors.push('Password tidak sesuai');
+      } // Jika tidak ada error
+
+
+      if (!this.errors.length) {
+        return true;
+      }
+
+      e.preventDefault();
+    },
+    validEmail: function validEmail(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
   }
@@ -38523,42 +38667,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "offset-md-3 col-md-6" }, [
-        _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
-          _c("div", { staticClass: "card-body p-5 text-center" }, [
-            _c("form", { staticClass: "w-75 mx-auto", attrs: { action: "" } }, [
-              _c("h1", { staticClass: "mb-4" }, [_vm._v("Forgot Password")]),
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "offset-md-3 col-md-6" }, [
+      _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
+        _c("div", { staticClass: "card-body p-5 text-center" }, [
+          _c(
+            "form",
+            {
+              staticClass: "w-75 mx-auto",
+              attrs: { method: "post" },
+              on: { submit: _vm.sendEmail }
+            },
+            [
+              _c("h1", { staticClass: "mb-4" }, [_vm._v("Lupa Sandi")]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.username,
+                      expression: "username"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark text-light text-center",
                   attrs: {
                     type: "text",
                     name: "username",
-                    id: "username",
                     placeholder: "Username"
+                  },
+                  domProps: { value: _vm.username },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.username = $event.target.value
+                    }
                   }
                 })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.email,
+                      expression: "email"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark text-light text-center",
-                  attrs: {
-                    type: "text",
-                    name: "email",
-                    id: "email",
-                    placeholder: "Email"
+                  attrs: { type: "text", name: "email", placeholder: "Email" },
+                  domProps: { value: _vm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.email = $event.target.value
+                    }
                   }
                 })
               ]),
@@ -38568,13 +38740,71 @@ var staticRenderFns = [
                 {
                   staticClass:
                     "mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3",
-                  attrs: { type: "submit" }
+                  attrs: {
+                    "data-toggle": "modal",
+                    "data-target": "#confirmModal",
+                    type: "submit"
+                  }
                 },
                 [_vm._v("Submit")]
               )
-            ])
-          ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm.errors.length
+            ? _c("p", { staticStyle: { padding: "10px" } }, [
+                _c("b", [_vm._v("Tolong periksa kembali:")]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  _vm._l(_vm.errors, function(error) {
+                    return _c("li", { key: error }, [_vm._v(_vm._s(error))])
+                  }),
+                  0
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.modalConfirm
+            ? _c(
+                "div",
+                { staticClass: "modal fade", attrs: { id: "confirmModal" } },
+                [_vm._m(0)]
+              )
+            : _vm._e()
         ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-dialog modal-dialog-centered" }, [
+      _c("div", { staticClass: "modal-content rounded" }, [
+        _c(
+          "div",
+          { staticClass: "modal-body", staticStyle: { padding: "50px" } },
+          [
+            _c(
+              "p",
+              { staticStyle: { "font-size": "24px", "text-align": "center" } },
+              [_vm._v("Kata sandi baru telah dikirim melalui email anda!")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3",
+                attrs: { type: "button", "data-dismiss": "modal" }
+              },
+              [_vm._v("OK")]
+            )
+          ]
+        )
       ])
     ])
   }
@@ -38679,42 +38909,74 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "offset-md-3 col-md-6" }, [
-        _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
-          _c("div", { staticClass: "card-body p-5 text-center" }, [
-            _c("form", { staticClass: "w-75 mx-auto", attrs: { action: "" } }, [
-              _c("h1", { staticClass: "mb-4" }, [_vm._v("Login")]),
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "offset-md-3 col-md-6" }, [
+      _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
+        _c("div", { staticClass: "card-body p-5 text-center" }, [
+          _c(
+            "form",
+            {
+              staticClass: "w-75 mx-auto",
+              attrs: { method: "post" },
+              on: { submit: _vm.loginCheck }
+            },
+            [
+              _c("h1", { staticClass: "mb-4" }, [_vm._v("Masuk")]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.username,
+                      expression: "username"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark text-light text-center",
                   attrs: {
                     type: "text",
                     name: "username",
-                    id: "username",
                     placeholder: "Username"
+                  },
+                  domProps: { value: _vm.username },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.username = $event.target.value
+                    }
                   }
                 })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.password,
+                      expression: "password"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark text-light text-center",
                   attrs: {
-                    type: "text",
+                    type: "password",
                     name: "password",
-                    id: "password",
                     placeholder: "Password"
+                  },
+                  domProps: { value: _vm.password },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.password = $event.target.value
+                    }
                   }
                 })
               ]),
@@ -38728,13 +38990,28 @@ var staticRenderFns = [
                 },
                 [_vm._v("LOGIN")]
               )
-            ])
-          ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm.errors.length
+            ? _c("p", { staticStyle: { padding: "10px" } }, [
+                _c("b", [_vm._v("Tolong periksa kembali:")]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  _vm._l(_vm.errors, function(error) {
+                    return _c("li", { key: error }, [_vm._v(_vm._s(error))])
+                  }),
+                  0
+                )
+              ])
+            : _vm._e()
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -38756,68 +39033,129 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "offset-md-3 col-md-6" }, [
-        _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
-          _c("div", { staticClass: "card-body p-5 text-center" }, [
-            _c("form", { staticClass: "w-75 mx-auto", attrs: { action: "" } }, [
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "offset-md-3 col-md-6" }, [
+      _c("div", { staticClass: "card border-0 mx-auto card-shadow" }, [
+        _c("div", { staticClass: "card-body p-5 text-center" }, [
+          _c(
+            "form",
+            {
+              staticClass: "w-75 mx-auto",
+              attrs: { method: "post" },
+              on: { submit: _vm.checkForm }
+            },
+            [
               _c("h1", { staticClass: "mb-4" }, [_vm._v("Register")]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.username,
+                      expression: "username"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
                   attrs: {
                     type: "text",
                     name: "username",
-                    id: "username",
                     placeholder: "Username"
+                  },
+                  domProps: { value: _vm.username },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.username = $event.target.value
+                    }
                   }
                 })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.email,
+                      expression: "email"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
-                  attrs: {
-                    type: "text",
-                    name: "email",
-                    id: "email",
-                    placeholder: "Email"
+                  attrs: { type: "email", name: "email", placeholder: "Email" },
+                  domProps: { value: _vm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.email = $event.target.value
+                    }
                   }
                 })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.password,
+                      expression: "password"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
                   attrs: {
-                    type: "text",
+                    type: "password",
                     name: "password",
-                    id: "password",
                     placeholder: "Password"
+                  },
+                  domProps: { value: _vm.password },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.password = $event.target.value
+                    }
                   }
                 })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.confirm,
+                      expression: "confirm"
+                    }
+                  ],
                   staticClass:
                     "form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center",
+                  class: {},
                   attrs: {
-                    type: "text",
+                    type: "password",
                     name: "confirm",
-                    id: "confirm",
                     placeholder: "Confirm Password"
+                  },
+                  domProps: { value: _vm.confirm },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.confirm = $event.target.value
+                    }
                   }
                 })
               ]),
@@ -38831,13 +39169,28 @@ var staticRenderFns = [
                 },
                 [_vm._v("Submit")]
               )
-            ])
-          ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm.errors.length
+            ? _c("p", { staticStyle: { padding: "10px" } }, [
+                _c("b", [_vm._v("Please correct the following error(s):")]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  _vm._l(_vm.errors, function(error) {
+                    return _c("li", { key: error }, [_vm._v(_vm._s(error))])
+                  }),
+                  0
+                )
+              ])
+            : _vm._e()
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
