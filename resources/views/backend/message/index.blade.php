@@ -13,13 +13,17 @@
 		list-style-type: none;
 		list-style-position: none;
 	}
+	.message li {
+		margin: 3pt 0;
+	}
 	.message .message-list{
 		border-radius: 5pt;
+		//background-color: cyan;
 		padding: 3pt 5pt;
 		width: auto!important;
 		margin: 3pt 0pt;
 	}
-	.message .message-own {
+	.message .message-own  {
 		text-align: right;
 	}
 </style>
@@ -101,13 +105,13 @@
 										<div class="panel-body" style="min-height: 20vh">
 											<ul class="message">
 												<li class="message-list">tes</li>
-												<li class="message-list message-own">tes</li>
+												<li class="message-list message-own"> tes</li>
 											</ul>
 										</div>
 										<div class="panel-footer">
 											<div class="input-group">
 											  <input type="text" class="form-control" placeholder="Text message..." aria-describedby="send">
-											  <span class="input-group-addon" id="send"><a href="" class="btn">Kirim</a></span>
+											  <span class="input-group-addon" id="send"><a href=""><span class="glyphicon glyphicon-send"></span></a></span>
 											</div>
 										</div>
 									</div>
