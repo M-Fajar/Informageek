@@ -85,11 +85,11 @@
             },
             sendForgot() {
                 console.log("Submit Forgot");
+                this.modalConfirm = true;
             }
         },
         mounted() {
             console.log('Component mounted.')
-            this.modalConfirm = true;
         }
     }
 </script>

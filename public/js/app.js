@@ -1996,11 +1996,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     sendForgot: function sendForgot() {
       console.log("Submit Forgot");
+      this.modalConfirm = true;
     }
   },
   mounted: function mounted() {
     console.log('Component mounted.');
-    this.modalConfirm = true;
   }
 });
 
