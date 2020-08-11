@@ -3,22 +3,18 @@
         <div class="offset-md-3 col-md-6">
             <div class="card border-0 mx-auto card-shadow">
                 <div class="card-body p-5 text-center">
-                    <form method="post" @submit="sendEmail" class="w-75 mx-auto">
+                    <form method="post" @submit.prevent="sendForgot" class="w-75 mx-auto">
                         <h1 class="mb-4">Lupa Sandi</h1>
                         <div class="form-group">
                             <input type="text" name="username" v-model="username" class="form-control form-control-lg rounded-pill bg-dark text-light text-center" placeholder="Username">
+                            <span v-if="errors.username" class="text-danger">{{ errors.username }}</span>
                         </div>
                         <div class="form-group">
                             <input type="text" name="email" v-model="email" class="form-control form-control-lg rounded-pill bg-dark text-light text-center" placeholder="Email">
+                            <span v-if="errors.email" class="text-danger">{{ errors.email }}</span>
                         </div>
-                        <button class="mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3" data-toggle="modal" data-target="#confirmModal" type="submit">Submit</button>
+                        <button :disabled="!enableBtn" class="mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3" data-toggle="modal" data-target="#confirmModal" type="submit">Submit</button>
                     </form>
-                    <p v-if="errors.length" style="padding: 10px;">
-                        <b>Tolong periksa kembali:</b>
-                        <ul>
-                            <li v-for="error in errors" :key="error">{{ error }}</li>
-                        </ul>
-                    </p>
                     <!-- Modal -->
                     <div v-if="modalConfirm" class="modal fade" id="confirmModal">
                         <div class="modal-dialog modal-dialog-centered">
@@ -42,40 +38,58 @@
         data(){
             return{
                 errors: [],
-                username: null,
-                email: null,
+                username: '',
+                email: '',
                 modalConfirm: false,
             }
         },
-        methods:{
-            sendEmail:function(e){
-                this.errors = [];
-                if (!this.username){
-                    this.errors.push("Username harus diisi");
-                }
-                if (!this.email) {
-                    this.errors.push("Email harus diisi");
-                } else if (!this.validEmail(this.email)) {
-                    this.errors.push('Email tidak Valid');
-                }
-
-                if (this.errors.length){
-                    this.modalConfirm = false
-                }
-
-                if (!this.errors.length){
-                    this.modalConfirm = true;
-                    this.errors = []
-                }
-                e.preventDefault();
+        computed: {
+            enableBtn() {
+                return this.validateEmail(this.email) && this.validateUsername(this.username);
+            }
+        },
+        watch:{
+            username(value) {
+                this.username = value;
+                this.validateUsername(value);
             },
-            validEmail: function (email) {
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(email);
+			email(value) {
+				this.email = value;
+				this.validateEmail(value);
+			},
+        },
+        methods:{
+            validateEmail(value) {
+				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+					this.errors['email'] = '';
+					return true;
+				} else if (!value.length) {
+					this.errors['email'] = 'Email harus diisi';
+				} else {
+					this.errors['email'] = 'Email tidak valid';
+				}
+				return false;
+			},
+			validateUsername(value) {
+                let diff = 6 - value.length;
+				if (!value.length) {
+					this.errors['username'] = 'Username harus diisi';
+					return false;
+				}else if (value.length < 6)  {
+					this.errors['username'] = 'Username > 6 karakter ' + diff + ' tersisa';
+					return false;
+				} else {
+					this.errors['username'] = '';
+					return true;
+				}
+            },
+            sendForgot() {
+                console.log("Submit Forgot");
             }
         },
         mounted() {
             console.log('Component mounted.')
+            this.modalConfirm = true;
         }
     }
 </script>

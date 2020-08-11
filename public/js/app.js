@@ -1943,51 +1943,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       errors: [],
-      username: null,
-      email: null,
+      username: '',
+      email: '',
       modalConfirm: false
     };
   },
-  methods: {
-    sendEmail: function sendEmail(e) {
-      this.errors = [];
-
-      if (!this.username) {
-        this.errors.push("Username harus diisi");
-      }
-
-      if (!this.email) {
-        this.errors.push("Email harus diisi");
-      } else if (!this.validEmail(this.email)) {
-        this.errors.push('Email tidak Valid');
-      }
-
-      if (this.errors.length) {
-        this.modalConfirm = false;
-      }
-
-      if (!this.errors.length) {
-        this.modalConfirm = true;
-        this.errors = [];
-      }
-
-      e.preventDefault();
+  computed: {
+    enableBtn: function enableBtn() {
+      return this.validateEmail(this.email) && this.validateUsername(this.username);
+    }
+  },
+  watch: {
+    username: function username(value) {
+      this.username = value;
+      this.validateUsername(value);
     },
-    validEmail: function validEmail(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    email: function email(value) {
+      this.email = value;
+      this.validateEmail(value);
+    }
+  },
+  methods: {
+    validateEmail: function validateEmail(value) {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+        this.errors['email'] = '';
+        return true;
+      } else if (!value.length) {
+        this.errors['email'] = 'Email harus diisi';
+      } else {
+        this.errors['email'] = 'Email tidak valid';
+      }
+
+      return false;
+    },
+    validateUsername: function validateUsername(value) {
+      var diff = 6 - value.length;
+
+      if (!value.length) {
+        this.errors['username'] = 'Username harus diisi';
+        return false;
+      } else if (value.length < 6) {
+        this.errors['username'] = 'Username > 6 karakter ' + diff + ' tersisa';
+        return false;
+      } else {
+        this.errors['username'] = '';
+        return true;
+      }
+    },
+    sendForgot: function sendForgot() {
+      console.log("Submit Forgot");
     }
   },
   mounted: function mounted() {
     console.log('Component mounted.');
+    this.modalConfirm = true;
   }
 });
 
@@ -2075,35 +2088,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      errors: [],
-      username: null,
-      password: null
+      username: '',
+      password: '',
+      errors: []
     };
   },
+  computed: {
+    enableBtn: function enableBtn() {
+      console.log('btn');
+      return this.validate(this.username) && this.validate(this.password);
+    }
+  },
+  watch: {
+    username: function username(value) {
+      this.username = value;
+      this.validate(value);
+    },
+    password: function password(value) {
+      this.password = value;
+      this.validate(value);
+    }
+  },
   methods: {
-    loginCheck: function loginCheck(e) {
-      this.errors = [];
+    validate: function validate(value) {
+      var diff = 6 - value.length;
 
-      if (!this.username) {
-        this.errors.push("Username harus diisi");
-      }
-
-      if (!this.password) {
-        this.password.push("Password harus diisi");
-      }
-
-      if (!this.errors.length) {
+      if (!value.length) {
+        this.errors['password'] = 'Password harus diisi';
+        return false;
+      } else if (value.length < 6) {
+        this.errors['password'] = 'Password > 6 karakter ' + diff + ' tersisa';
+        return false;
+      } else {
+        this.errors['password'] = '';
         return true;
       }
-
-      e.preventDefault();
+    },
+    redirect: function redirect() {
+      console.log("Form submitted");
     }
   },
   mounted: function mounted() {
@@ -2153,57 +2178,97 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       errors: [],
-      username: null,
-      email: null,
-      password: null,
-      confirm: null
+      username: '',
+      email: '',
+      password: '',
+      confirm: ''
     };
   },
+  computed: {
+    enableConfirm: function enableConfirm() {
+      console.log(!this.password.length);
+      return !this.password.length;
+    },
+    enableBtn: function enableBtn() {
+      return this.validateEmail(this.email) && this.validateUsername(this.username) && this.validatePassword(this.password) && this.validateConfirm();
+    }
+  },
+  watch: {
+    username: function username(value) {
+      this.username = value;
+      this.validateUsername(value);
+    },
+    email: function email(value) {
+      this.email = value;
+      this.validateEmail(value);
+    },
+    password: function password(value) {
+      this.password = value;
+      this.validatePassword(value);
+    },
+    confirm: function confirm(value) {
+      this.confirm = value;
+      this.validateConfirm();
+    }
+  },
   methods: {
-    // Mengecek form
-    checkForm: function checkForm(e) {
-      // Array error berfungsi untuk menampung error
-      this.errors = []; // Mengecek username
+    validateUsername: function validateUsername(value) {
+      var diff = 6 - value.length;
 
-      if (!this.username) {
-        this.errors.push("Username harus diisi");
-      } // Mengecek email
-
-
-      if (!this.email) {
-        this.errors.push('Email required.');
-      } else if (!this.validEmail(this.email)) {
-        this.errors.push('Email tidak Valid');
-      } // Mengecek password
-
-
-      if (!this.password) {
-        this.errors.push('Password harus diisi');
-
-        if (this.password < 8) {
-          this.errors.push('Password kurang dari 8');
-        }
-      } else if (this.password != this.confirm) {
-        this.errors.push('Password tidak sesuai');
-      } // Jika tidak ada error
-
-
-      if (!this.errors.length) {
+      if (!value.length) {
+        this.errors['username'] = 'Username harus diisi';
+        return false;
+      } else if (value.length < 6) {
+        this.errors['username'] = 'Username > 6 karakter ' + diff + ' tersisa';
+        return false;
+      } else {
+        this.errors['username'] = '';
         return true;
       }
-
-      e.preventDefault();
     },
-    validEmail: function validEmail(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    validateEmail: function validateEmail(value) {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+        this.errors['email'] = '';
+        return true;
+      } else if (!value.length) {
+        this.errors['email'] = 'Email harus diisi';
+      } else {
+        this.errors['email'] = 'Email tidak valid';
+      }
+
+      return false;
+    },
+    validatePassword: function validatePassword(value) {
+      var diff = 6 - value.length;
+
+      if (!value.length) {
+        this.errors['password'] = 'Password harus diisi';
+        return false;
+      } else if (value.length < 6) {
+        this.errors['password'] = 'Password > 6 karakter ' + diff + ' tersisa';
+        return false;
+      } else {
+        this.errors['password'] = '';
+        return true;
+      }
+    },
+    validateConfirm: function validateConfirm() {
+      console.log(this.confirm + " = " + this.password);
+
+      if (this.confirm != this.password) {
+        this.errors['confirm'] = 'Konfirmasi harus sama';
+        return false;
+      } else {
+        this.errors['confirm'] = '';
+        return true;
+      }
+    },
+    sendRegister: function sendRegister(e) {
+      console.log("Submit register");
     }
   },
   mounted: function mounted() {
@@ -38676,7 +38741,12 @@ var render = function() {
             {
               staticClass: "w-75 mx-auto",
               attrs: { method: "post" },
-              on: { submit: _vm.sendEmail }
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.sendForgot($event)
+                }
+              }
             },
             [
               _c("h1", { staticClass: "mb-4" }, [_vm._v("Lupa Sandi")]),
@@ -38707,7 +38777,13 @@ var render = function() {
                       _vm.username = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.username
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.username))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -38732,7 +38808,13 @@ var render = function() {
                       _vm.email = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.email
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.email))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c(
@@ -38741,6 +38823,7 @@ var render = function() {
                   staticClass:
                     "mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3",
                   attrs: {
+                    disabled: !_vm.enableBtn,
                     "data-toggle": "modal",
                     "data-target": "#confirmModal",
                     type: "submit"
@@ -38750,20 +38833,6 @@ var render = function() {
               )
             ]
           ),
-          _vm._v(" "),
-          _vm.errors.length
-            ? _c("p", { staticStyle: { padding: "10px" } }, [
-                _c("b", [_vm._v("Tolong periksa kembali:")]),
-                _vm._v(" "),
-                _c(
-                  "ul",
-                  _vm._l(_vm.errors, function(error) {
-                    return _c("li", { key: error }, [_vm._v(_vm._s(error))])
-                  }),
-                  0
-                )
-              ])
-            : _vm._e(),
           _vm._v(" "),
           _vm.modalConfirm
             ? _c(
@@ -38918,7 +38987,12 @@ var render = function() {
             {
               staticClass: "w-75 mx-auto",
               attrs: { method: "post" },
-              on: { submit: _vm.loginCheck }
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.redirect($event)
+                }
+              }
             },
             [
               _c("h1", { staticClass: "mb-4" }, [_vm._v("Masuk")]),
@@ -38949,7 +39023,13 @@ var render = function() {
                       _vm.username = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.username
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.username))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -38978,7 +39058,13 @@ var render = function() {
                       _vm.password = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.password
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.password))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c(
@@ -38986,26 +39072,12 @@ var render = function() {
                 {
                   staticClass:
                     "mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3",
-                  attrs: { type: "submit" }
+                  attrs: { disabled: !_vm.enableBtn, type: "submit" }
                 },
                 [_vm._v("LOGIN")]
               )
             ]
-          ),
-          _vm._v(" "),
-          _vm.errors.length
-            ? _c("p", { staticStyle: { padding: "10px" } }, [
-                _c("b", [_vm._v("Tolong periksa kembali:")]),
-                _vm._v(" "),
-                _c(
-                  "ul",
-                  _vm._l(_vm.errors, function(error) {
-                    return _c("li", { key: error }, [_vm._v(_vm._s(error))])
-                  }),
-                  0
-                )
-              ])
-            : _vm._e()
+          )
         ])
       ])
     ])
@@ -39042,7 +39114,12 @@ var render = function() {
             {
               staticClass: "w-75 mx-auto",
               attrs: { method: "post" },
-              on: { submit: _vm.checkForm }
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.checkForm($event)
+                }
+              }
             },
             [
               _c("h1", { staticClass: "mb-4" }, [_vm._v("Register")]),
@@ -39073,7 +39150,13 @@ var render = function() {
                       _vm.username = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.username
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.username))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -39098,7 +39181,13 @@ var render = function() {
                       _vm.email = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.email
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.email))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -39127,7 +39216,13 @@ var render = function() {
                       _vm.password = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.password
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.password))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -39145,6 +39240,7 @@ var render = function() {
                   class: {},
                   attrs: {
                     type: "password",
+                    disabled: _vm.enableConfirm,
                     name: "confirm",
                     placeholder: "Confirm Password"
                   },
@@ -39157,7 +39253,13 @@ var render = function() {
                       _vm.confirm = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.confirm
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.confirm))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c(
@@ -39165,26 +39267,12 @@ var render = function() {
                 {
                   staticClass:
                     "mt-4 btn btn-warning rounded-pill btn-block submit p-3",
-                  attrs: { type: "submit" }
+                  attrs: { disabled: !_vm.enableBtn, type: "submit" }
                 },
                 [_vm._v("Submit")]
               )
             ]
-          ),
-          _vm._v(" "),
-          _vm.errors.length
-            ? _c("p", { staticStyle: { padding: "10px" } }, [
-                _c("b", [_vm._v("Please correct the following error(s):")]),
-                _vm._v(" "),
-                _c(
-                  "ul",
-                  _vm._l(_vm.errors, function(error) {
-                    return _c("li", { key: error }, [_vm._v(_vm._s(error))])
-                  }),
-                  0
-                )
-              ])
-            : _vm._e()
+          )
         ])
       ])
     ])
@@ -54889,8 +54977,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Website\Informageek\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Website\Informageek\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Project\informageek\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Project\informageek\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
