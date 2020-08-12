@@ -24,7 +24,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware'=>['auth','checkRole:admin'],'prefix'=>'admin'],function(){
     
     Route::get('/', 'Admin\HomeController@index')->name('admin');
-    Route::get('/user', 'Admin\UserController@index')->name('admin.user');    
+    Route::get('/user', 'Admin\UserController@index')->name('admin.user');
+    Route::get('/userupdate/{id}', 'Admin\UserController@userupdate');
+    Route::put('/user-register-update/{id}', 'Admin\UserController@userregisterupdate'); 
+    Route::delete('/userdelete/{id}', 'Admin\UserController@userdelete');  
 });
 Route::group(['middleware'=>['auth','checkRole:user,userplus']],function(){
     Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
