@@ -13,7 +13,9 @@
 							<input type="password" name="password" v-model="password" class="form-control form-control-lg rounded-pill bg-dark text-light text-center" placeholder="Password">
 							<span v-if="errors.password" class="text-danger">{{ errors.password }}</span>
 						</div>
-						<button :disabled="!enableBtn" class="mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3" type="submit">LOGIN</button>
+						<router-link :to="{name : 'beranda'}">
+						<button :disabled="!enableBtn" class="mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3" type="submit" >LOGIN</button>
+						</router-link>
 					</form>
 				</div>
 			</div>
@@ -63,6 +65,7 @@
 			},
 			redirect() {
 				console.log("Form submitted");
+				
 			}
 		},
 		mounted() {

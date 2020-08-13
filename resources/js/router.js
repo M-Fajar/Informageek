@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Home from './pages/Home';
+import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Forgot from './pages/Forgot';
+import Beranda from './pages/Beranda';
 
 Vue.use(VueRouter);
 
@@ -12,9 +13,9 @@ const router = new VueRouter({
   mode: 'history',
   'routes': [
     {
-      name: 'home',
+      name: 'welcome',
       path: '/',
-      component: Home
+      component: Welcome
     },
     {
       name: 'login',
@@ -31,6 +32,12 @@ const router = new VueRouter({
       path: '/forgot',
       component: Forgot
     },
+    {
+      name: 'beranda',
+      path: '/beranda',
+      meta: {layout: "home"},
+      component: Beranda
+    }
   ]
 });
 
