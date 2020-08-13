@@ -4,7 +4,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <router-link :to="{name: 'beranda'}" class="navbar-brand logo" @click.prevent="">
+      <router-link :to="{name: 'welcome'}" class="navbar-brand logo" @click.prevent="">
         INFORMAGEEK
       </router-link>
       
@@ -12,7 +12,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'beranda'}">Selamat Datang</router-link>
+            <router-link class="nav-link" :to="{name: 'welcome'}">Selamat Datang</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :to="{name: 'login'}">Masuk</router-link>
