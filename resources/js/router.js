@@ -15,28 +15,32 @@ const router = new VueRouter({
     {
       name: 'welcome',
       path: '/',
-      component: Welcome
+      component: Welcome,
+      meta: {layout: 'default'}
     },
     {
       name: 'login',
       path: '/login',
-      component: Login
+      component: Login,
+      meta: {layout: 'default'}
     },
     {
       name: 'register',
       path: '/register',
-      component: Register
+      component: Register,
+      meta: {layout: 'default'}
     },
     {
       name: 'forgot',
       path: '/forgot',
-      component: Forgot
+      component: Forgot,
+      meta: {layout: 'default'}
     },
     {
       name: 'beranda',
       path: '/beranda',
-      meta: {layout: "home"},
-      component: Beranda
+      component: Beranda,
+      meta: {layout: "home"}
     }
   ]
 });

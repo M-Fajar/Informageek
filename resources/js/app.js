@@ -4,13 +4,13 @@ window.Vue = require('vue');
 
 import router from './router';
 
-import App from './pages/App.vue';
+import App from './App.vue';
 
-import Default from './layout/Default.vue';
-import Home from './layout/Home.vue';
+import Default from './layouts/Default.vue';
+import Home from './layouts/Home.vue';
 
-vue.components('default-layout', Default);
-vue.components('home-layout', Home)
+Vue.component('default-layout', Default);
+Vue.component('home-layout', Home)
 
 new Vue({
     router,

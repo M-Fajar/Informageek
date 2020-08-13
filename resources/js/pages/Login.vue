@@ -65,7 +65,7 @@
 			},
 			redirect() {
 				console.log("Form submitted");
-				
+				this.$router.push('/beranda');
 			}
 		},
 		mounted() {

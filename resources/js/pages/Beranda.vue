@@ -4,12 +4,8 @@
     </div>
 </template>
 
-// <script>
-// import Navbar from '@/component/Navbar.vue'
+<script>
+export default {
 
-// export default {
-//     components:[
-//         Navbar,
-//     ]
-// }
-// </script>
+}
+</script>

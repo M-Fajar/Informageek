@@ -1,11 +1,10 @@
 <template>
-  <div class="container d-flex flex-column justify-content-between vh-100">
     <nav class="navbar navbar-expand-lg navbar-light bg-transparent flex-md-row-reverse border-bottom">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <router-link :to="{name: 'home'}" class="navbar-brand logo" @click.prevent="">
+      <router-link :to="{name: 'beranda'}" class="navbar-brand logo" @click.prevent="">
         INFORMAGEEK
       </router-link>
       
@@ -13,7 +12,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'home'}">Selamat Datang</router-link>
+            <router-link class="nav-link" :to="{name: 'beranda'}">Selamat Datang</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :to="{name: 'login'}">Masuk</router-link>
@@ -27,18 +26,6 @@
         </ul>
       </div>
     </nav>
-
-    <div>
-      <router-view></router-view>
-    </div>
-    
-    <footer>
-        <div class="d-flex justify-content-between">
-            <p><i>Copyright Informageek 2020</i></p>
-            <p><i>Teknik Informatika UIN Bandung</i></p>
-        </div>
-    </footer>
-  </div>
 </template>
 
 <style>
