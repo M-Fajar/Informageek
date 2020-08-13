@@ -10,7 +10,9 @@
 
         <div class="collapse navbar-collapse" id="navbarToggler">
             <div class="form-inline ml-auto px-0 mr-0">
-                <input class="form-control form-control-lg" type="search" placeholder="Search">
+                <form @click.prevent="redirectSearch">
+                    <input class="form-control form-control-lg" type="search" placeholder="Search">
+                </form>
             </div>
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item">
@@ -51,3 +53,15 @@
         text-decoration-style: none;
     }
 </style>
+
+<script>
+
+export default {
+    methods: {
+        redirectSearch() {
+            this.$router.push('/search');
+        }
+    }
+}
+
+</script>

@@ -8,6 +8,7 @@ import Forgot from './pages/Forgot';
 import Beranda from './pages/Beranda';
 import Profile from './pages/Profile';
 import Post from './pages/Post';
+import Search from './pages/Search';
 
 Vue.use(VueRouter);
 
@@ -48,6 +49,12 @@ const router = new VueRouter({
       name: 'post',
       path: '/post',
       component: Post,
+      meta: {layout: "home"}
+    },
+    {
+      name: 'search',
+      path: '/search',
+      component: Search,
       meta: {layout: "home"}
     },
     {
