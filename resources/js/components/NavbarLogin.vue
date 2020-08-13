@@ -28,7 +28,7 @@
     </nav>
 </template>
 
-<style>
+<style scoped>
 .navbar-light .navbar-brand {
     color: #FEDE2B;
 }
