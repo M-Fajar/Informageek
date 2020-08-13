@@ -1,35 +1,34 @@
 <template>    
     <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom">
-        <a class="navbar-brand pl-2">
+        <router-link class="navbar-brand pl-2" :to="{name: 'beranda'}">
             <i class="fas fa-circle text-warning fa-2x"></i>
-        </a>
+        </router-link>
         <h2 class="pl-3">Informageek</h2>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarToggler">
-            <div class="form-inline ml-auto pr-0 mr-0">
+            <div class="form-inline ml-auto px-0 mr-0">
                 <input class="form-control form-control-lg" type="search" placeholder="Search">
             </div>
-            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <!-- <i class="far fa-user-circle fa-2x"></i> -->
-                        <img src="/media/frontend/sugiono.png" class="img-fluid" alt="avatar" width="30px;">
-                    </a>
+                    <router-link class="nav-link" :to="{name: 'profile'}">
+                        <img src="/media/frontend/sugiono.png" alt="avatar" class="img-fluid">
+                    </router-link>
                 </li>
-                <li class="nav-item pl-3">
-                    <a class="nav-link" href="#">
+                <li class="nav-item">
+                    <router-link class="nav-link" :to="{name: 'profile'}">
                         <i class="far fa-envelope fa-2x"></i>
-                    </a>
+                    </router-link>
                 </li>
-                <li class="nav-item pl-3">
-                    <a class="nav-link" href="#">
-                        <i class="far fa-bell fa-2x"></i>
-                    </a>
+                <li class="nav-item">
+                    <router-link class="nav-link" :to="{name: 'profile'}">
+                        <i class="far fa-bell fa-2x "></i>
+                    </router-link>
                 </li>
-                <li class="nav-item pl-3">
+                <li class="nav-item">
                     <a class="nav-link" href="#">
                         <!-- <i class="fas fa-cog fa-2x"></i> -->
                         <span class="fa-stack">
@@ -45,9 +44,6 @@
 </template>
 
 <style scoped>
-    /* .navbar{
-        box-shadow: 4px 4px 5px rgba(0, 0, 0.25, 0.25);
-    } */
     .navbar .collapse input{
         width: 700px;
         background: #F9F8F8;

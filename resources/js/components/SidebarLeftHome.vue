@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-2 b-right h-100 shadow-sm">
+  <div class="pb-2 b-right h-100">
     <p class="pop-tag pl-4">Popular Tags</p>
     <ol type="1" class="pt-0 mt-0">
         <li>
@@ -28,7 +28,7 @@ export default {
 /*Sidebar Kiri*/
 .b-right{
     background-color: #fff;
-    /* box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25); */
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
 }
 .b-right .pop-tag{
     font-size: 25px;

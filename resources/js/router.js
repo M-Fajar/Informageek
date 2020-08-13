@@ -6,6 +6,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Forgot from './pages/Forgot';
 import Beranda from './pages/Beranda';
+import Profile from './pages/Profile';
+import Post from './pages/Post';
 
 Vue.use(VueRouter);
 
@@ -40,6 +42,18 @@ const router = new VueRouter({
       name: 'beranda',
       path: '/beranda',
       component: Beranda,
+      meta: {layout: "home"}
+    },
+    {
+      name: 'post',
+      path: '/post',
+      component: Post,
+      meta: {layout: "home"}
+    },
+    {
+      name: 'profile',
+      path: '/profile',
+      component: Profile,
       meta: {layout: "home"}
     }
   ]
