@@ -11,7 +11,7 @@
 						@csrf
 						<div class="form-group">
 							<label for="thumbnail">Gambar</label>
-							<input name= "thumbnail" type="file" class="form-control" id="thumbnail">
+							<input name="thumbnail[]" type="file" class="form-control" id="thumbnail" multiple>
 							@error('thumbnail') <div class="text-danger mt-1" > {{$message}} </div> @enderror
 						</div>
 

@@ -18,6 +18,11 @@ class Post extends Model
         return $this->belongsToMany(Category::class);
     }
 
+    public function thumbnails()
+    {
+        return $this->hasMany(Thumbnail::class);
+    }
+
     public function getTakeImageAttribute()
     {
     	return "/storage/" . $this->thumbnail;

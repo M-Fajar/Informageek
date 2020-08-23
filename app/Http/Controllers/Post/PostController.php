@@ -8,6 +8,7 @@ use App\Http\Requests\PostRequest;
 
 use App\Post;
 use App\Category;
+use App\Thumbnail;
 
 class PostController extends Controller
 {
@@ -34,7 +35,8 @@ class PostController extends Controller
     {
         return view('backend.post.create', [
             'post' => new Post(),
-            'categories' => Category::get()
+            'categories' => Category::get(),
+            'thumbnails' => new Thumbnail()
         ]);
     }
 
@@ -46,27 +48,43 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        // validasi
-        $request->validate([
-            'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:2048' 
-        ]);
-        $attr = $request->all();
-        // slug
-        $slug = \Str::slug(request('title'));
-        $attr['slug'] = $slug;
+        // // validasi
+        // $request->validate([
+        //     'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:2048',
+        //     'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:5000' 
+        // ]);
+        // $attr = $request->all();
+        // // slug
+        // $slug = \Str::slug(request('title'));
+        // $attr['slug'] = $slug;
 
-        // gambar
-        $thumbnail = request()->file('thumbnail') ? request()->file('thumbnail')->store('images/posts') : null;
+        // // gambar
+        // if ($request->hasFile('thumbnail')) {
 
-        $attr['thumbnail'] = $thumbnail;
+        //    //  $thumbnails = request()->file();
+        //    //  foreach($thumbnails as $thumbnail) {
+        //    //      $thumbnail->store('images/posts');
+        //    //      $attr['thumbnail'] = $thumbnail;
+        //    // }
 
-        // store
-        $post = auth()->user()->posts()->create($attr);
-        $post->categories()->attach(request('categories'));
+        //     foreach ($request->file('thumbnail') as $tmb) {
+        //         $name = time() . '_' . rand(1, 999) . '.' . $file->extension();
+        //         $file->move(public_path(). '/files/', $name);
+        //         $gambar[] = $name; 
+        //     }
+        //     $post->thumbnails()->attach(request('thumbnails'));
 
-        session()->flash('success', 'Postingan telah dibuat');
+        // }
 
-        return redirect('home');
+        // // store
+        // $post = auth()->user()->posts()->create($attr);
+        // $post->categories()->attach(request('categories'));
+
+        // session()->flash('success', 'Postingan telah dibuat');
+
+        // return redirect('home');
+
+        dd($request->file);
     }
 
     /**

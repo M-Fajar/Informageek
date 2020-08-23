@@ -24,9 +24,11 @@
                 <div class="card">
                     <div class="card-header">
                         @if($post->thumbnail)
+                        @foreach($thumbnail as $tmb)
                         <a href="{{ route('posts.show', $post->slug) }}">
                             <img style="height: 380px" src="{{ $post->takeImage }}">
                         </a>
+                        @endforeach
                         @endif
                         <h3><a href="{{ route('posts.show', $post->slug) }}">
                         {{ $post->title }}</a></h3>
