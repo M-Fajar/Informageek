@@ -42,7 +42,8 @@
 				</div>
 				<hr style="margin: 0">
 				<div class="card-body">
-					<div class="row">
+					<message :url="'{{ url('/') }}'"></message>
+					{{-- <div class="row">
 						<div class="col-md-4">
 							<div class="card-title">
 								<a href="">
@@ -56,7 +57,7 @@
 									<div class="col-xs-1">
 										<a href="#"><img src="{{ asset('media/user.jpg') }}" class="img-circle" alt="user image" width="50px"></a>
 									</div>
-									<div class="col-xs-10">
+									<div class="col-xs-10 align-middle">
 										<a href="#" class="h5">Nama User </a>
 									</div>
 									<div class="col-xs-1">
@@ -118,7 +119,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 				</div>
 				<div class="card-footer">
 					
