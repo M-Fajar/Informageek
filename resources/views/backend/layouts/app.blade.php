@@ -93,7 +93,13 @@
                                     </ul>
                                 </div>
                             </li>
- --}}                            <li class="dropdown">
+ --}}                       
+                            <li>
+                                <a href="{{route('message')}}">
+                                    <i class="ion ion-email"></i>
+                                </a>
+                            </li>
+                            <li class="dropdown">
                                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="ion-person-stalker"></i> <span class="text">Forgif Request</span>
                                 </a>
