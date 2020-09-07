@@ -33,10 +33,12 @@ class PostController extends Controller
      */
     public function create()
     {
+        $datagambar = Thumbnail::all();
         return view('backend.post.create', [
             'post' => new Post(),
             'categories' => Category::get(),
-            'thumbnails' => new Thumbnail()
+            // 'thumbnails' => new Thumbnail()
+            'datagambar' => $datagambar
         ]);
     }
 
@@ -46,43 +48,56 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PostRequest $request)
+    public function store(PostRequest $request, Request $request1)
     {
-        // // validasi
+        // validasi
         // $request->validate([
         //     'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:2048',
         //     'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:5000' 
         // ]);
-        // $attr = $request->all();
-        // // slug
-        // $slug = \Str::slug(request('title'));
-        // $attr['slug'] = $slug;
+        $this->validate($request1, [
+            'thumbnail' => 'required',
+            'thumbnail.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
 
-        // // gambar
-        // if ($request->hasFile('thumbnail')) {
 
-        //    //  $thumbnails = request()->file();
-        //    //  foreach($thumbnails as $thumbnail) {
-        //    //      $thumbnail->store('images/posts');
-        //    //      $attr['thumbnail'] = $thumbnail;
-        //    // }
+        $attr = $request->all();
+        // slug
+        $slug = \Str::slug(request('title'));
+        $attr['slug'] = $slug;
 
-        //     foreach ($request->file('thumbnail') as $tmb) {
-        //         $name = time() . '_' . rand(1, 999) . '.' . $file->extension();
-        //         $file->move(public_path(). '/files/', $name);
-        //         $gambar[] = $name; 
-        //     }
-        //     $post->thumbnails()->attach(request('thumbnails'));
+        // gambar
+        if ($request1->hasFile('thumbnail')) {
 
-        // }
+           //  $thumbnails = request()->file();
+           //  foreach($thumbnails as $thumbnail) {
+           //      $thumbnail->store('images/posts');
+           //      $attr['thumbnail'] = $thumbnail;
+           // }
 
-        // // store
-        // $post = auth()->user()->posts()->create($attr);
-        // $post->categories()->attach(request('categories'));
+            foreach ($request1->file('thumbnail') as $tmb) {
+                // $name = time() . '_' . rand(1, 999) . '.' . $file->extension();
+                // $file->move(public_path(). '/files/', $name);
+                // $gambar[] = $name; 
+                $name=$tmb->getClientOriginalName();
+                $tmb->move(public_path().'/image/', $name);
+                $datagambar[] = $name;
+            }
+            // $post->thumbnails()->attach(request('thumbnails'));
+            $Upload_model = new Thumbnail;
+            $Upload_model->thumbnail = json_encode($datagambar);
+            $Upload_model->save();
+            
 
-        // session()->flash('success', 'Postingan telah dibuat');
+        }
 
-        // return redirect('home');
+        // store
+        $post = auth()->user()->posts()->create($attr);
+        $post->categories()->attach(request('categories'));
+
+        session()->flash('success', 'Postingan telah dibuat');
+
+        return redirect('home');
 
         dd($request->file);
     }
