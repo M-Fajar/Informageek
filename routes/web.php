@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 Route::get('/', function () {
-    return redirect()->route('home');
+	return redirect()->route('home');
 });
 
 
@@ -26,28 +26,28 @@ Route::get('/home', 'Post\PostController@index')->name('home');
 // ADMIN
 Route::group(['middleware' => ['auth', 'checkRole:admin'], 'prefix' => 'admin'], function () {
 
-    Route::get('/', 'Admin\HomeController@index')->name('admin');
-    Route::get('/user', 'Admin\UserController@index')->name('admin.user');
-    Route::get('/category', 'Admin\CategoryController@index')->name('admin.category');
+	Route::get('/', 'Admin\HomeController@index')->name('admin');
+	Route::get('/user', 'Admin\UserController@index')->name('admin.user');
+	Route::get('/category', 'Admin\CategoryController@index')->name('admin.category');
 });
 // Kategori Admin
 Route::group(['middleware' => ['auth', 'checkRole:admin'], 'prefix' => 'admin/category'], function () {
-    // Route::get('create', 'Admin\CategoryController@create')->name('category.create'); // create nyatu dihalaman index pake modal
-    Route::post('store', 'Admin\CategoryController@store')->name('category.store');
-    Route::get('{category:slug}/edit', 'Admin\CategoryController@edit')->name('category.edit');
-    Route::patch('{category:slug}/edit', 'Admin\CategoryController@update')->name('category.update');
-    Route::delete('{category:slug}/delete', 'Admin\CategoryController@destroy')->name('category.delete');
+	// Route::get('create', 'Admin\CategoryController@create')->name('category.create'); // create nyatu dihalaman index pake modal
+	Route::post('store', 'Admin\CategoryController@store')->name('category.store');
+	Route::get('{category:slug}/edit', 'Admin\CategoryController@edit')->name('category.edit');
+	Route::patch('{category:slug}/edit', 'Admin\CategoryController@update')->name('category.update');
+	Route::delete('{category:slug}/delete', 'Admin\CategoryController@destroy')->name('category.delete');
 });
 
 
 // PROFILE
 Route::group(['middleware' => ['auth', 'checkRole:user,userplus']], function () {
-    Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
+	Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
 });
 
 
 // POST
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
 	// ALL POST
 	Route::get('posts', 'Post\PostController@index')->name('posts.index')->withoutMiddleware('auth');
 	// CREATE

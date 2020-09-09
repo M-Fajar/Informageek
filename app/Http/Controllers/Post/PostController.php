@@ -8,7 +8,6 @@ use App\Http\Requests\PostRequest;
 
 use App\Post;
 use App\Category;
-use App\Thumbnail;
 
 class PostController extends Controller
 {
@@ -33,12 +32,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        $datagambar = Thumbnail::all();
         return view('backend.post.create', [
             'post' => new Post(),
-            'categories' => Category::get(),
-            // 'thumbnails' => new Thumbnail()
-            'datagambar' => $datagambar
+            'categories' => Category::get()
         ]);
     }
 
@@ -48,48 +44,21 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PostRequest $request, Request $request1)
+    public function store(PostRequest $request)
     {
         // validasi
-        // $request->validate([
-        //     'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:2048',
-        //     'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:5000' 
-        // ]);
-        $this->validate($request1, [
-            'thumbnail' => 'required',
-            'thumbnail.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        $request->validate([
+            'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:2048'
         ]);
-
-
         $attr = $request->all();
         // slug
         $slug = \Str::slug(request('title'));
         $attr['slug'] = $slug;
 
         // gambar
-        if ($request1->hasFile('thumbnail')) {
+        $thumbnail = request()->file('thumbnail') ? request()->file('thumbnail')->store('images/posts') : null;
 
-           //  $thumbnails = request()->file();
-           //  foreach($thumbnails as $thumbnail) {
-           //      $thumbnail->store('images/posts');
-           //      $attr['thumbnail'] = $thumbnail;
-           // }
-
-            foreach ($request1->file('thumbnail') as $tmb) {
-                // $name = time() . '_' . rand(1, 999) . '.' . $file->extension();
-                // $file->move(public_path(). '/files/', $name);
-                // $gambar[] = $name; 
-                $name=$tmb->getClientOriginalName();
-                $tmb->move(public_path().'/image/', $name);
-                $datagambar[] = $name;
-            }
-            // $post->thumbnails()->attach(request('thumbnails'));
-            $Upload_model = new Thumbnail;
-            $Upload_model->thumbnail = json_encode($datagambar);
-            $Upload_model->save();
-            
-
-        }
+        $attr['thumbnail'] = $thumbnail;
 
         // store
         $post = auth()->user()->posts()->create($attr);
@@ -98,8 +67,6 @@ class PostController extends Controller
         session()->flash('success', 'Postingan telah dibuat');
 
         return redirect('home');
-
-        dd($request->file);
     }
 
     /**

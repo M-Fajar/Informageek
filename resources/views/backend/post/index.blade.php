@@ -9,7 +9,7 @@
             </div>
             <div class="">
                 @if(Auth::check())
-                <a href="{{ route('posts.create') }}" class="btn btn-primary">New Post</a> 
+                <a href="{{ route('posts.create') }}" class="btn btn-primary">New Post</a>
                 @else
                 <a href="{{ route('posts.create') }}" class="btn btn-primary">Login to create a post</a>
                 @endif
@@ -24,19 +24,17 @@
                 <div class="card">
                     <div class="card-header">
                         @if($post->thumbnail)
-                        @foreach($thumbnail as $tmb)
                         <a href="{{ route('posts.show', $post->slug) }}">
                             <img style="height: 380px" src="{{ $post->takeImage }}">
                         </a>
-                        @endforeach
                         @endif
                         <h3><a href="{{ route('posts.show', $post->slug) }}">
-                        {{ $post->title }}</a></h3>
+                                {{ $post->title }}</a></h3>
                         <p>By: {{ $post->user->name }}</p>
-                        <p>Kategori: 
-                        @foreach($post->categories as $category)
+                        <p>Kategori:
+                            @foreach($post->categories as $category)
                             <small>{{ $category->name }}</small>
-                        @endforeach
+                            @endforeach
                         </p>
                     </div>
                     <div class="card-body">
