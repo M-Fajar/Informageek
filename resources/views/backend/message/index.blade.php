@@ -42,7 +42,7 @@
 				</div>
 				<hr style="margin: 0">
 				<div class="card-body">
-					<message :url="'{{ url('/') }}'"></message>
+					<message :url="'{{ url('/') }}'" :user="{{ auth()->user() }}"></message>
 				</div>
 				<div class="card-footer">
 					
