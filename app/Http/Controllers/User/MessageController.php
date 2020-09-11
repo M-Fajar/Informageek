@@ -27,10 +27,12 @@ class MessageController extends Controller
         $room = Room::find($room);
         if (isset($room->name)) {
             $user = $room->user()->select('name')->get();
+            $room_name = $room->name;
         } else {
-            $user = $room->user()->select('name')->where('users.id', '!=', $id_user)->get();
+            $user = $room->user()->select('users.id','users.name')->where('users.id', '!=', $id_user)->get();
+            $room_name = $user[0]->name;
         }
-        return ['user' => $user, 'chat' => $message];
+        return ['user' => $user, 'room_name' => $room_name, 'chat' => $message];
     }
 
     public function fetchRoom()
