@@ -10,7 +10,7 @@
 						<img width="400" src="{{ $post->takeImage }}">
 						<h3>{{$post->title}}</h3>
 						<small class="text-secondary">
-							By : @if(auth()->user()->is($post->user)) You @else {{ $post->user->name}} @endif &middot; {{ $post->created_at->format("d F, Y") }}
+							By : {{ $post->user->name}} &middot; {{ $post->created_at->format("d F, Y") }}
 						</small>
 					</div>
 					<div class="card-body">

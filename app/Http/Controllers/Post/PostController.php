@@ -109,7 +109,7 @@ class PostController extends Controller
         $this->authorize('update', $post);
         if (request()->file('thumbnail')) {
             \Storage::delete($post->thumbnail);
-            $thumbnail = request()->file('thumbnail')->store("image/posts");
+            $thumbnail = request()->file('thumbnail')->store("images/posts");
         } else {
             $thumbnail = $post->thumbnail;
         }
