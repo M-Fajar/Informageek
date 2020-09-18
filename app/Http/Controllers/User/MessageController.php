@@ -38,7 +38,7 @@ class MessageController extends Controller
     public function fetchRoom()
     {
         $id_user = Auth::id();
-        $room_list = Room::with(['message' => function ($m)
+        $room_list = auth()->user()->room()->with(['message' => function ($m)
         {
             $m->orderBy('id', 'desc')->first();
         }, 'user' => function ($u) use ($id_user)
