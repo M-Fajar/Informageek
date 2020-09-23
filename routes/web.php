@@ -54,14 +54,12 @@ Route::middleware('auth')->group(function () {
 	Route::get('posts/create', 'Post\PostController@create')->name('posts.create'); // route ini harus ada di atas route yang posts/{post:slug}. karena kalau dia ada dibawah, nanti laravel ngiranya 'create' itu adalah slug, makanya nanti url ini akan not found kalau di ketik nya dibawah posts/create
 	Route::post('posts/store', 'Post\PostController@store');
 	// UPDATE
-	Route::get('posts/{post:slug}/edit', 'Post\PostController@edit');
-	Route::patch('posts/{post:slug}/edit', 'Post\PostController@update');
-	// put buat update data di keseluruhan field yang ada di database
-	// patch buat update data parsial / sebagian field, gak semuanya. contoh edit title dan post nya aja, id dan slug gak kita update
+	Route::get('posts/{post:id}/edit', 'Post\PostController@edit');
+	Route::patch('posts/{post:id}/edit', 'Post\PostController@update');
 	// DELETE
-	Route::delete('posts/{post:slug}/delete', 'Post\PostController@destroy');
+	Route::delete('posts/{post:id}/delete', 'Post\PostController@destroy');
 	// READ
-	Route::get('posts/{post:slug}', 'Post\PostController@show')->name('posts.show')->withoutMiddleware('auth');
+	Route::get('posts/{post:id}', 'Post\PostController@show')->name('posts.show')->withoutMiddleware('auth');
 });
 
 //Route Frontend

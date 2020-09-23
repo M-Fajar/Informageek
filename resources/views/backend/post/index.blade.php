@@ -21,31 +21,57 @@
             </div>
             <div class="col-md-7">
                 @foreach($posts as $post)
-                <div class="card">
-                    <div class="card-header">
-                        @if($post->thumbnail)
-                        <a href="{{ route('posts.show', $post->slug) }}">
-                            <img style="height: 380px" src="{{ $post->takeImage }}">
+                @if($post->thumbnails->count()>0)
+                @for($i=0; $i<count($images=$post->thumbnails()->get()); $i++)
+
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            @if($i==0)
+                            <div class="carousel-item active">
+                                <img src="/storage/images/posts/{{ $images[$i]['name'] }}" class="d-block w-100" alt="...">
+                            </div>
+                            @else
+                            <div class="carousel-item">
+                                <img src="/storage/images/posts/{{ $images[$i]['name'] }}" class="d-block w-100" alt="...">
+                            </div>
+                            @endif
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
                         </a>
-                        @endif
-                        <h3><a href="{{ route('posts.show', $post->slug) }}">
-                                {{ $post->title }}</a></h3>
-                        <p>By: {{ $post->user->name }}</p>
-                        <p>Kategori:
-                            @foreach($post->categories as $category)
-                            <small>{{ $category->name }}</small>
-                            @endforeach
-                        </p>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        {{ Str::limit($post->body, 300) }}
+                    @endfor
+                    @endif
+                    <div class="card">
+                        <div class="card-header">
+                            @if($post->thumbnail)
+                            <a href="{{ route('posts.show', $post->id) }}">
+                                <img style="height: 380px" src="{{ $post->takeImage }}">
+                            </a>
+                            @endif
+                            <h3><a href="{{ route('posts.show', $post->id) }}">
+                                    {{ $post->title }}</a></h3>
+                            <p>By: {{ $post->user->name }}</p>
+                            <p>Kategori:
+                                @foreach($post->categories as $category)
+                                <small>{{ $category->name }}</small>
+                                @endforeach
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            {{ Str::limit($post->body, 300) }}
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-secondary">{{ $post->created_at->diffForHumans() }}</small>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <small class="text-secondary">{{ $post->created_at->diffForHumans() }}</small>
-                    </div>
-                </div>
-                @endforeach
-                <div>{{ $posts->links() }}</div>
+                    @endforeach
+                    <div>{{ $posts->links() }}</div>
             </div>
             <div class="col-md-2">
                 cek

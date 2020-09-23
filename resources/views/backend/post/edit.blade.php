@@ -7,20 +7,20 @@
 					New Post
 				</div>
 				<div class="card-body">
-					<form action="/posts/{{ $post->slug }}/edit" method="post" enctype="multipart/form-data">
+					<form action="/posts/{{ $post->id }}/edit" method="post" enctype="multipart/form-data">
 						@method('patch')
 						@csrf
 						<div class="form-group">
 							<label for="thumbnail">Gambar</label>
-							<input name= "thumbnail" type="file" class="form-control" id="thumbnail">
-							@error('thumbnail') <div class="text-danger mt-1" > {{$message}} </div> @enderror
+							<input name="photo_id[]" type="file" class="form-control" id="thumbnail" multiple>
+							@error('thumbnail') <div class="text-danger mt-1"> {{$message}} </div> @enderror
 						</div>
 
 
 						<div class="form-group">
 							<label for="title">Title</label>
-							<input name= "title" type="text" class="form-control" id="title" value="{{ old('title') ?? $post->title }}">
-							@error('title') <div class="text-danger mt-1" > {{$message}} </div> @enderror
+							<input name="title" type="text" class="form-control" id="title" value="{{ old('title') ?? $post->title }}">
+							@error('title') <div class="text-danger mt-1"> {{$message}} </div> @enderror
 						</div>
 
 						<div class="form-group">
@@ -33,13 +33,13 @@
 								<option value="{{ $category->id }}">{{ $category->name }}</option>
 								@endforeach
 							</select>
-							@error('categories') <div class="text-danger mt-1" > {{$message}} </div> @enderror
+							@error('categories') <div class="text-danger mt-1"> {{$message}} </div> @enderror
 						</div>
 
 
 						<div class="form-group">
 							<label for="body">Body</label>
-							<textarea name= "body" type="" rows="10" class="form-control" id="body">{{ old('body') ?? $post->body }}</textarea>
+							<textarea name="body" type="" rows="10" class="form-control" id="body">{{ old('body') ?? $post->body }}</textarea>
 							@error('body') <div class="text-danger mt-1"> {{$message}} </div> @enderror
 						</div>
 

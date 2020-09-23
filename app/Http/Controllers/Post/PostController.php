@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\post;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests\PostRequest;
-
 use App\Post;
 use App\Category;
+use App\Thumbnail;
+use Illuminate\Http\Request;
+
+use App\Http\Requests\PostRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -46,25 +48,25 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        // validasi
+        $user = Auth::user();
+        $post = new Post();
+        $data = $request->all();
+        $post = $user->posts()->create($data);
+
         $request->validate([
-            'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:2048'
+            'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
+            'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
         ]);
-        $attr = $request->all();
-        // slug
-        $slug = \Str::slug(request('title'));
-        $attr['slug'] = $slug;
 
-        // gambar
-        $thumbnail = request()->file('thumbnail') ? request()->file('thumbnail')->store('images/posts') : null;
-
-        $attr['thumbnail'] = $thumbnail;
-
-        // store
-        $post = auth()->user()->posts()->create($attr);
-        $post->categories()->attach(request('categories'));
-
-        session()->flash('success', 'Postingan telah dibuat');
+        if ($request->hasFile('photo_id')) {
+            $files = $request->file('photo_id');
+            foreach ($files as $file) {
+                $name = time() . '-' . $file->getClientOriginalName();
+                $name = str_replace(' ', '-', $name);
+                $tmb = $file->store('images/posts');
+                $post->thumbnails()->create(['name' => str_replace('images/posts/', '', $tmb)]);
+            }
+        }
 
         return redirect('home');
     }
@@ -103,24 +105,38 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
+        // validasi
         $request->validate([
-            'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096'
+            'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
+            'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
         ]);
+
+        // auth
         $this->authorize('update', $post);
-        if (request()->file('thumbnail')) {
-            \Storage::delete($post->thumbnail);
-            $thumbnail = request()->file('thumbnail')->store("images/posts");
-        } else {
-            $thumbnail = $post->thumbnail;
+
+        // update dan hapus image lama
+        if ($request->hasFile('photo_id')) {
+            $thumb = Thumbnail::where('post_id', $post->id)->get();
+            foreach ($thumb as $thu) {
+                \Storage::delete('images/posts/' . $thu->name);
+            }
+
+            $post->thumbnails()->delete();
+            $files = $request->file('photo_id');
+            foreach ($files as $file) {
+                $tmb = $file->store('images/posts');
+                $post->thumbnails()->create(['name' => str_replace('images/posts/', '', $tmb)]);
+            }
         }
 
+        // update post keseluruhan 
         $attr = $request->all();
-
-        $attr['thumbnail'] = $thumbnail;
         $post->update($attr);
 
+        // update kategori
         $post->categories()->sync(request('categories'));
 
+        // notif dan redirect
         session()->flash('success', 'Postingan telah diedit');
         return redirect('home');
     }
@@ -134,9 +150,21 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
-        \Storage::delete($post->thumbnail);
+
+        // delete thumbnail
+        $thumb = Thumbnail::where('post_id', $post->id)->get();
+        foreach ($thumb as $thu) {
+            \Storage::delete('images/posts/' . $thu->name);
+        }
+        $post->thumbnails()->delete();
+
+        // delete category
         $post->categories()->detach();
+
+        // delete post
         $post->delete();
+
+        // notif dan redirect
         session()->flash('success', 'Postingan telah dihapus');
         return redirect('home');
     }
