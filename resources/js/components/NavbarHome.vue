@@ -15,11 +15,22 @@
                 </form>
             </div>
             <ul class="navbar-nav ml-auto align-items-center">
+                <template v-if="authenticated">
+                <li class="nav-item">
+                    <router-link class="nav-link" :to="{name: 'profile'}">
+                        {{user.username}}
+
+                    </router-link>
+                </li>    
+                </template>
+                <template v-else>
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{name: 'profile'}">
                         <img src="/media/frontend/sugiono.png" alt="avatar" class="img-fluid">
+
                     </router-link>
                 </li>
+                </template>
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{name: 'profile'}">
                         <i class="far fa-envelope fa-2x"></i>
@@ -30,14 +41,17 @@
                         <i class="far fa-bell fa-2x "></i>
                     </router-link>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-cog fa-2x"></i> -->
                         <span class="fa-stack">
                             <i class="fas fa-circle fa-stack-2x text-warning"></i>
                             <i class="fas fa-cog fa-stack-1x fa-inverse"></i>
                         </span>
                     </a>
+                    <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" @click.prevent="logOut">Logout</a>
+                    </div>
                 </li>
             </ul>
 
@@ -55,12 +69,28 @@
 </style>
 
 <script>
-
+    import { mapGetters,mapActions } from "vuex"
 export default {
     methods: {
         redirectSearch() {
             this.$router.push('/search');
+        },
+        ...mapActions({
+            logOutAction: 'auth/logOut'
+        }),
+        logOut(){
+            this.logOutAction().then(() => {
+                this.$router.replace({
+                    name: 'welcome'
+                })
+            })
         }
+    },
+    computed: {
+        ...mapGetters({
+            authenticated: 'auth/authenticated',
+            user: 'auth/user'
+        }),
     }
 }
 

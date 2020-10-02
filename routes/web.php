@@ -20,15 +20,15 @@ Route::get('/{any}', function () {
 
 //Route Backend
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
 
-Route::group(['middleware'=>['auth','checkRole:admin'],'prefix'=>'admin'],function(){
+// Route::group(['middleware'=>['auth','checkRole:admin'],'prefix'=>'admin'],function(){
     
-    Route::get('/', 'Admin\HomeController@index')->name('admin');
-    Route::get('/user', 'Admin\UserController@index')->name('admin.user');    
-});
-Route::group(['middleware'=>['auth','checkRole:user,userplus']],function(){
-    Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
-    });
+//     Route::get('/', 'Admin\HomeController@index')->name('admin');
+//     Route::get('/user', 'Admin\UserController@index')->name('admin.user');    
+// });
+// Route::group(['middleware'=>['auth','checkRole:user,userplus']],function(){
+//     Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
+//     });
