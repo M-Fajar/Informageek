@@ -13,8 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route Frontend
+Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '.*');
+
 //Route Backend
 
+// Auth::routes();
+
+// Route::get('/home', 'HomeController@index')->name('home');
+=======
 Auth::routes();
 Route::get('/', function () {
 	return redirect()->route('home');
@@ -61,5 +70,3 @@ Route::middleware('auth')->group(function () {
 	// READ
 	Route::get('posts/{post:id}', 'Post\PostController@show')->name('posts.show')->withoutMiddleware('auth');
 });
-
-//Route Frontend

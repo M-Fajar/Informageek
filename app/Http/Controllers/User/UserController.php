@@ -12,4 +12,5 @@ class UserController extends Controller
         $user = User::whereUsername($req)->first();
         return view ('backend.user.profile',$user);
     }
+    
 }
