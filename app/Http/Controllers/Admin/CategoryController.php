@@ -18,7 +18,10 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::latest()->get();
-        return view('backend.admin.category.index', compact('categories'));
+        // return view('backend.admin.category.index', compact('categories'));
+        return response()->json([
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -28,7 +31,11 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('backend.admin.category.create', ['categories' => new Category]);
+        // return view('backend.admin.category.create', ['categories' => new Category]);
+        $categories = new Category();
+        return response()->json([
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -43,7 +50,10 @@ class CategoryController extends Controller
         $data['slug'] = \Str::slug($request->name);
         Category::create($data);
         session()->flash('success', 'kategori telah ditambahkan');
-        return back();
+        // return back();
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -65,7 +75,10 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('backend.admin.category.edit', [
+        // return view('backend.admin.category.edit', [
+        //     'category' => $category
+        // ]);
+        return response()->json([
             'category' => $category
         ]);
     }
@@ -84,8 +97,11 @@ class CategoryController extends Controller
         ]);
 
         $category->update($data);
-        session()->flash('success', 'kategori telah diedit');
-        return redirect(route('admin.category'));
+        // session()->flash('success', 'kategori telah diedit');
+        // return redirect(route('admin.category'));
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -99,6 +115,9 @@ class CategoryController extends Controller
         $category->delete();
 
         session()->flash('success', 'kategori telah dihapus');
-        return redirect(route('admin.category'));
+        // return redirect(route('admin.category'));
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 }

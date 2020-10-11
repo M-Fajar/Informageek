@@ -21,9 +21,14 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::latest()->paginate(5);
-        return view('backend.post.index', [
+        $categories = Category::get();
+        // return view('backend.post.index', [
+        //     'posts' => $posts,
+        //     'categories' => Category::get()
+        // ]);
+        return response()->json([
             'posts' => $posts,
-            'categories' => Category::get()
+            'categories' => $categories
         ]);
     }
 
@@ -34,9 +39,15 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('backend.post.create', [
-            'post' => new Post(),
-            'categories' => Category::get()
+        // return view('backend.post.create', [
+        //     'post' => new Post(),
+        //     'categories' => Category::get()
+        // ]);
+        $post = new Post();
+        $categories = Category::get();
+        return response()->json([
+            'post' => $post,
+            'categories' => $categories
         ]);
     }
 
@@ -68,7 +79,10 @@ class PostController extends Controller
             }
         }
 
-        return redirect('home');
+        // return redirect('home');
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -79,7 +93,10 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('backend.post.show', compact('post'));
+        // return view('backend.post.show', compact('post'));
+        return response()->json([
+            'post' => $post
+        ]);
     }
 
     /**
@@ -90,9 +107,14 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('backend.post.edit', [
+        // return view('backend.post.edit', [
+        //     'post' => $post,
+        //     'categories' => Category::get()
+        // ]);
+        $categories = Category::get();
+        return response()->json([
             'post' => $post,
-            'categories' => Category::get()
+            'categories' => $categories
         ]);
     }
 
@@ -136,9 +158,12 @@ class PostController extends Controller
         // update kategori
         $post->categories()->sync(request('categories'));
 
-        // notif dan redirect
-        session()->flash('success', 'Postingan telah diedit');
-        return redirect('home');
+        // session()->flash('success', 'Postingan telah diedit');
+        // return redirect('home');
+        return response()->json([
+            'status' => 'success'
+        ]);
+        // kurang
     }
 
     /**
@@ -165,7 +190,10 @@ class PostController extends Controller
         $post->delete();
 
         // notif dan redirect
-        session()->flash('success', 'Postingan telah dihapus');
-        return redirect('home');
+        // session()->flash('success', 'Postingan telah dihapus');
+        // return redirect('home');
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 }
