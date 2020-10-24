@@ -13,16 +13,21 @@
           <h5>1197050010</h5>
           <p class="my-4">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis nulla repellendus provident deserunt aspernatur. Architecto incidunt vitae quod deserunt omnis illum amet saepe sit commodi! Praesentium vero voluptatem ab nihil?</p>
           <button class="btn btn-primary btn-lg">Following</button>
-          <hr>
-          <ul class="list-unstyled">
-            <PostPreview @click.native="redirectPost"/>
+          <ul class="nav justify-content-center my-3">
+            <li class="nav-item">
+              <a class="nav-link color-dark" href="#">23 Post</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link color-dark" href="#">128 Pengikut</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link color-dark" href="#">181 Mengikuti</a>
+            </li>
           </ul>
-          <div class="d-flex justify-content-around h3">
-              <a href="#" class="text-secondary text-decoration-none"><i class="fas fa-heart text-danger"></i> 33</a>
-              <a href="#" class="text-secondary text-decoration-none"><i class="far fa-comment"></i> 3</a>
-              <a href="#" class="text-secondary text-decoration-none"><i class="fas fa-share"></i> 5</a>
-              <a href="#" class="text-secondary text-decoration-none"><i class="far fa-bookmark"></i></a>
-          </div>
+          <hr class="border-bottom">
+          <h2 class="text-center">Post</h2>
+          <Timeline :post-length="2" :show-form="false" />
+          <router-link  :to="{name: 'post'}" class="btn btn-light btn-lg mt-4 btnshadow rounded-pill">Lihat Selengkapnya</router-link>
         </div>
       </div>
     </div>
@@ -31,7 +36,7 @@
 
 <style scoped>
 .hero {
-  background-image: url('https://picsum.photos/1200/1920');
+  background-image: url('/media/bg.jpg');
   background-size: cover;
   background-position: center center;
   height: 50vh;
@@ -48,14 +53,20 @@
 .space {
   margin: 8% 0px;
 }
+.nav-item > .nav-link {
+  color: #333 !important;
+}
+.btnshadow{
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
 </style>
 
 <script>
-import PostPreview from '../components/PostPreview';
+import Timeline from '../components/Timeline';
 
 export default {
   components: {
-    PostPreview,
+    Timeline,
   },
   methods: {
     redirectPost() {

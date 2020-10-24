@@ -2,10 +2,21 @@
   <div class="container-fluid">
     <div class="row mt-2">
       <div class="col-md-3 p-3">
-        <a href="#" class="text-decoration-none text-secondary h3">
-          <i class="fas fa-filter mr-2"></i>
-          Filter
-        </a>
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="media">
+              <i class="fas fa-filter fa-2x mr-3 text-secondary"></i>
+              <div class="media-body">
+                <h2>Filter</h2>
+                <ul class="list-unstyled">
+                  <li><a href="" class="card-link text-danger h5">Akun</a></li>
+                  <li><a href="" class="card-link text-secondary h5">Filter</a></li>
+                  <li><a href="" class="card-link text-secondary h5">Hashtag</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-md-6 p-3">
         <div class="card border-0 shadow-sm rounded">

@@ -21,7 +21,7 @@
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{name: 'profile'}">
+                    <router-link class="nav-link" :to="{name: 'message'}">
                         <i class="far fa-envelope fa-2x"></i>
                     </router-link>
                 </li>
