@@ -32,7 +32,7 @@ export default {
 
 	actions: {
         async logIn({ dispatch },credentials){
-            let response = await axios.post('auth/login',credentials)
+            let response = await axios.post('auth/login',credentials);
             return dispatch('attempt',response.data.token)
          },
          
@@ -58,7 +58,9 @@ export default {
                 } else {
                     
                     commit('SET_USER',response.data)    
+
                     localStorage.setItem('user-token',token)    
+                    $cookies.set('token',token)
                 }
                 
             } catch (err){
