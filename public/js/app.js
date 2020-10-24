@@ -58943,8 +58943,12 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store/index */ "./resources/js/store/index.js");
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./router */ "./resources/js/router.js");
+<<<<<<< HEAD
+/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store/auth */ "./resources/js/store/auth.js");
+=======
 /* harmony import */ var vue_session__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-session */ "./node_modules/vue-session/index.js");
 /* harmony import */ var vue_session__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_session__WEBPACK_IMPORTED_MODULE_2__);
+>>>>>>> restMiddle
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
@@ -60733,8 +60737,8 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_cookies__WEBPACK_IMPORTED_MOD
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Informatika\Informageek\Progress\Informageek\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Informatika\Informageek\Progress\Informageek\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Fathima Umar\Desktop\Informageek\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Fathima Umar\Desktop\Informageek\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
