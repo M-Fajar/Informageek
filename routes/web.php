@@ -14,13 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Route Frontend
-Route::get('/{any}', function () {
-	return view('welcome');
-})->where('any', '.*');
+
 
 //Route Backend
 
-// Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
@@ -68,3 +65,28 @@ Route::middleware('auth')->group(function () {
 	// READ
 	Route::get('posts/{post:id}', 'Post\PostController@show')->name('posts.show')->withoutMiddleware('auth');
 });
+
+
+
+Route::group(['prefix'=>'admin'],function(){
+    
+    Route::get('login', 'Admin\AuthController@showFormLogin')->name('login');
+    Route::post('login', 'AuthController@login');
+    Route::group(['middleware' => 'admin'], function () {
+        
+    Route::get('/', 'Admin\HomeController@index')->name('admin');    
+        Route::get('/user', 'Admin\UserController@index')->name('admin.user');    
+        Route::get('/dashboard', 'Admin\HomeController@index')->name('home');
+        Route::post('logout', 'Admin\AuthController@logout')->name('logout');
+        Route::get('reqpass', 'AuthController@logout')->name('password.request');
+        Route::get('register', 'AuthController@showFormRegister')->name('register');
+
+     
+    });
+
+ });
+
+
+Route::get('/{any}', function () {
+     return view('welcome');
+ })->where('any', '.*');

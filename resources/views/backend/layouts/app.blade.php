@@ -25,7 +25,7 @@
     @yield('css')
 </head>
 <body>
-    <div id="app">
+    <div id="">
     @if(@$navbar !== false)
         <nav class="navbar navbar-default navbar-static-top {{Auth::check()  ? 'has-topbar' : ''}}">
            

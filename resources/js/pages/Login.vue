@@ -63,6 +63,8 @@ import { mapActions } from 'vuex'
 			...mapActions({
 				logIn: 'auth/logIn'
 			}),
+			
+
 			validate(value) {
 				let diff = 6 - value.length;
 				if (!value.length) {
@@ -89,7 +91,7 @@ import { mapActions } from 'vuex'
 					this.err = 'Masuk Gagal'
 					}
 				)
-				
+			
 			}
 		},
 		mounted() {

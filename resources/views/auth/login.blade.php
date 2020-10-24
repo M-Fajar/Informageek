@@ -54,9 +54,7 @@
 
                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                     <label for="password" class="control-label fw">Password
-                    <div class="pull-right">
-                        <a href="{{route('password.request')}}" tabindex="-1">Forgot password?</a>
-                    </div>
+                    
                     </label>
 
                     <input id="password" type="password" class="form-control" name="password" required>

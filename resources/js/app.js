@@ -4,7 +4,12 @@ require('./bootstrap');
 window.Vue = require('vue');
 import store from "./store/index"
 import router from './router';
+<<<<<<< HEAD
 import auth from './store/auth'
+=======
+import VueSession from 'vue-session'
+Vue.use(VueSession)
+>>>>>>> restMiddle
 import App from './App.vue';
 import axios from 'axios';
 import Default from './layouts/Default.vue';
