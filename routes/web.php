@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 //Route Frontend
 Route::get('/{any}', function () {
-    return view('welcome');
+	return view('welcome');
 })->where('any', '.*');
 
 //Route Backend
@@ -39,8 +39,7 @@ Route::group(['middleware' => ['auth', 'checkRole:admin'], 'prefix' => 'admin'],
 	Route::get('/category', 'Admin\CategoryController@index')->name('admin.category');
 });
 // Kategori Admin
-Route::group(['middleware' => ['auth', 'checkRole:admin'], 'prefix' => 'admin/category'], function () {
-	// Route::get('create', 'Admin\CategoryController@create')->name('category.create'); // create nyatu dihalaman index pake modal
+Route::group(['middleware' => ['auth:api', 'checkRole:admin'], 'prefix' => 'admin/category'], function () {
 	Route::post('store', 'Admin\CategoryController@store')->name('category.store');
 	Route::get('{category:slug}/edit', 'Admin\CategoryController@edit')->name('category.edit');
 	Route::patch('{category:slug}/edit', 'Admin\CategoryController@update')->name('category.update');

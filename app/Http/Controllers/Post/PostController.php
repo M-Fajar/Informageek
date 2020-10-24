@@ -20,12 +20,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->paginate(5);
         $categories = Category::get();
+        $posts = Post::latest();
+        // $posts = Post::latest()->paginate(5);
         // return view('backend.post.index', [
         //     'posts' => $posts,
         //     'categories' => Category::get()
         // ]);
+
         return response()->json([
             'posts' => $posts,
             'categories' => $categories
