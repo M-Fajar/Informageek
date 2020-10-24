@@ -19,7 +19,7 @@ class Admin
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {   if($_COOKIE['token']){
+    {   if(isset($_COOKIE['token'])){
         $token = md5($_COOKIE['token']);
         $user = DB::table('users')->where('token', $token)->first();
     
