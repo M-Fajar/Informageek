@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <form action="/admin/user-register-update/{{ $users->id }}" method="POST">
+                            <form action="/admin/user/user-register-update/{{ $users->id }}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}
                                 <div class="form-group">

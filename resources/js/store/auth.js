@@ -60,13 +60,14 @@ export default {
                     commit('SET_USER',response.data)    
 
                     localStorage.setItem('user-token',token)    
-                    $cookies.set('token',token)
+                    $cookies.set('userid',token)
                 }
                 
             } catch (err){
                 commit('SET_TOKEN',null)   
                 commit('SET_USER',null)
                 localStorage.removeItem('user-token')
+                $cookies.remove('userid')
             }
         },
         async logOut({commit}){
@@ -74,6 +75,7 @@ export default {
                 commit('SET_TOKEN',null)   
                 commit('SET_USER',null)
                 localStorage.removeItem('user-token')
+                $cookies.remove('userid')
                 delete axios.defaults.headers.common['Authorization']
             })
         }

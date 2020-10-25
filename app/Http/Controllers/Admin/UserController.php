@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 use DB;
 use Spatie\Permission\Moddel\Role;
@@ -13,8 +14,8 @@ class UserController extends Controller
     public function index(){
 
         $data = [ 'users' => User::orderBy('id','DESC')->get()
+                
         ];
-        dd($data);
         return view('backend.admin.user.index',$data);
     }
     public function userupdate (Request $request, $id)
@@ -25,9 +26,8 @@ class UserController extends Controller
 
     public function userregisterupdate (Request $request, $id)
     {
-        $users = User::find($id);
-        $users->syncRoles($request->input('roles-user'));
-        $users->update();
+        $users = User::find($id)->update(['role' => $request->input('roles-user')]);
+        
 
         return redirect('/admin/user')->with('status', 'Data telah di update');
     }

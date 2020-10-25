@@ -23,8 +23,7 @@ class ProfileController extends Controller
     public function me (Request $request ){
         $user = $request->user();
         return response()->json([
-            'username' => $user->username,
-            'role' => $user->role
+            'username' => $user->username
         ]);
     }
 }

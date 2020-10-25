@@ -21,13 +21,12 @@ class PostController extends Controller
     public function index()
     {
         $categories = Category::get();
-        $posts = Post::latest();
+        $posts = Post::orderBy('id','DESC')->get();
         // $posts = Post::latest()->paginate(5);
         // return view('backend.post.index', [
         //     'posts' => $posts,
         //     'categories' => Category::get()
         // ]);
-
         return response()->json([
             'posts' => $posts,
             'categories' => $categories
@@ -60,10 +59,11 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(PostRequest $request)
-    {
+    {   
         $user = Auth::user();
         $post = new Post();
         $data = $request->all();
+  
         $post = $user->posts()->create($data);
 
         $request->validate([

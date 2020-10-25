@@ -12,7 +12,7 @@
                         <div class="media">
                             <img src="/media/frontend/sugiono.png" class="mr-3" alt="avatar">
                             <div class="media-body">
-                                <input type="text" class="form-control status" placeholder="Ide apa hari ini">
+                                <input type="text" class="form-control status" name="postData"  v-model="postData" placeholder="Ide apa hari ini">
                                 <div class="mt-2">
                                     <ul class="list-inline h3">
                                         <li class="list-inline-item">
@@ -28,7 +28,7 @@
                                             <a href="#" class="text-secondary text-decoration-none"><i class="far fa-smile-wink"></i></a>
                                         </li>
                                         <li class="list-inline-item float-right">
-                                            <button type="button" class="btn btn-warning rounded-pill px-4">Kirim</button>
+                                            <button type="button" @click='postCreate' class="btn btn-warning rounded-pill px-4">Kirim</button>
                                         </li>
                                     </ul>
                                 </div>
@@ -37,7 +37,9 @@
                     </div>
                 </div>
                 <div class="timeline mt-3">
-                    <PostCard @click.native="redirectPost"/>
+
+                    <PostCard @click.native="redirectPost" />
+
                 </div>
             </div>
             <!-- Sidebar Kanan -->
@@ -76,17 +78,45 @@
 import SidebarLeftHome from '../components/SidebarLeftHome';
 import SidebarRightHome from '../components/SidebarRightHome';
 import PostCard from '../components/PostCard';
+import axios from 'axios';
 export default {
     components: {
         SidebarLeftHome,
         SidebarRightHome,
         PostCard,
     },
+    data(){
+        return{
+            message:"",
+            postData:''
+        }
+
+    },
     methods: {
+        
+        postCreate(){
+          
+            axios.post("http://localhost:8000/api/auth/posts/store", {
+               
+                body: this.postData,
+               
+            },
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+            })
+            .then(response => {
+                
+                this.message = response.data.status;
+                console.log(this.message);
+            });
+        },
+
         redirectPost() {
             console.log('clicked');
             this.$router.push('/post');
         }
     },
 }
-</script>
+</script>   

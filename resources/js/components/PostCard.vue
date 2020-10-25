@@ -1,17 +1,17 @@
 <template>
-  <div class="card">
+<div>
+  <div class="card" v-for="(post) in postData" :key="post.id">
       <div class="card-body">
           <div class="media position-relative">
               <img src="/media/frontend/sugiono.png" class="mr-3" alt="avatar">
               <div class="media-object">
-                  <h5 class="mt-0"><b>Prof Sugiono</b></h5>
-                  <p>99 Tahun yang lalu</p>
+                  <h5 class="mt-0"><b>{{ post.user_id }}</b></h5>
+                  <p>{{post.created_at | formatDate}}</p>
                   <a href="" class="position-absolute" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
               </div>
           </div>
           <p>
-              Apa perbedaan HTML dan CSS ?
-              <br>Yang tau komen d bawah guys nanti dapet give away video saya..
+              {{post.body}}
               <br>
               <a href="">#CodingGarisKeras</a>
           </p>
@@ -38,6 +38,7 @@
           </div>
       </div>
   </div>
+  </div>
 </template>
 
 <style scoped>
@@ -45,5 +46,44 @@
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border: none;
   border-radius: 10px;
+  margin-bottom: 15px;
 }
-</style>
+</style>   
+
+<script>
+import axios from 'axios';
+
+export default {
+    data(){
+        return{
+            postData:{},
+        }
+
+    },
+    created: function(){
+        axios.get("http://localhost:8000/api/auth/posts",
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+            })
+            .then(response => {
+                
+                this.postData = response.data.posts;
+          
+
+            });
+        
+    },
+    methods: {
+        
+        
+
+        redirectPost() {
+            console.log('clicked');
+            this.$router.push('/post');
+        }
+    },
+
+}
+</script> 

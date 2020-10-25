@@ -13,7 +13,7 @@ class LoginController extends Controller
 {
     public function __invoke (Request $request){
         $credentials = $request->only('username', 'password');
-        $token = auth()->attempt($credentials);
+        $token = auth('api')->attempt($credentials);
         if ($token){
             $user = auth()->user();
             if($user->role == 'admin'){
