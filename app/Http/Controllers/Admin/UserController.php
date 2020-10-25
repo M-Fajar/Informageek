@@ -14,6 +14,29 @@ class UserController extends Controller
 
         $data = [ 'users' => User::orderBy('id','DESC')->get()
         ];
+        dd($data);
         return view('backend.admin.user.index',$data);
+    }
+    public function userupdate (Request $request, $id)
+    {
+        $users = User::findOrFail($id);
+        return view('backend.admin.user.update')->with('users', $users);
+    }
+
+    public function userregisterupdate (Request $request, $id)
+    {
+        $users = User::find($id);
+        $users->syncRoles($request->input('roles-user'));
+        $users->update();
+
+        return redirect('/admin/user')->with('status', 'Data telah di update');
+    }
+
+    public function userdelete ($id)
+    {
+        $users = User::findOrFail($id);
+        $users->delete();
+
+        return redirect('/admin/user')->with('status', 'Data telah di hapus');
     }
 }
