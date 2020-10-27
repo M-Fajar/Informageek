@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
-    use HasRoles;
+
 
 
     /**
@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','username',
+        'name', 'email', 'password','username','role',
     ];
 
     /**
@@ -48,5 +48,15 @@ class User extends Authenticatable
     public function room()
     {
         return $this->belongsToMany(Room::class, 'room_user');
+    }
+    
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
