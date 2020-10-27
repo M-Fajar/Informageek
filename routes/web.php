@@ -22,7 +22,7 @@ Route::get('/{any}', function () {
 
 // Auth::routes();
 
-<<<<<<< HEAD
+
 Route::group(['middleware'=>['auth','checkRole:admin'],'prefix'=>'admin'],function(){
     
     Route::get('/', 'Admin\HomeController@index')->name('admin');
@@ -41,9 +41,7 @@ Route::group(['prefix'=>'/message', 'middleware'=>['auth', 'checkRole:user,userp
 	Route::get('room/create', 'User\RoomController@create')->name('.room.create');
 	Route::post('room/store', 'User\RoomController@store')->name('.room.store');
 });
-=======
 // Route::get('/home', 'HomeController@index')->name('home');
->>>>>>> restApi
 
 // Route::group(['middleware'=>['auth','checkRole:admin'],'prefix'=>'admin'],function(){
     
