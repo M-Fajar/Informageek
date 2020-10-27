@@ -10,11 +10,12 @@
                   <a href="" class="position-absolute" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
               </div>
           </div>
-          <p>
-              {{post.body}}
-              <br>
-              <a href="">#CodingGarisKeras</a>
-          </p>
+            <p>
+            <span style="margin-right: 4px;display:inline-block;" v-for="word in post.body.split(' ')" :key="word.id">
+              <a v-if="word.charAt(0)=='#'" href="">{{word}}</a>
+              <span style="" v-else>{{word}}</span>
+            </span>
+            </p>  
       </div>
       <div class="card-img-top">
           <img src="/media/frontend/kntn.png" class="img-fluid">
@@ -60,6 +61,10 @@ export default {
         }
 
     },
+    watch:{
+        
+    },
+
     created: function(){
         axios.get("http://localhost:8000/api/auth/posts",
             {
@@ -70,6 +75,7 @@ export default {
             .then(response => {
                 
                 this.postData = response.data.posts;
+                console.log(this.postData)
           
 
             });

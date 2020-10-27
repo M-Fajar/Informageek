@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@informageek.tech',
             'password' => bcrypt('123456'),
             'username' => 'admin',
-            'role' => 'admin'
+            'role' => 'admin',
+            'foto' => 'profile.png'
         
         ]);
 
@@ -26,7 +27,8 @@ class UserSeeder extends Seeder
             'email' => 'user@informageek.tech',
             'password' => bcrypt('123456'),
             'username' => 'user',
-            'role' => 'user'
+            'role' => 'user',
+            'foto' => 'sugiono.png'
         ]);
         
         $user = User::create([

@@ -20,7 +20,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {   if(isset($_COOKIE['userid'])){
-        $token = md5($_COOKIE['token']);
+        $token = md5($_COOKIE['userid']);
         $user = DB::table('users')->where('token', $token)->first();
     
             if($user){

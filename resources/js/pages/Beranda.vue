@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="media">
-                            <img src="/media/frontend/sugiono.png" class="mr-3" alt="avatar">
+                            <img v-bind:src="'/media/profile/' + user.foto" class="mr-3" alt="avatar">
                             <div class="media-body">
                                 <input type="text" class="form-control status" name="postData"  v-model="postData" placeholder="Ide apa hari ini">
                                 <div class="mt-2">
@@ -75,6 +75,7 @@
 </style>
 
 <script>
+import { mapGetters,mapActions } from "vuex"
 import SidebarLeftHome from '../components/SidebarLeftHome';
 import SidebarRightHome from '../components/SidebarRightHome';
 import PostCard from '../components/PostCard';
@@ -88,17 +89,29 @@ export default {
     data(){
         return{
             message:"",
-            postData:''
+            postData:'',
+            hashtag:[]
         }
 
+    },
+    watch:{
+        
     },
     methods: {
         
         postCreate(){
-          
+            var regexp = /#(\w+)/g;
+            var match = regexp.exec(this.postData);
+            while (match != null){
+            console.log(match[1])
+            this.hashtag.push(match[1])
+            match = regexp.exec(this.postData)
+            } 
+            console.log(this.hastag)
             axios.post("http://localhost:8000/api/auth/posts/store", {
                
                 body: this.postData,
+                categories: this.hashtag
                
             },
             {
@@ -118,5 +131,11 @@ export default {
             this.$router.push('/post');
         }
     },
+     computed: {
+        ...mapGetters({
+            authenticated: 'auth/authenticated',
+            user: 'auth/user'
+        }),
+    }
 }
 </script>   

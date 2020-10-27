@@ -15,22 +15,22 @@
                 </form>
             </div>
             <ul class="navbar-nav ml-auto align-items-center">
-                <template v-if="authenticated">
-                <li class="nav-item">
+    
+                <li class="nav-item">   
                     <router-link class="nav-link" :to="{name: 'profile'}">
-                        {{user.username}}
+                        <span><b> {{user.username}}</b></span>
 
                     </router-link>
                 </li>    
-                </template>
-                <template v-else>
+    
+    
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{name: 'profile'}">
-                        <img src="/media/frontend/sugiono.png" alt="avatar" class="img-fluid">
+                        <img v-bind:src="'/media/profile/' + user.foto" alt="avatar" class="img-fluid">
 
                     </router-link>
                 </li>
-                </template>
+    
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{name: 'profile'}">
                         <i class="far fa-envelope fa-2x"></i>
