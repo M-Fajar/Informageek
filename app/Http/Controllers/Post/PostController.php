@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\post;
 
 use App\Post;
+use App\User;
 use App\Category;
 use App\Thumbnail;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,15 +23,14 @@ class PostController extends Controller
     public function index()
     {
         $categories = Category::get();
-        $posts = Post::orderBy('id','DESC')->get();
-        // $posts = Post::latest()->paginate(5);
-        // return view('backend.post.index', [
-        //     'posts' => $posts,
-        //     'categories' => Category::get()
-        // ]);
+        $posts = Post::orderBy('id', 'DESC')->get();
+        $foto = DB::table('users')->where('id', $posts->user_id)->value('foto');
+        $username = DB::table('users')->where('id', $posts->user_id)->value('username');
         return response()->json([
             'posts' => $posts,
-            'categories' => $categories
+            'foto' => $foto,
+            'username' => $username,
+            'categories' => $categories,
         ]);
     }
 
@@ -40,10 +41,6 @@ class PostController extends Controller
      */
     public function create()
     {
-        // return view('backend.post.create', [
-        //     'post' => new Post(),
-        //     'categories' => Category::get()
-        // ]);
         $post = new Post();
         $categories = Category::get();
         return response()->json([
@@ -59,18 +56,15 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(PostRequest $request)
-    {   
+    {
         $user = Auth::user();
         $post = new Post();
         $data = $request->all();
-  
         $post = $user->posts()->create($data);
-
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
             'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
         ]);
-
         if ($request->hasFile('photo_id')) {
             $files = $request->file('photo_id');
             foreach ($files as $file) {
@@ -80,8 +74,6 @@ class PostController extends Controller
                 $post->thumbnails()->create(['name' => str_replace('images/posts/', '', $tmb)]);
             }
         }
-
-        // return redirect('home');
         return response()->json([
             'status' => 'success'
         ]);
@@ -95,9 +87,12 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        // return view('backend.post.show', compact('post'));
+        $username = DB::table('users')->where('id', $post->user_id)->value('username');
+        $foto = DB::table('users')->where('id', $post->user_id)->value('foto');
         return response()->json([
-            'post' => $post
+            'post' => $post,
+            'username' => $username,
+            'foto' => $foto,
         ]);
     }
 
@@ -109,10 +104,6 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        // return view('backend.post.edit', [
-        //     'post' => $post,
-        //     'categories' => Category::get()
-        // ]);
         $categories = Category::get();
         return response()->json([
             'post' => $post,
@@ -129,22 +120,17 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
-        // validasi
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
             'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
         ]);
-
-        // auth
         $this->authorize('update', $post);
-
         // update dan hapus image lama
         if ($request->hasFile('photo_id')) {
             $thumb = Thumbnail::where('post_id', $post->id)->get();
             foreach ($thumb as $thu) {
                 \Storage::delete('images/posts/' . $thu->name);
             }
-
             $post->thumbnails()->delete();
             $files = $request->file('photo_id');
             foreach ($files as $file) {
@@ -152,20 +138,14 @@ class PostController extends Controller
                 $post->thumbnails()->create(['name' => str_replace('images/posts/', '', $tmb)]);
             }
         }
-
         // update post keseluruhan 
         $attr = $request->all();
         $post->update($attr);
-
         // update kategori
         $post->categories()->sync(request('categories'));
-
-        // session()->flash('success', 'Postingan telah diedit');
-        // return redirect('home');
         return response()->json([
             'status' => 'success'
         ]);
-        // kurang
     }
 
     /**
@@ -177,23 +157,13 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
-
-        // delete thumbnail
         $thumb = Thumbnail::where('post_id', $post->id)->get();
         foreach ($thumb as $thu) {
             \Storage::delete('images/posts/' . $thu->name);
         }
         $post->thumbnails()->delete();
-
-        // delete category
         $post->categories()->detach();
-
-        // delete post
         $post->delete();
-
-        // notif dan redirect
-        // session()->flash('success', 'Postingan telah dihapus');
-        // return redirect('home');
         return response()->json([
             'status' => 'success'
         ]);
