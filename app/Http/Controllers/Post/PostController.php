@@ -23,9 +23,12 @@ class PostController extends Controller
     public function index()
     {
         $categories = Category::get();
+
         $posts = Post::orderBy('id', 'DESC')->get();
-        $foto = DB::table('users')->where('id', $posts->user_id)->value('foto');
-        $username = DB::table('users')->where('id', $posts->user_id)->value('username');
+        foreach ($posts as $post) {
+            $foto = DB::table('users')->where('id', $post['user_id'])->value('foto');
+            $username = DB::table('users')->where('id', $post['user_id'])->value('username');
+        }
         return response()->json([
             'posts' => $posts,
             'foto' => $foto,
@@ -87,8 +90,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $username = DB::table('users')->where('id', $post->user_id)->value('username');
-        $foto = DB::table('users')->where('id', $post->user_id)->value('foto');
+        $username = DB::table('users')->where('id', $post['user_id'])->value('username');
+        $foto = DB::table('users')->where('id', $post['user_id'])->value('foto');
         return response()->json([
             'post' => $post,
             'username' => $username,
