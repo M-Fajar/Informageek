@@ -28,13 +28,13 @@ class PostController extends Controller
         foreach ($posts as $post) {
             $foto = DB::table('users')->where('id', $post['user_id'])->value('foto');
             $username = DB::table('users')->where('id', $post['user_id'])->value('username');
+            return response()->json([
+                'posts' => $posts,
+                'foto' => $foto,
+                'username' => $username,
+                'categories' => $categories,
+            ]);
         }
-        return response()->json([
-            'posts' => $posts,
-            'foto' => $foto,
-            'username' => $username,
-            'categories' => $categories,
-        ]);
     }
 
     /**
