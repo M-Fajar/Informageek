@@ -16,7 +16,15 @@ class ProfileController extends Controller
         return response()->json(
             [
                 'status' => 'success',
-                'user' => $user
+                'user' => [
+                    
+                'name' => $user->name,
+                'username' =>  $user->username,
+                'bio'=> $user->bio,
+                'foto'=>$user->foto,
+                'cover'=> $user->cover
+                ]
+
             ],200
         );
     }

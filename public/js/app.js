@@ -2025,6 +2025,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: _objectSpread(_objectSpread({
@@ -2684,7 +2685,98 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_PostPreview__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/PostPreview */ "./resources/js/components/PostPreview.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _components_PostPreview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/PostPreview */ "./resources/js/components/PostPreview.vue");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./resources/js/router.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2738,16 +2830,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    PostPreview: _components_PostPreview__WEBPACK_IMPORTED_MODULE_0__["default"]
+    PostPreview: _components_PostPreview__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      user: []
+    };
   },
   methods: {
     redirectPost: function redirectPost() {
       console.log('clicked');
       this.$router.push('/post');
     }
-  }
+  },
+  created: function created() {
+    var _this = this;
+
+    this.username = this.$route.params.username;
+    axios.get("http://localhost:8000/api/auth/profile/" + this.username, {
+      headers: {
+        Authorization: 'Bearer ' + this.$store.state.auth.token
+      }
+    }).then(function (response) {
+      _this.user = response.data.user;
+      console.log(_this.user);
+    });
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+    authenticated: 'auth/authenticated',
+    auth: 'auth/user'
+  }))
 });
 
 /***/ }),
@@ -7538,7 +7654,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.hero[data-v-074da5b0] {\r\n  background-image: url('https://picsum.photos/1200/1920');\r\n  background-size: cover;\r\n  background-position: center center;\r\n  height: 50vh;\r\n  width: 100%;\r\n  position: relative;\n}\n.hero img[data-v-074da5b0] {\r\n  position: absolute;\r\n  bottom: 0;\r\n  left: 50%;\r\n  transform: translate(-50%, 50%);\r\n  border: 10px solid white;\n}\n.space[data-v-074da5b0] {\r\n  margin: 8% 0px;\n}\r\n", ""]);
+exports.push([module.i, "\n.cover-foto[data-v-074da5b0]{\r\n  background:rgba(211,211,211, 0.5);\r\n  width: 150px;\r\n  padding-top: 3px; \r\n  height: 32px;\r\n  bottom: 10%;\r\n  left: 10%;\r\n  margin: auto;\r\n  border-radius: 8%;\r\n  position: absolute;\r\n   transform: translate(-50%, 50%);\n}\n.cover-foto span[data-v-074da5b0]{\r\n  color: #f1f1f1;\r\n  font-weight: bold;\n}\n#edit-pen[data-v-074da5b0]{\r\n  position: absolute;\r\n  bottom: 10%;\r\n  left: 60%;\r\n  transform: translate(-50%, 50%);\r\n  border: 0px solid white;\r\n  width: 50px;\n}\n.hero[data-v-074da5b0] {\r\n  background-image: url('https://picsum.photos/1200/1920');\r\n  background-size: cover;\r\n  background-position: center center;\r\n  height: 50vh;\r\n  width: 100%;\r\n  position: relative;\n}\n#foto[data-v-074da5b0]{\r\n  position: absolute;\r\n  bottom: 0;\r\n  left: 50%;\r\n  transform: translate(-50%, 50%);\r\n  border: 10px solid white;\n}\n.space[data-v-074da5b0] {\r\n  margin: 8% 0px;\n}\n.dropdown[data-v-074da5b0] {\r\n  position: relative;\r\n  display: inline-block;\n}\n.dropdown-content[data-v-074da5b0] {\r\n  display: none;\r\n  position: absolute;\r\n  border-radius: 15%;\r\n  font-size: 8pt;\r\n  background-color: #f9f9f9;\r\n  min-width: 110px;\r\n  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);\r\n  z-index: 1;\n}\n.dropdown-content a[data-v-074da5b0] {\r\n  color: black;\r\n  padding: 12px 16px;\r\n  text-decoration: none;\r\n  display: block;\n}\n.dropdown-content a[data-v-074da5b0]:hover {background-color: #f1f1f1}\n.dropdown:hover .dropdown-content[data-v-074da5b0] {\r\n  display: block;\n}\n.dropdown:hover .dropbtn[data-v-074da5b0] {\r\n  background-color: darkblue;\n}\r\n", ""]);
 
 // exports
 
@@ -62157,25 +62273,25 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("ul", { staticClass: "navbar-nav ml-auto align-items-center" }, [
-            _c(
-              "li",
-              { staticClass: "nav-item" },
-              [
-                _c(
-                  "router-link",
-                  {
-                    staticClass: "nav-link",
-                    attrs: { to: { name: "profile" } }
-                  },
-                  [
-                    _c("span", [
-                      _c("b", [_vm._v(" " + _vm._s(_vm.user.username))])
-                    ])
-                  ]
-                )
-              ],
-              1
-            ),
+            _c("li", { staticClass: "nav-item" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "nav-link",
+                  attrs: {
+                    href: _vm.$router.resolve({
+                      name: "profile",
+                      params: { username: _vm.user.username }
+                    }).href
+                  }
+                },
+                [
+                  _c("span", [
+                    _c("b", [_vm._v(" " + _vm._s(_vm.user.username))])
+                  ])
+                ]
+              )
+            ]),
             _vm._v(" "),
             _c(
               "li",
@@ -62185,7 +62301,12 @@ var render = function() {
                   "router-link",
                   {
                     staticClass: "nav-link",
-                    attrs: { to: { name: "profile" } }
+                    attrs: {
+                      to: {
+                        name: "profile",
+                        params: { username: _vm.user.username }
+                      }
+                    }
                   },
                   [
                     _c("img", {
@@ -63569,16 +63690,33 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container-fluid" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "jumbotron-fluid hero" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("img", {
+          staticClass: "img-fluid rounded-circle",
+          attrs: {
+            id: "foto",
+            src: "/media/profile_full/" + _vm.user["foto"],
+            alt: "avatar"
+          }
+        }),
+        _vm._v(" "),
+        _c("img", {
+          attrs: { id: "edit-pen", src: "/media/frontend/pencil.png", alt: "" }
+        })
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "space" }),
     _vm._v(" "),
     _c("div", { staticClass: "container p-5" }, [
       _c("div", { staticClass: "row text-center" }, [
         _c("div", { staticClass: "col-md-6 offset-md-3" }, [
-          _c("h1", [_vm._v("Steven Ujang")]),
+          _c("h1", [_vm._v(_vm._s(_vm.user["name"]))]),
           _vm._v(" "),
-          _c("h5", [_vm._v("1197050010")]),
+          _c("h5", [_vm._v(_vm._s(_vm.user["username"]))]),
           _vm._v(" "),
           _c("p", { staticClass: "my-4" }, [
             _vm._v(
@@ -63586,9 +63724,11 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("button", { staticClass: "btn btn-primary btn-lg" }, [
-            _vm._v("Following")
-          ]),
+          _vm.user["username"] == _vm.auth.username
+            ? _c("div", [_vm._m(1)])
+            : _c("button", { staticClass: "btn btn-primary btn-lg" }, [
+                _vm._v("Follow")
+              ]),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
@@ -63607,7 +63747,7 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(2)
         ])
       ])
     ])
@@ -63618,12 +63758,42 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "jumbotron-fluid hero" }, [
-        _c("img", {
-          staticClass: "img-fluid rounded-circle",
-          attrs: { src: "https://picsum.photos/id/1005/200/200", alt: "avatar" }
-        })
+    return _c("a", { attrs: { href: "" } }, [
+      _c("div", { staticClass: "cover-foto" }, [
+        _c("div", { staticClass: "content-cover" }, [
+          _c("img", {
+            staticClass: "camera",
+            attrs: { src: "/media/frontend/cam.png", alt: "" }
+          }),
+          _vm._v(" "),
+          _c("span", [_vm._v("Edit Cover Photo")])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dropdown" }, [
+      _c("button", { staticClass: "btn btn-primary btn-lg dropbtn" }, [
+        _vm._v("Edit Profil")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "dropdown-content" }, [
+        _c(
+          "a",
+          {
+            attrs: {
+              href: "#",
+              "data-toggle": "modal",
+              "data-target": "#modalLoginForm"
+            }
+          },
+          [_vm._v("Upload Foto Profile")]
+        ),
+        _vm._v(" "),
+        _c("a", { attrs: { href: "#" } }, [_vm._v("Cover Profile")])
       ])
     ])
   },
@@ -82324,7 +82494,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
     beforeEnter: ifAuthenticated
   }, {
     name: 'profile',
-    path: '/profile',
+    path: '/profile/:username',
     component: _pages_Profile__WEBPACK_IMPORTED_MODULE_9__["default"],
     meta: {
       layout: "home"
@@ -82558,8 +82728,8 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_cookies__WEBPACK_IMPORTED_MOD
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Fathima Umar\Desktop\informageek\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Fathima Umar\Desktop\informageek\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Informatika\Informageek\Ifa\Informageek\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Informatika\Informageek\Ifa\Informageek\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

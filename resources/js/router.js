@@ -89,11 +89,11 @@ const router = new VueRouter({
     },
     {
       name: 'profile',
-      path: '/profile',
+      path: '/profile/:username',
       component: Profile,
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
-    }
+    },
   ]
 });
 

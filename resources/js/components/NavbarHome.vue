@@ -17,15 +17,16 @@
             <ul class="navbar-nav ml-auto align-items-center">
     
                 <li class="nav-item">   
-                    <router-link class="nav-link" :to="{name: 'profile'}">
+                    <a class="nav-link" :href="$router.resolve({name: 'profile',params: {username:user.username}}).href">
+                    <!-- <router-link class="nav-link" :to="{name: 'profile',params: {username:user.username}}"> -->
                         <span><b> {{user.username}}</b></span>
-
-                    </router-link>
+                    </a>
+                    <!-- </router-link> -->
                 </li>    
     
     
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{name: 'profile'}">
+                    <router-link class="nav-link" :to="{name: 'profile',params: {username:user.username}}">
                         <img v-bind:src="'/media/profile/' + user.foto" alt="avatar" class="img-fluid">
 
                     </router-link>
