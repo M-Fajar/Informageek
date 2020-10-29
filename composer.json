@@ -19,7 +19,6 @@
         "pusher/pusher-php-server": "~3.0",
         "spatie/laravel-permission": "^3.13",
         "tymon/jwt-auth": "^1.0"
-
     },
     "require-dev": {
         "facade/ignition": "^2.0",

@@ -32,7 +32,7 @@ Route::group(['middleware'=>['auth','checkRole:user,userplus']],function(){
     Route::get('profile/{req}', 'User\UserController@detail')->name('user.detail');
 });
 
-Route::group(['prefix'=>'/message', 'middleware'=>['auth', 'checkRole:user,userplus'], 'as' => 'message'], function () {
+Route::group(['prefix'=>'/message', 'as' => 'message'], function () {
 	Route::get('/', 'User\MessageController@index');
 	Route::get('chat/{room}', 'User\MessageController@fetchMessage')->name('.chat');
 	Route::post('send', 'User\MessageController@sendMessage')->name('.send-message');

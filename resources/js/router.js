@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import Post from './pages/Post';
 import Search from './pages/Search';
 import auth from './store/auth';
+import Message from './components/backend/MessageComponent';
 import { isNull } from 'lodash';
 
 Vue.use(VueRouter);
@@ -93,7 +94,14 @@ const router = new VueRouter({
       component: Profile,
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
-    }
+    },
+    {
+      name: 'message',
+      path: '/message',
+      component: Message,
+      meta: {layout: "home"},
+      beforeEnter: ifAuthenticated
+    },
   ]
 });
 
