@@ -22,15 +22,23 @@ class PostController extends Controller
      */
     public function index()
     {
-        $categories = Category::get();
+       
         $posts = Post::orderBy('id', 'DESC')->get();
-        $foto = DB::table('users')->where('id', $posts->user_id)->value('foto');
-        $username = DB::table('users')->where('id', $posts->user_id)->value('username');
+        $foto= array();
+        $username=array();
+        foreach ($posts as $post) {
+
+            $getfoto = DB::table('users')->where('id', $post['user_id'])->value('foto');
+            array_push($foto,$getfoto);
+            $getusername = DB::table('users')->where('id', $post['user_id'])->value('username');
+            array_push($username,$getusername);
+        }
+       
         return response()->json([
             'posts' => $posts,
             'foto' => $foto,
-            'username' => $username,
-            'categories' => $categories,
+            'username' => $username
+           
         ]);
     }
 
