@@ -6,8 +6,9 @@ use App\Post;
 use App\User;
 use App\Category;
 use App\Thumbnail;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -64,6 +65,16 @@ class PostController extends Controller
         $post = new Post();
         $data = $request->all();
         $post = $user->posts()->create($data);
+
+        // coba category
+        $categories = new Category;
+        $categories->name = $request->categories;
+        $categories->slug = Str::slug($request->categories);
+        $categories->save();
+        $post->categories()->attach($post);
+        // $categories->posts()->attach($categories);
+        // batas coba category
+
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
             'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
