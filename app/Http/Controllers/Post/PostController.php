@@ -13,6 +13,7 @@ use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -66,14 +67,28 @@ class PostController extends Controller
         $data = $request->all();
         $post = $user->posts()->create($data);
 
-        // coba category
+        // // coba category
+        // $categories = new Category;
+        // $categories->name = $request->categories;
+        // $categories->slug = Str::slug($request->categories);
+        // $categories->save();
+        // // $post->categories()->attach($categories);
+        // // $categories->posts()->attach($categories);
+
+        // coba category 2
         $categories = new Category;
         $categories->name = $request->categories;
         $categories->slug = Str::slug($request->categories);
-        $categories->save();
-        $post->categories()->attach($post);
-        // $categories->posts()->attach($categories);
-        // batas coba category
+        // $cat = Category::where('name', $categories->name);
+        $cat = DB::table('categories')->where('name', $request->categories)->get();
+        if ($cat) {
+            // $cat = $cat->id;
+            // $post->categories()->sync($cat->id);
+        } else if (!$cat) {
+            $categories->save();
+            // $categories->id;
+            // $post->categories()->sync($categories->id);
+        }
 
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
@@ -89,7 +104,8 @@ class PostController extends Controller
             }
         }
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
+            'cat' => $cat,
         ]);
     }
 
@@ -143,7 +159,7 @@ class PostController extends Controller
         if ($request->hasFile('photo_id')) {
             $thumb = Thumbnail::where('post_id', $post->id)->get();
             foreach ($thumb as $thu) {
-                \Storage::delete('images/posts/' . $thu->name);
+                Storage::delete('images/posts/' . $thu->name);
             }
             $post->thumbnails()->delete();
             $files = $request->file('photo_id');
@@ -173,7 +189,7 @@ class PostController extends Controller
         $this->authorize('delete', $post);
         $thumb = Thumbnail::where('post_id', $post->id)->get();
         foreach ($thumb as $thu) {
-            \Storage::delete('images/posts/' . $thu->name);
+            Storage::delete('images/posts/' . $thu->name);
         }
         $post->thumbnails()->delete();
         $post->categories()->detach();
