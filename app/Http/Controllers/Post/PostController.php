@@ -7,6 +7,7 @@ use App\User;
 use App\Category;
 use App\Thumbnail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +40,7 @@ class PostController extends Controller
             'foto' => $foto,
             'username' => $username
            
-        ]);
+         ]);
     }
 
     /**
@@ -69,6 +70,24 @@ class PostController extends Controller
         $post = new Post();
         $data = $request->all();
         $post = $user->posts()->create($data);
+
+        $catIds = [];
+        foreach ( $request->categories as $catName){
+        $cat = Category::where('name', $catName)->first();
+        if (!$cat) {
+            
+            $categories = new Category;
+            $categories->name = $catName;
+            $categories->slug = Str::slug($catName);
+            $categories->save();
+            $cat = Category::where('name', $catName)->first();
+        }
+        array_push($catIds,$cat->id);
+        }   
+        $post->categories()->sync($catIds);
+
+
+
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
             'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
@@ -175,5 +194,22 @@ class PostController extends Controller
         return response()->json([
             'status' => 'success'
         ]);
+
     }
+
+
+
+    public function lastPostUser(Request $request, $value){
+        
+        $user_id = $request->user()->id;
+        $lastpost = Post::where(['user_id'=>$user_id ])->orderBy('id', 'DESC')->take($value)->get();
+        $username = DB::table('users')->where('id', $user_id)->value('username');
+        $foto = DB::table('users')->where('id', $user_id)->value('foto');
+        return response()->json([
+            'posts' => $lastpost,
+            'username'=> $username,
+            'foto' => $foto
+        ]);
+        }
+
 }

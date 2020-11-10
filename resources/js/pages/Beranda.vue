@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="media">
-                            <img v-bind:src="'/media/profile/' + user.foto" class="mr-3" alt="avatar">
+                            <img v-bind:src="'/media/avatar/' + user.foto" class="mr-3"  alt="avatar">
                             <div class="media-body">
                                 <input type="text" class="form-control status" name="postData"  v-model="postData" placeholder="Ide apa hari ini">
                                 <div class="mt-2">
@@ -36,9 +36,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="timeline mt-3">
 
-                    <PostCard @click.native="redirectPost" />
+                <div class="timeline mt-3"  v-if="postSucces > 0 && reload" >
+
+                <PostUpdate  :userPhoto="user.foto"  :lastPost="postSucces"/>
+                
+                 
+                </div>
+                <div class="timeline mt-3"> 
+
+                    <PostCard  :userPhoto="user.foto"/>
 
                 </div>
             </div>
@@ -72,6 +79,13 @@
     height: 45px;
     top: 15px;
 }
+.media img{
+    width: 2.5rem;
+    margin-left: 7px;
+    height: 2.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
 </style>
 
 <script>
@@ -79,18 +93,23 @@ import { mapGetters,mapActions } from "vuex"
 import SidebarLeftHome from '../components/SidebarLeftHome';
 import SidebarRightHome from '../components/SidebarRightHome';
 import PostCard from '../components/PostCard';
+import PostUpdate from '../components/PostUpdate';
 import axios from 'axios';
 export default {
     components: {
         SidebarLeftHome,
         SidebarRightHome,
         PostCard,
+        PostUpdate
     },
+    
     data(){
         return{
             message:"",
             postData:'',
-            hashtag:[]
+            hashtag:[],
+            postSucces: 0,
+            reload: true
         }
 
     },
@@ -100,14 +119,15 @@ export default {
     methods: {
         
         postCreate(){
+            
             var regexp = /#(\w+)/g;
             var match = regexp.exec(this.postData);
             while (match != null){
-            console.log(match[1])
+            
             this.hashtag.push(match[1])
             match = regexp.exec(this.postData)
             } 
-            console.log(this.hastag)
+            this.reload= false
             axios.post("http://localhost:8000/api/auth/posts/store", {
                
                 body: this.postData,
@@ -120,9 +140,11 @@ export default {
                 }
             })
             .then(response => {
-                
                 this.message = response.data.status;
-                console.log(this.message);
+                
+                this.postSucces += 1
+                this.reload= true
+           
             });
         },
 

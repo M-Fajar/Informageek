@@ -14,7 +14,9 @@ import auth from './store/auth';
 import { isNull } from 'lodash';
 
 Vue.use(VueRouter);
-
+const Comp = {
+  template: '<div>Hello world</div>'
+ }
 
 const ifAuthenticated = async (to, from,next) => {
   if(localStorage.getItem('user-token')){
@@ -36,7 +38,6 @@ const ifNotAuthenticated = async (to, from,next) => {
   }
     next()
 }
-
 
 const router = new VueRouter({
   mode: 'history',

@@ -42,7 +42,7 @@ Vue.filter('formatDate', function(value) {
             result = diffDuration.seconds()+' detik yang lalu'
         }
         else{
-            result = 'Null'
+            result = ' Baru saja'
         }
         
       return result.substring(1);

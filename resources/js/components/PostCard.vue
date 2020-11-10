@@ -1,12 +1,18 @@
 <template>
 <div>
-  <div class="card" v-for="(post) in postData" :key="post.id">
-      <div class="card-body">
+    
+  <div class="card"   v-for="(post, index ) in postData" :key="post.id">
+      <div class="card-body" >
           <div class="media position-relative">
-              <img src="/media/frontend/sugiono.png" class="mr-3" alt="avatar">
+              <router-link :to="{name: 'profile',params: {username:postUser[index]}}">
+              <img v-bind:src="'/media/avatar/'+ postPhoto[index]" id="avatar" alt="avatar" class="mr-3">
+              </router-link>
               <div class="media-object">
-                  <h5 class="mt-0"><b>{{ post.user_id }}</b></h5>
-                  <p>{{post.created_at | formatDate}}</p>
+                    <a :href="$router.resolve({name: 'profile',params: {username:postUser[index]}}).href">
+                    <h5 class="mt-0"><b>{{ postUser[index] }}</b></h5>
+                    </a>
+                    <p >{{post.created_at | formatDate}}</p>
+                
                   <a href="" class="position-absolute" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
               </div>
           </div>
@@ -32,7 +38,7 @@
           </div>
           <hr>
           <div class="d-flex align-items-center">
-              <img src="/media/frontend/profile.png" class="img-fluid">
+              <img v-bind:src="'/media/avatar/'+ userPhoto" id="avatar" alt="avatar" class="img-fluid">
               <div class="ml-3 flex-fill">
                   <input type="text" class="form-control rounded-pill" placeholder="Tuliskan Komentar">
               </div>
@@ -49,15 +55,34 @@
   border-radius: 10px;
   margin-bottom: 15px;
 }
+
+    #avatar{    
+    width: 2.7rem;
+    object-fit: cover;
+    height: 2.7rem;
+    border-radius: 5vw;
+}
+.media-object h5 {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
 </style>   
 
 <script>
 import axios from 'axios';
 
 export default {
+
+    props:{
+        userPhoto: String,
+    },
     data(){
         return{
+            
             postData:{},
+            postUser:{},
+            postPhoto:{}
         }
 
     },
@@ -65,8 +90,9 @@ export default {
         
     },
 
+
     created: function(){
-        axios.get("http://localhost:8000/api/auth/posts",
+        axios.get("auth/posts",
             {
                 headers: {
                     Authorization: 'Bearer ' + this.$store.state.auth.token
@@ -75,8 +101,10 @@ export default {
             .then(response => {
                 
                 this.postData = response.data.posts;
-                console.log(this.postData)
-          
+                this.postUser = response.data.username;
+                this.postPhoto = response.data.foto;
+               
+               
 
             });
         
