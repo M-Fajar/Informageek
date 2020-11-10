@@ -6,13 +6,14 @@ use App\Post;
 use App\User;
 use App\Category;
 use App\Thumbnail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -102,7 +103,8 @@ class PostController extends Controller
             }
         }
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
+            'cat' => $cat,
         ]);
     }
 
@@ -156,7 +158,7 @@ class PostController extends Controller
         if ($request->hasFile('photo_id')) {
             $thumb = Thumbnail::where('post_id', $post->id)->get();
             foreach ($thumb as $thu) {
-                \Storage::delete('images/posts/' . $thu->name);
+                Storage::delete('images/posts/' . $thu->name);
             }
             $post->thumbnails()->delete();
             $files = $request->file('photo_id');
@@ -186,7 +188,7 @@ class PostController extends Controller
         $this->authorize('delete', $post);
         $thumb = Thumbnail::where('post_id', $post->id)->get();
         foreach ($thumb as $thu) {
-            \Storage::delete('images/posts/' . $thu->name);
+            Storage::delete('images/posts/' . $thu->name);
         }
         $post->thumbnails()->delete();
         $post->categories()->detach();
