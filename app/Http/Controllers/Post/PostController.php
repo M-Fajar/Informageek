@@ -67,28 +67,19 @@ class PostController extends Controller
         $data = $request->all();
         $post = $user->posts()->create($data);
 
-        // // coba category
-        // $categories = new Category;
-        // $categories->name = $request->categories;
-        // $categories->slug = Str::slug($request->categories);
-        // $categories->save();
-        // // $post->categories()->attach($categories);
-        // // $categories->posts()->attach($categories);
-
-        // coba category 2
-        $categories = new Category;
-        $categories->name = $request->categories;
-        $categories->slug = Str::slug($request->categories);
-        // $cat = Category::where('name', $categories->name);
-        $cat = DB::table('categories')->where('name', $request->categories)->get();
-        if ($cat) {
-            // $cat = $cat->id;
-            // $post->categories()->sync($cat->id);
-        } else if (!$cat) {
-            $categories->save();
-            // $categories->id;
-            // $post->categories()->sync($categories->id);
+        $catIds = [];
+        foreach ($request->categories as $catName) {
+            $cat = Category::where('name', $catName)->first();
+            if (!$cat) {
+                $categories = new Category;
+                $categories->name = $catName;
+                $categories->slug = Str::slug($catName);
+                $categories->save();
+                $cat = Category::where('name', $catName)->first();
+            }
+            array_push($catIds, $cat->id);
         }
+        $post->categories()->sync($catIds);
 
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
@@ -104,8 +95,7 @@ class PostController extends Controller
             }
         }
         return response()->json([
-            'status' => 'success',
-            'cat' => $cat,
+            'status' => 'success'
         ]);
     }
 
@@ -171,8 +161,23 @@ class PostController extends Controller
         // update post keseluruhan 
         $attr = $request->all();
         $post->update($attr);
+
         // update kategori
-        $post->categories()->sync(request('categories'));
+        $catIds = [];
+        foreach ($request->categories as $catName) {
+            $cat = Category::where('name', $catName)->first();
+            if (!$cat) {
+                $categories = new Category;
+                $categories->name = $catName;
+                $categories->slug = Str::slug($catName);
+                $categories->save();
+                $cat = Category::where('name', $catName)->first();
+            }
+            array_push($catIds, $cat->id);
+        }
+        $post->categories()->sync($catIds);
+        // $post->categories()->sync(request('categories'));
+
         return response()->json([
             'status' => 'success'
         ]);
