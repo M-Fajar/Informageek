@@ -12,12 +12,9 @@
                   <a href="" class="position-absolute" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
               </div>
           </div>
-            <p>
-            <span style="margin-right: 4px;display:inline-block;" v-for="word in post.body.split(' ')" :key="word.id">
-              <a v-if="word.charAt(0)=='#'" href="">{{word}}</a>
-              <span style="" v-else>{{word}}</span>
-            </span>
-            </p>  
+
+            <p v-html="replaceBody(post.body)" ></p>
+            
       </div>
       <div class="card-img-top">
         
@@ -104,7 +101,10 @@ export default {
         
     },
     methods: {
-        
+        replaceBody(body){
+             const hasil =  body.replace(/(?:\r\n|\r|\n)/g, '<br />')
+            return hasil.replace(/#([\w]+)/g,'<a href="">#$1</a>')
+        },
         
 
         redirectPost() {

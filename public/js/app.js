@@ -2160,9 +2160,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2190,6 +2187,10 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    replaceBody: function replaceBody(body) {
+      var hasil = body.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      return hasil.replace(/#([\w]+)/g, '<a href="">#$1</a>');
+    },
     redirectPost: function redirectPost() {
       console.log('clicked');
       this.$router.push('/post');
@@ -2210,9 +2211,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
 //
 //
 //
@@ -2303,6 +2301,10 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    replaceBody: function replaceBody(body) {
+      var hasil = body.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      return hasil.replace(/#([\w]+)/g, '<a href="">#$1</a>');
+    },
     redirectPost: function redirectPost() {
       console.log('clicked');
       this.$router.push('/post');
@@ -2544,6 +2546,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var regexp = /#(\w+)/g;
       var match = regexp.exec(this.postData);
+      console.log(this.postData);
 
       while (match != null) {
         this.hashtag.push(match[1]);
@@ -63077,27 +63080,9 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c(
-            "p",
-            _vm._l(post.body.split(" "), function(word) {
-              return _c(
-                "span",
-                {
-                  key: word.id,
-                  staticStyle: {
-                    "margin-right": "4px",
-                    display: "inline-block"
-                  }
-                },
-                [
-                  word.charAt(0) == "#"
-                    ? _c("a", { attrs: { href: "" } }, [_vm._v(_vm._s(word))])
-                    : _c("span", {}, [_vm._v(_vm._s(word))])
-                ]
-              )
-            }),
-            0
-          )
+          _c("p", {
+            domProps: { innerHTML: _vm._s(_vm.replaceBody(post.body)) }
+          })
         ]),
         _vm._v(" "),
         _vm._m(1, true),
@@ -63305,27 +63290,9 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c(
-            "p",
-            _vm._l(post.body.split(" "), function(word) {
-              return _c(
-                "span",
-                {
-                  key: word.id,
-                  staticStyle: {
-                    "margin-right": "4px",
-                    display: "inline-block"
-                  }
-                },
-                [
-                  word.charAt(0) == "#"
-                    ? _c("a", { attrs: { href: "" } }, [_vm._v(_vm._s(word))])
-                    : _c("span", {}, [_vm._v(_vm._s(word))])
-                ]
-              )
-            }),
-            0
-          )
+          _c("p", {
+            domProps: { innerHTML: _vm._s(_vm.replaceBody(post.body)) }
+          })
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-img-top" }),
@@ -63728,7 +63695,7 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("div", { staticClass: "media-body" }, [
-                _c("input", {
+                _c("textarea", {
                   directives: [
                     {
                       name: "model",
@@ -63738,11 +63705,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control status",
-                  attrs: {
-                    type: "text",
-                    name: "postData",
-                    placeholder: "Ide apa hari ini"
-                  },
+                  attrs: { name: "postData", placeholder: "Ide apa hari ini" },
                   domProps: { value: _vm.postData },
                   on: {
                     input: function($event) {

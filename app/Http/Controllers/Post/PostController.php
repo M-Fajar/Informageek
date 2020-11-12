@@ -73,21 +73,21 @@ class PostController extends Controller
         $post = $user->posts()->create($data);
 
         $catIds = [];
-        foreach ( $request->categories as $catName){
-        $cat = Category::where('name', $catName)->first();
-        if (!$cat) {
-            
-            $categories = new Category;
-            $categories->name = $catName;
-            $categories->slug = Str::slug($catName);
-            $categories->save();
+        if($request->categories != null){
+            foreach ( $request->categories as $catName){
             $cat = Category::where('name', $catName)->first();
-        }
-        array_push($catIds,$cat->id);
-        }   
+                if (!$cat) {
+            
+                $categories = new Category;
+                $categories->name = $catName;
+                $categories->slug = Str::slug($catName);
+                $categories->save();
+                $cat = Category::where('name', $catName)->first();
+                }
+            array_push($catIds,$cat->id);
+            }   
         $post->categories()->sync($catIds);
-
-
+        }
 
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
@@ -104,7 +104,6 @@ class PostController extends Controller
         }
         return response()->json([
             'status' => 'success',
-            'cat' => $cat,
         ]);
     }
 

@@ -12,7 +12,7 @@
                         <div class="media">
                             <img v-bind:src="'/media/avatar/' + user.foto" class="mr-3"  alt="avatar">
                             <div class="media-body">
-                                <input type="text" class="form-control status" name="postData"  v-model="postData" placeholder="Ide apa hari ini">
+                                <textarea name="postData" class="form-control status" v-model="postData" placeholder="Ide apa hari ini"></textarea>
                                 <div class="mt-2">
                                     <ul class="list-inline h3">
                                         <li class="list-inline-item">
@@ -122,6 +122,8 @@ export default {
             
             var regexp = /#(\w+)/g;
             var match = regexp.exec(this.postData);
+            console.log(this.postData)
+
             while (match != null){
             
             this.hashtag.push(match[1])
