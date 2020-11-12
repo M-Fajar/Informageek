@@ -103,7 +103,7 @@ class PostController extends Controller
             }
         }
         return response()->json([
-            'status' => 'success',
+            'status' => 'success'
         ]);
     }
 
@@ -169,8 +169,23 @@ class PostController extends Controller
         // update post keseluruhan 
         $attr = $request->all();
         $post->update($attr);
+
         // update kategori
-        $post->categories()->sync(request('categories'));
+        $catIds = [];
+        foreach ($request->categories as $catName) {
+            $cat = Category::where('name', $catName)->first();
+            if (!$cat) {
+                $categories = new Category;
+                $categories->name = $catName;
+                $categories->slug = Str::slug($catName);
+                $categories->save();
+                $cat = Category::where('name', $catName)->first();
+            }
+            array_push($catIds, $cat->id);
+        }
+        $post->categories()->sync($catIds);
+        // $post->categories()->sync(request('categories'));
+
         return response()->json([
             'status' => 'success'
         ]);
