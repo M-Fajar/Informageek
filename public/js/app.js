@@ -2517,6 +2517,130 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2536,13 +2660,72 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       postData: '',
       hashtag: [],
       postSucces: 0,
-      reload: true
+      reload: true,
+      images: [],
+      previewImage: {}
     };
   },
   watch: {},
   methods: {
-    postCreate: function postCreate() {
+    clearPreview: function clearPreview(key) {
+      var panjangImage = this.images.length;
+      this.images.splice(key, 1);
+
+      for (var i = 0; i < panjangImage; i++) {
+        console.log('tesfor');
+
+        if (i == key) {
+          key++;
+
+          if (key == this.panjangImage) {
+            Vue["delete"](this.previewImage, i);
+          } else {
+            Vue.set(this.previewImage, i, this.previewImage[key]);
+          }
+
+          console.log(i);
+        }
+      }
+
+      console.log(this.images);
+      console.log(this.previewImage);
+    },
+    pickFile: function pickFile() {
       var _this = this;
+
+      var input = this.$refs.fileInput;
+      var file = input.files;
+      var index;
+
+      var _loop = function _loop(i) {
+        if (file[i]['size'] < 3111775) {
+          if (file && file[i]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+              _this.images.push(input.files[i]);
+
+              Vue.set(_this.previewImage, _this.images.length - 1, URL.createObjectURL(input.files[i]));
+            };
+
+            reader.readAsDataURL(file[i]);
+
+            _this.$emit('input', file[i]);
+          }
+        } else {
+          alert('Ukuran tidak lebih dari 2 MB');
+        }
+      };
+
+      for (var i = 0; i < file.length; i++) {
+        _loop(i);
+      }
+
+      console.log(this.images);
+      console.log(this.previewImage);
+    },
+    postCreate: function postCreate() {
+      var _this2 = this;
 
       var regexp = /#(\w+)/g;
       var match = regexp.exec(this.postData);
@@ -2562,9 +2745,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           Authorization: 'Bearer ' + this.$store.state.auth.token
         }
       }).then(function (response) {
-        _this.message = response.data.status;
-        _this.postSucces += 1;
-        _this.reload = true;
+        _this2.message = response.data.status;
+        _this2.postSucces += 1;
+        _this2.reload = true;
+        _this2.postData = null;
+        _this2.hashtag = [];
       });
     },
     redirectPost: function redirectPost() {
@@ -7985,7 +8170,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.container-fluid[data-v-2b189280] {\r\n    overflow: hidden;\r\n    margin: 0 !important;\r\n    padding: 0 !important;\n}\n.beranda[data-v-2b189280]{\r\n    background-color: #F9F8F8;\n}\r\n\r\n/*Beranda Tengah*/\n.card[data-v-2b189280]{\r\n    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);\r\n    border: none;\r\n    border-radius: 10px;\n}\n.status[data-v-2b189280]{\r\n    background: #F9F8F8;\r\n    border-radius: 45px;\r\n    height: 45px;\r\n    top: 15px;\n}\n.media img[data-v-2b189280]{\r\n    width: 2.5rem;\r\n    margin-left: 7px;\r\n    height: 2.5rem;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n    border-radius: 50%;\n}\r\n", ""]);
+exports.push([module.i, "\n.container-fluid[data-v-2b189280] {\r\n    overflow: hidden;\r\n    margin: 0 !important;\r\n    padding: 0 !important;\n}\n.beranda[data-v-2b189280]{\r\n    background-color: #F9F8F8;\n}\r\n\r\n/*Beranda Tengah*/\n.card[data-v-2b189280]{\r\n    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);\r\n    border: none;\r\n    border-radius: 10px;\n}\n.status[data-v-2b189280]{\r\n    background: #F9F8F8;\r\n    border-radius: 45px;\r\n    height: 45px;\r\n    top: 15px;\n}\n.media img[data-v-2b189280]{\r\n    width: 2.5rem;\r\n    margin-left: 7px;\r\n    height: 2.5rem;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n    border-radius: 50%;\n}\n.modal-footer .btn[data-v-2b189280]{\r\n    width: 100%;\r\n    color:white;\r\n    font-weight: 600;\n}\n.status-model[data-v-2b189280]{\r\n    display:inline-block;\r\n    min-height:     100px;\r\n    resize: none;\n}\ndiv.scroll[data-v-2b189280] {\r\n  background-color: white;\r\n  max-height: 190px;\r\n  width: 100%;\r\n  overflow-y: scroll;\n}\n.fileUpload[data-v-2b189280] {\r\n    position: relative;\r\n    overflow: hidden;\r\n    left: 37%;\r\n    cursor: pointer;\r\n    margin-bottom: -20px;\r\n    color:hsl(51, 100%, 50%) ;\n}\n.fileUpload input.upload[data-v-2b189280] {\r\n    position: absolute;\r\n    top: 0;\r\n    right: 0;\r\n    margin: 0;\r\n    padding: 0;\r\n    font-size: 20px;\r\n    cursor: pointer;\r\n    opacity: 0;\r\n    filter: alpha(opacity=0);\n}\n.imagePreviewWrapper[data-v-2b189280] {\r\n    margin: 3px;\r\n    display: inline-block ;\r\n    justify-content: left;\r\n    align-items: left;\n}\n.img-wrap[data-v-2b189280]{\r\n    position: relative;\n}\n.imagePreviewWrapper img[data-v-2b189280]{\r\n\r\n  max-width: 100%;\r\n  max-height: 165px;\n}\n.btn-clear .close[data-v-2b189280] {\r\n    position: absolute;\r\n    right: 3.5px;\r\n    color: #F9F8F8;\n}\n.btn-clear[data-v-2b189280]{\r\n    cursor: pointer;\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    top: 3px;\r\n    border-radius: 50%;\r\n    right: 2px;\r\n    z-index: 100;\r\n    background: #20202093;\n}\r\n", ""]);
 
 // exports
 
@@ -63767,7 +63952,117 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-3" }, [_c("SidebarRightHome")], 1)
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "orangeModalSubscription",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-notify modal-warning",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(4),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postData,
+                        expression: "postData"
+                      }
+                    ],
+                    staticClass: "form-control status-model ",
+                    attrs: {
+                      name: "postData",
+                      placeholder: "Ide apa hari ini"
+                    },
+                    domProps: { value: _vm.postData },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.postData = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "scroll" },
+                    _vm._l(_vm.previewImage, function(image, key) {
+                      return _c(
+                        "div",
+                        { key: key, staticClass: "imagePreviewWrapper" },
+                        [
+                          image != null
+                            ? _c("div", { staticClass: "img-wrap" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "btn-clear",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.clearPreview(key)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("span", { staticClass: "close" }, [
+                                      _vm._v("×")
+                                    ])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("img", {
+                                  ref: "image",
+                                  refInFor: true,
+                                  attrs: { src: image }
+                                })
+                              ])
+                            : _vm._e()
+                        ]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "fileUpload btn" }, [
+                    _c("span", [_vm._v("Tambah Foto")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      ref: "fileInput",
+                      staticClass: "upload",
+                      attrs: { type: "file", name: "file", multiple: "" },
+                      on: { change: _vm.pickFile }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(5)
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -63775,16 +64070,26 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "list-inline-item" }, [
-      _c(
-        "a",
-        {
-          staticClass: "text-secondary text-decoration-none",
-          attrs: { href: "#" }
-        },
-        [_c("i", { staticClass: "far fa-image" })]
-      )
-    ])
+    return _c(
+      "li",
+      {
+        staticClass: "list-inline-item",
+        attrs: {
+          "data-toggle": "modal",
+          "data-target": "#orangeModalSubscription"
+        }
+      },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "text-secondary text-decoration-none",
+            attrs: { href: "#" }
+          },
+          [_c("i", { staticClass: "far fa-image" })]
+        )
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -63828,6 +64133,52 @@ var staticRenderFns = [
           attrs: { href: "#" }
         },
         [_c("i", { staticClass: "far fa-smile-wink" })]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header text-center" }, [
+      _c(
+        "h4",
+        { staticClass: "modal-title white-text w-100 font-weight-bold py-2" },
+        [_vm._v("Create Post")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [
+          _c(
+            "span",
+            { staticClass: "white-text", attrs: { "aria-hidden": "true" } },
+            [_vm._v("×")]
+          )
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer justify-content-center" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-warning waves-effect",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Post "), _c("i", { staticClass: "fas fa-paper-plane-o ml-1" })]
       )
     ])
   }
