@@ -73,8 +73,8 @@
           <div>
     <div v-if="previewImage != null"
       class="imagePreviewWrapper"
-      @click="selectImage">
-      <img :src="previewImage" alt="">
+        @click="selectImage">
+        <img :src="previewImage" alt="">
     </div>
     
     <div class="fileUpload btn btn-primary">
@@ -230,7 +230,8 @@ export default {
     pickFile () {
         let input = this.$refs.fileInput
         let file = input.files
-        console.log(file)
+
+        
         if(file[0]['size'] < 3111775){                
         if (file && file[0]) {
           let reader = new FileReader
@@ -267,7 +268,9 @@ export default {
                     }.bind(this)
                 })
                 .then((response) => {
-                  window.location.reload()
+                  // window.location.reload()
+                  console.log(this.file)
+                  console.log(response.data.foto)
                   
                 })
 

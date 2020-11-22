@@ -25,8 +25,11 @@ Route::prefix('auth')->group(function () {
         Route::patch('posts/{post:id}/edit', 'Post\PostController@update');
         Route::delete('posts/{post:id}/delete', 'Post\PostController@destroy');
         Route::get('posts/{post:id}', 'Post\PostController@show')->withoutMiddleware('auth');
+        Route::post('posts/comment','Post\PostController@comment');
 
-
+        Route::post('posts/like','Post\LikeController@likePost');
+        Route::get('posts/getlikes/{id}','Post\LikeController@getLikes');
+        Route::post('posts/favorite','Post\LikeController@getFavorite');
         
     });
 });

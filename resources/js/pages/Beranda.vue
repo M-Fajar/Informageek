@@ -13,7 +13,11 @@
                         <div class="media">
                             <img v-bind:src="'/media/avatar/' + user.foto" class="mr-3"  alt="avatar">
                             <div class="media-body">
-                                <textarea name="postData" class="form-control status" v-model="postData" placeholder="Ide apa hari ini"></textarea>
+                                
+
+
+                                <textarea  name="postData" class="form-control status" v-model="postData" placeholder="Ide apa hari ini"></textarea>
+                                
                                 <div class="mt-2">
                                     <ul class="list-inline h3">
                                         <li class="list-inline-item" data-toggle="modal" data-target="#orangeModalSubscription" >
@@ -38,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="timeline mt-3"  v-if="postSucces > 0 && reload" >
+                <div class="timeline mt-3"  v-if="postSucces > 0 && reload" >   
 
                 <PostUpdate  :userPhoto="user.foto"  :lastPost="postSucces"/>
                 
@@ -46,7 +50,7 @@
                 </div>
                 <div class="timeline mt-3"> 
 
-                    <PostCard  :userPhoto="user.foto"/>
+                    <PostCard  :userPhoto="user.foto" />
 
                 </div>
             </div>
@@ -99,7 +103,7 @@
 
       <!--Footer-->
                     <div class="modal-footer justify-content-center">
-                          <a type="button"  data-dismiss="modal"  class="btn btn-warning waves-effect">Post <i class="fas fa-paper-plane-o ml-1"></i></a>
+                          <a type="button"  data-dismiss="modal"  class="btn btn-warning waves-effect" @click="postCreate">Post <i class="fas fa-paper-plane-o ml-1"></i></a>
                     </div>
                 </div>
             <!--/.Content-->
@@ -236,6 +240,7 @@ export default {
             postSucces: 0,
             reload: true,
             images:[],
+            file:'',
             previewImage: {},
         }
 
@@ -248,7 +253,7 @@ export default {
             let panjangImage = this.images.length
             this.images.splice(key,1)
             for(let i=0;i<panjangImage;i++){
-                console.log('tesfor')
+               
                 if(i == key){
                     key++
                     if(key == this.panjangImage ){
@@ -257,12 +262,10 @@ export default {
                     else{
                     Vue.set(this.previewImage,i,this.previewImage[key])
                     }
-                    console.log(i)
+                    
                }
             }
             
-            console.log(this.images)
-            console.log(this.previewImage)
         },
         pickFile () {
         
@@ -276,9 +279,10 @@ export default {
             let reader = new FileReader
             reader.onload = e => {
                 this.images.push(input.files[i])
+                this.file = file[0];
                 
-                
-                Vue.set(this.previewImage,this.images.length-1,URL.createObjectURL(input.files[i]))
+            
+                    Vue.set(this.previewImage,this.images.length-1,URL.createObjectURL(input.files[i]))
                
                            }
 
@@ -290,7 +294,6 @@ export default {
             }
         
         }
-        console.log(this.images)
         console.log(this.previewImage)
      
 
@@ -307,16 +310,22 @@ export default {
             this.hashtag.push(match[1])
             match = regexp.exec(this.postData)
             } 
+              
+            let formData = new FormData();
+            for(let i=0;i < this.images.length;i++){
+                
+            formData.append('photo_id['+i+']',this.images[i]);
+            }
+            formData.append('body',this.postData);
+            formData.append('categories',this.hashtag);
+            
             this.reload= false
-            axios.post("http://localhost:8000/api/auth/posts/store", {
-               
-                body: this.postData,
-                categories: this.hashtag
-               
-            },
+            axios.post("http://localhost:8000/api/auth/posts/store",formData,
             {
                 headers: {
-                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                     'content-type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + this.$store.state.auth.token,
+              
                 }
             })
             .then(response => {
@@ -326,6 +335,7 @@ export default {
                 this.reload= true
                 this.postData = null
                 this.hashtag =[]
+             
            
             });
         },

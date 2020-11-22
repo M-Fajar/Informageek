@@ -2160,6 +2160,82 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2169,24 +2245,54 @@ __webpack_require__.r(__webpack_exports__);
     return {
       postData: {},
       postUser: {},
-      postPhoto: {}
+      postPhoto: {},
+      postLikes: {},
+      postFavorite: {},
+      commentData: {},
+      likesCount: {},
+      likesStatus: {},
+      clicked: false
     };
   },
-  watch: {},
-  created: function created() {
-    var _this = this;
-
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("auth/posts", {
-      headers: {
-        Authorization: 'Bearer ' + this.$store.state.auth.token
-      }
-    }).then(function (response) {
-      _this.postData = response.data.posts;
-      _this.postUser = response.data.username;
-      _this.postPhoto = response.data.foto;
-    });
+  watch: {
+    commentData: function commentData(value) {
+      console.log(value);
+    }
   },
   methods: {
+    setLikesStatus: function setLikesStatus(key) {
+      this.likesStatus[key] = true;
+    },
+    likePost: function likePost(key) {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('auth/posts/like', {
+        post_id: key
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.auth.token
+        }
+      }).then(function (response) {
+        Vue.set(_this.likesCount, key, response.data.likes);
+        Vue.set(_this.likesStatus, key, !_this.likesStatus[key]);
+        _this.clicked = !_this.clicked;
+        console.log(response.data);
+      });
+    },
+    commentSend: function commentSend(key) {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('auth/posts/comment', {
+        post_id: key,
+        comment: this.commentData[key]
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.auth.token
+        }
+      }).then(function (response) {
+        _this2.commentData[key] = null;
+      });
+    },
     replaceBody: function replaceBody(body) {
       var hasil = body.replace(/(?:\r\n|\r|\n)/g, '<br />');
       return hasil.replace(/#([\w]+)/g, '<a href="">#$1</a>');
@@ -2195,7 +2301,24 @@ __webpack_require__.r(__webpack_exports__);
       console.log('clicked');
       this.$router.push('/post');
     }
-  }
+  },
+  created: function created() {
+    var _this3 = this;
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("auth/posts", {
+      headers: {
+        Authorization: 'Bearer ' + this.$store.state.auth.token
+      }
+    }).then(function (response) {
+      _this3.postData = response.data.posts;
+      _this3.postUser = response.data.username;
+      _this3.postPhoto = response.data.foto;
+      _this3.postLikes = response.data.likes;
+      _this3.postFavorite = response.data.favorite;
+      _this3.loaded = true;
+    });
+  },
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -2641,6 +2764,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2662,6 +2789,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       postSucces: 0,
       reload: true,
       images: [],
+      file: '',
       previewImage: {}
     };
   },
@@ -2672,8 +2800,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.images.splice(key, 1);
 
       for (var i = 0; i < panjangImage; i++) {
-        console.log('tesfor');
-
         if (i == key) {
           key++;
 
@@ -2682,13 +2808,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           } else {
             Vue.set(this.previewImage, i, this.previewImage[key]);
           }
-
-          console.log(i);
         }
       }
-
-      console.log(this.images);
-      console.log(this.previewImage);
     },
     pickFile: function pickFile() {
       var _this = this;
@@ -2705,6 +2826,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             reader.onload = function (e) {
               _this.images.push(input.files[i]);
 
+              _this.file = file[0];
               Vue.set(_this.previewImage, _this.images.length - 1, URL.createObjectURL(input.files[i]));
             };
 
@@ -2721,7 +2843,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _loop(i);
       }
 
-      console.log(this.images);
       console.log(this.previewImage);
     },
     postCreate: function postCreate() {
@@ -2736,12 +2857,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         match = regexp.exec(this.postData);
       }
 
+      var formData = new FormData();
+
+      for (var i = 0; i < this.images.length; i++) {
+        formData.append('photo_id[' + i + ']', this.images[i]);
+      }
+
+      formData.append('body', this.postData);
+      formData.append('categories', this.hashtag);
       this.reload = false;
-      axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("http://localhost:8000/api/auth/posts/store", {
-        body: this.postData,
-        categories: this.hashtag
-      }, {
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("http://localhost:8000/api/auth/posts/store", formData, {
         headers: {
+          'content-type': 'multipart/form-data',
           Authorization: 'Bearer ' + this.$store.state.auth.token
         }
       }).then(function (response) {
@@ -3278,7 +3405,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var input = this.$refs.fileInput;
       var file = input.files;
-      console.log(file);
 
       if (file[0]['size'] < 3111775) {
         if (file && file[0]) {
@@ -3297,6 +3423,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     simpan: function simpan() {
+      var _this2 = this;
+
       if (this.previewImage == null) {
         console.log('Pilih Berkas');
       } else {
@@ -3313,7 +3441,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               this.progressBar = parseInt(Math.round(progressEvent.loaded * 100 / progressEvent.total));
             }.bind(this)
           }).then(function (response) {
-            window.location.reload();
+            // window.location.reload()
+            console.log(_this2.file);
+            console.log(response.data.foto);
           });
         } else {
           axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('auth/profile/update/cover', formData, {
@@ -3339,7 +3469,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.username = this.$route.params.username;
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('auth/profile/' + this.username, {
@@ -3347,8 +3477,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         Authorization: 'Bearer ' + this.$store.state.auth.token
       }
     }).then(function (response) {
-      _this2.user = response.data.user;
-      _this2.user.cover = '/media/cover/' + _this2.user.cover;
+      _this3.user = response.data.user;
+      _this3.user.cover = '/media/cover/' + _this3.user.cover;
     });
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
@@ -8094,7 +8224,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.card[data-v-1324358a] {\r\n  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);\r\n  border: none;\r\n  border-radius: 10px;\r\n  margin-bottom: 15px;\n}\n#avatar[data-v-1324358a]{    \r\n    width: 2.7rem;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n    height: 2.7rem;\r\n    border-radius: 5vw;\n}\n.media-object h5[data-v-1324358a] {\r\n  color: black;\r\n  background-color: transparent;\r\n  text-decoration: none;\n}\r\n", ""]);
+exports.push([module.i, "\n.card[data-v-1324358a] {\r\n  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);\r\n  border: none;\r\n  border-radius: 10px;\r\n  margin-bottom: 15px;\n}\n.img-post[data-v-1324358a]{    \r\n    \r\n    -o-object-fit: cover;    \r\n    \r\n       object-fit: cover;\r\n    \r\n    border-radius: 5vw;\n}\n#avatar[data-v-1324358a]{\r\n    width: 3rem;\r\n    height: 3rem;\n}\n.media-object h5[data-v-1324358a] {\r\n  color: black;\r\n  background-color: transparent;\r\n  text-decoration: none;\n}\n#btn-comment[data-v-1324358a]{\r\n    cursor: pointer;\n}\n.comment p[data-v-1324358a] {\r\n            display: inline;\n}\n.comment h6[data-v-1324358a] {\r\n            font-weight: 700;\r\n            padding: 0;\r\n            margin: 0 0 .25rem;\n}\n.pointer[data-v-1324358a]{\r\n    cursor: pointer;\n}\n.single-comment[data-v-1324358a]{\r\n    margin-left: 10px;\r\n    display: inline-block;\r\n    background: #f9f9f9;\r\n    font-size: 13pt;\r\n    flex-grow: 1;\r\n    padding: 0.5em 10px;    \r\n    border-radius: 10px;\n}\n.comment[data-v-1324358a]{\r\n    display: flex;\r\n    margin: 1.5em 10px;\n}\n.img-comment[data-v-1324358a]{\r\n    height: 2.5rem;\n}\n.white[data-v-1324358a] {\r\n       color: hsl(0, 5%, 75%);\n}\n.red[data-v-1324358a] {color: rgb(240, 56, 56);\n}\r\n", ""]);
 
 // exports
 
@@ -63227,7 +63357,7 @@ var render = function() {
                 },
                 [
                   _c("img", {
-                    staticClass: "mr-3",
+                    staticClass: "mr-3 img-post",
                     attrs: {
                       src: "/media/avatar/" + _vm.postPhoto[index],
                       id: "avatar",
@@ -63270,24 +63400,109 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(1, true),
-        _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
-          _vm._m(2, true),
+          _c("div", { staticClass: "d-flex justify-content-around h3      " }, [
+            _c(
+              "a",
+              {
+                staticClass: "text-secondary text-decoration-none pointer",
+                on: {
+                  click: function($event) {
+                    return _vm.likePost(post.id)
+                  }
+                }
+              },
+              [
+                _vm.likesStatus[post.id] == null
+                  ? _c("span", [
+                      _vm.postFavorite[index] == true
+                        ? _c("i", { staticClass: "fas fa-heart text-danger" }, [
+                            _vm._v(_vm._s(_vm.setLikesStatus(post.id)))
+                          ])
+                        : _c("i", { staticClass: "fas fa-heart " })
+                    ])
+                  : _c("span", [
+                      _vm.likesStatus[post.id] == true
+                        ? _c("i", { staticClass: "fas fa-heart text-danger" })
+                        : _c("i", { staticClass: "fas fa-heart " })
+                    ]),
+                _vm._v(" "),
+                _vm.likesCount[post.id] == null
+                  ? _c("span", [_vm._v(_vm._s(_vm.postLikes[index]))])
+                  : _c("span", [_vm._v(_vm._s(_vm.likesCount[post.id]))])
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(1, true),
+            _vm._v(" "),
+            _vm._m(2, true),
+            _vm._v(" "),
+            _vm._m(3, true)
+          ]),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
-          _c("div", { staticClass: "d-flex align-items-center" }, [
+          _c("div", { staticClass: "comment" }, [
             _c("img", {
-              staticClass: "img-fluid",
-              attrs: {
-                src: "/media/avatar/" + _vm.userPhoto,
-                id: "avatar",
-                alt: "avatar"
-              }
+              staticClass: "img-fluid img-post img-comment",
+              attrs: { src: "/media/avatar/" + _vm.userPhoto, alt: "avatar" }
             }),
             _vm._v(" "),
-            _vm._m(3, true)
+            _vm._m(4, true)
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "d-flex align-items-center" }, [
+            _c("img", {
+              staticClass: "img-fluid img-post img-comment",
+              attrs: { src: "/media/avatar/" + _vm.userPhoto, alt: "avatar" }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "ml-3 flex-fill" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.commentData[post.id],
+                    expression: "commentData[post.id]"
+                  }
+                ],
+                staticClass: "form-control rounded-pill",
+                attrs: { type: "text", placeholder: "Tuliskan Komentar" },
+                domProps: { value: _vm.commentData[post.id] },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.commentSend(post.id)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.commentData, post.id, $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("img", {
+              staticClass: "btn",
+              attrs: {
+                id: "btn-comment",
+                src: "/media/frontend/send.png",
+                alt: ""
+              },
+              on: {
+                click: function($event) {
+                  return _vm.commentSend(post.id)
+                }
+              }
+            })
           ])
         ])
       ])
@@ -63314,64 +63529,50 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-img-top" }, [
-      _c("img", {
-        staticClass: "img-fluid",
-        attrs: { src: "/media/frontend/kntn.png" }
-      })
-    ])
+    return _c(
+      "a",
+      {
+        staticClass: "text-secondary text-decoration-none",
+        attrs: { href: "#" }
+      },
+      [_c("i", { staticClass: "far fa-comment" }), _vm._v(" 3 ")]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex justify-content-around h3" }, [
-      _c(
-        "a",
-        {
-          staticClass: "text-secondary text-decoration-none",
-          attrs: { href: "#" }
-        },
-        [_c("i", { staticClass: "fas fa-heart text-danger" }), _vm._v(" 33")]
-      ),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "text-secondary text-decoration-none",
-          attrs: { href: "#" }
-        },
-        [_c("i", { staticClass: "far fa-comment" }), _vm._v(" 3")]
-      ),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "text-secondary text-decoration-none",
-          attrs: { href: "#" }
-        },
-        [_c("i", { staticClass: "fas fa-share" }), _vm._v(" 5")]
-      ),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "text-secondary text-decoration-none",
-          attrs: { href: "#" }
-        },
-        [_c("i", { staticClass: "far fa-bookmark" })]
-      )
-    ])
+    return _c(
+      "a",
+      {
+        staticClass: "text-secondary text-decoration-none",
+        attrs: { href: "#" }
+      },
+      [_c("i", { staticClass: "fas fa-share" }), _vm._v(" 5")]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "ml-3 flex-fill" }, [
-      _c("input", {
-        staticClass: "form-control rounded-pill",
-        attrs: { type: "text", placeholder: "Tuliskan Komentar" }
-      })
+    return _c(
+      "a",
+      {
+        staticClass: "text-secondary text-decoration-none",
+        attrs: { href: "#" }
+      },
+      [_c("i", { staticClass: "far fa-bookmark" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "single-comment" }, [
+      _c("h6", [_vm._v("Fajar")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("Siap")]),
+      _c("br")
     ])
   }
 ]
@@ -64057,7 +64258,24 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(5)
+              _c(
+                "div",
+                { staticClass: "modal-footer justify-content-center" },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-warning waves-effect",
+                      attrs: { type: "button", "data-dismiss": "modal" },
+                      on: { click: _vm.postCreate }
+                    },
+                    [
+                      _vm._v("Post "),
+                      _c("i", { staticClass: "fas fa-paper-plane-o ml-1" })
+                    ]
+                  )
+                ]
+              )
             ])
           ]
         )
@@ -64164,21 +64382,6 @@ var staticRenderFns = [
             [_vm._v("×")]
           )
         ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer justify-content-center" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-warning waves-effect",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Post "), _c("i", { staticClass: "fas fa-paper-plane-o ml-1" })]
       )
     ])
   }

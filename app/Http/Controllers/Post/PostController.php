@@ -6,6 +6,8 @@ use App\Post;
 use App\User;
 use App\Category;
 use App\Thumbnail;
+use App\Comment;
+use App\Like;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
@@ -22,24 +24,34 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-       
+        $user_id = $request->user()->id;
         $posts = Post::orderBy('id', 'DESC')->get();
         $foto= array();
         $username=array();
+        $likes = array();
+        $favorite = array();
+        
         foreach ($posts as $post) {
 
             $getfoto = DB::table('users')->where('id', $post['user_id'])->value('foto');
             array_push($foto,$getfoto);
             $getusername = DB::table('users')->where('id', $post['user_id'])->value('username');
             array_push($username,$getusername);
+            $getlikes = Like::where('post_id',$post['id'])->count();
+            array_push($likes,$getlikes);
+            $getFavorite = Like::where('post_id',$post['id'])->where('user_Id',$user_id)->exists();
+            array_push($favorite,$getFavorite);
         }
        
         return response()->json([
             'posts' => $posts,
             'foto' => $foto,
+            'likes' => $likes,
+            'favorite' => $favorite,
             'username' => $username
+
            
          ]);
     }
@@ -93,8 +105,9 @@ class PostController extends Controller
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
             'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
         ]);
-        if ($request->hasFile('photo_id')) {
-            $files = $request->file('photo_id');
+    
+       if ($request->photo_id) {
+            $files = $request->photo_id;
             foreach ($files as $file) {
                 $name = time() . '-' . $file->getClientOriginalName();
                 $name = str_replace(' ', '-', $name);
@@ -103,7 +116,7 @@ class PostController extends Controller
             }
         }
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
         ]);
     }
 
@@ -227,5 +240,26 @@ class PostController extends Controller
             'foto' => $foto
         ]);
         }
+
+    public function comment(Request $request){
+             //VALIDASI DATA YANG DITERIMA
+        $this->validate($request, [
+            'post_id' => 'required',
+            'comment' => 'required',
+        ]);
+         
+        $user_id = $request->user()->id;
+        Comment::create([
+            'post_id' => $request->post_id,
+    
+            'parent_id' => $request->parent_id != '' ? $request->parent_id:NULL,
+            'user_id' => $user_id,
+            'comment' => $request->comment
+        ]);
+        return response()->json([
+            'status' => 'succes'
+        ]);
+    }
+    
 
 }

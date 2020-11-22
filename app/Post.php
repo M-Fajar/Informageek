@@ -25,6 +25,14 @@ class Post extends Model
 
     public function getTakeImageAttribute()
     {
-        return "/storage/" . $this->thumbnails;
+        return "/public/" . $this->thumbnails;
+    }
+    public function comments()
+    {
+    return $this->hasMany(Comment::class)->whereNull('parent_id');
+    }
+    public function likes()
+    {
+    return $this->hasMany(Like::class);
     }
 }
