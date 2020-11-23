@@ -12,7 +12,6 @@ Route::prefix('auth')->group(function () {
         Route::get('profile', 'User\ProfileController@me');
         Route::get('profile/{username}', 'User\ProfileController');
         Route::post('logout', 'Auth\LogoutController');
-
         Route::get('posts', 'Post\PostController@index')->withoutMiddleware('auth');
         Route::get('posts/create', 'Post\PostController@create');
         Route::post('posts/store', 'Post\PostController@store');
@@ -20,5 +19,8 @@ Route::prefix('auth')->group(function () {
         Route::patch('posts/{post:id}/edit', 'Post\PostController@update');
         Route::delete('posts/{post:id}/delete', 'Post\PostController@destroy');
         Route::get('posts/{post:id}', 'Post\PostController@show')->withoutMiddleware('auth');
+        Route::post('user/follow', 'User\FollowController@follow');
+        Route::post('user/following','User\FollowController@ListFollowing');
+        Route::post('user/follower', 'User\FollowController@ListFollower');
     });
 });
