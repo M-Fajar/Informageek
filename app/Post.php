@@ -25,7 +25,7 @@ class Post extends Model
 
     public function getTakeImageAttribute()
     {
-        return "/public/" . $this->thumbnails;
+        return "/storage/" . $this->thumbnails;
     }
     public function comments()
     {

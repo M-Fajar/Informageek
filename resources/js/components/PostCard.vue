@@ -2,70 +2,63 @@
  <template>
 <div>
     
-  <div class="card"   v-for="(post, index ) in postData" :key="post.id">
-      <div class="card-body" >
+  <div class="card"   v-for="(post) in postData" :key="post.id">
+      <div class="card-body " >
           <div class="media position-relative">
-              <router-link :to="{name: 'profile',params: {username:postUser[index]}}">
-              <img v-bind:src="'/media/avatar/'+ postPhoto[index]" id="avatar" alt="avatar" class="mr-3 img-post">
+              <router-link :to="{name: 'profile',params: {username:postUser[post.id]}}">
+              <img v-bind:src="'/media/avatar/'+ postPhoto[post.id]" id="avatar" alt="avatar" class="mr-3 img-post">
               </router-link>
               <div class="media-object">
-                    <a :href="$router.resolve({name: 'profile',params: {username:postUser[index]}}).href">
-                    <h5 class="mt-0"><b>{{ postUser[index] }}</b></h5>
+                     
+                    <a :href="$router.resolve({name: 'profile',params: {username:postUser[post.id]}}).href">
+                    <h5 class="mt-0"><b>{{ postUser[post.id] }}</b></h5>
                     </a>
                     <p >{{post.created_at | formatDate}}</p>
                 
                   <a href="" class="position-absolute" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
-              </div>
+              </div>    
           </div>
              <p v-html="replaceBody(post.body)" ></p>
-             
+            
       </div>
-      <!-- <div class="card-img-top">
-          <img src="/media/frontend/kntn.png" class="img-fluid">
-      </div> -->
+      <div class="card-img-top ">
+          <lightbox :items="postThumbnails[post.id]"></lightbox>
+      </div>
 
       <div class="card-body">
           <div class="d-flex justify-content-around h3      ">
               <a  class="text-secondary text-decoration-none pointer" @click="likePost(post.id)">
-                  
-                  <span v-if="likesStatus[post.id] == null">
-                  <i  v-if="postFavorite[index] == true"  class="fas fa-heart text-danger">{{setLikesStatus(post.id)}}</i>
+                  <i  v-if="postFavorite[post.id] == true"  class="fas fa-heart text-danger"></i>
                   <i v-else   class="fas fa-heart "></i>
-                  </span>
-                  <span v-else>
-                    <i  v-if="likesStatus[post.id] == true"  class="fas fa-heart text-danger"></i>
-                    <i v-else   class="fas fa-heart "></i>
-                  </span>
-
-                 <span v-if="likesCount[post.id] == null">{{postLikes[index]}}</span>
-                 <span v-else>{{likesCount[post.id]}}</span></a>
+                    {{postLikes[post.id]}}</a>
           
-              <a href="#"  class="text-secondary text-decoration-none"><i class="far fa-comment"></i> 3 </a>
+              <a href="#"  class="text-secondary text-decoration-none"><i class="far fa-comment"></i>{{postComment[post.id]}} </a>
           
               <a href="#" class="text-secondary text-decoration-none"><i class="fas fa-share"></i> 5</a>
           
               <a href="#" class="text-secondary text-decoration-none"><i class="far fa-bookmark"></i></a>
-          </div>
+          </div>    
         
           <hr>
-          <div class="comment">
+          <!-- <Comment :post_id = "post.id"/> -->
+          <div class="comment" v-if="commentData[post.id]">
                                         
-              <img v-bind:src="'/media/avatar/'+ userPhoto" alt="avatar" class="img-fluid img-post img-comment">
+              <img v-bind:src="'/media/avatar/'+ user.foto" alt="avatar" class="img-fluid img-post img-comment">
                                     <div class="single-comment">
                                         
-                                        <h6>Fajar</h6>
+                                        <h6>{{user.username}}</h6>
                                         
-                                        <p>Siap</p><br>
+                                        {{commentData[post.id]}}<br>
                             
                                     </div>
                                    
                             </div>   
           <div class="d-flex align-items-center">
               
-              <img v-bind:src="'/media/avatar/'+ userPhoto" alt="avatar" class="img-fluid img-post img-comment">
+              <img v-bind:src="'/media/avatar/'+ user.foto" alt="avatar" class="img-fluid img-post img-comment">
               
               <div class="ml-3 flex-fill">
-                  <input type="text" @keyup.enter="commentSend(post.id)" v-model="commentData[post.id]" class="form-control rounded-pill" placeholder="Tuliskan Komentar">
+                  <input type="text" @keyup.enter="commentSend(post.id)" v-model="textComment[post.id]" class="form-control rounded-pill" placeholder="Tuliskan Komentar">
                     
               </div>
               
@@ -130,8 +123,9 @@
     display: flex;
     margin: 1.5em 10px;
 }
-.img-comment{
+.img-comment{   
     height: 2.5rem;
+    width: 2.5rem;
 }
 .white {
        color: hsl(0, 5%, 75%);
@@ -144,13 +138,17 @@
 
 <script>
 
-
+import { mapGetters,mapActions } from "vuex"
 import axios from 'axios';
-
+import Lightbox from '@morioh/v-lightbox/src/lightbox';
+// stylsheet
+import '@morioh/v-lightbox/dist/lightbox.css';
+import Comment from '../components/Comment';
 export default {
 
-    props:{
-        userPhoto: String,
+    components:{
+        Lightbox,
+        Comment
     },
     data(){
         return{
@@ -160,17 +158,16 @@ export default {
             postPhoto:{},
             postLikes:{},
             postFavorite:{},
+            postComment:{},
+            postThumbnails:{},
             commentData:{},
-            likesCount:{},
+            textComment:{},
             likesStatus:{},
-            clicked: false
         }
 
     },
     watch:{
-      commentData: function  (value){
-          console.log(value)
-      }
+      
 
 
     },
@@ -178,9 +175,7 @@ export default {
 
     
     methods: {
-        setLikesStatus(key){
-            this.likesStatus[key] = true;
-        },
+     
         likePost(key)  {
             axios.post('auth/posts/like',{
                 post_id: key
@@ -190,19 +185,22 @@ export default {
                 }
             }
             ).then(response =>{
-                Vue.set(this.likesCount,key,response.data.likes)
+                Vue.set(this.postLikes,key,response.data.likes)
                 
-                Vue.set(this.likesStatus,key,!this.likesStatus[key])
+                Vue.set(this.postFavorite,key,!this.postFavorite[key])
                 this.clicked = !this.clicked        
-                console.log(response.data)
+               
             })
             
         },
         commentSend(key){
-           
+           let comment = this.textComment[key];
+           this.commentData[key] = this.textComment[key];
+           this.textComment[key] = null
+           if(comment != null && this.textComment[key] == null)
             axios.post('auth/posts/comment', {
                     post_id: key,
-                    comment: this.commentData[key]
+                    comment: comment
                     }, 
                     {
                 headers: {
@@ -210,8 +208,7 @@ export default {
                 }
             })
             .then(response => {
-                this.commentData[key] = null
-           
+                Vue.set(this.postComment,key,response.data.count)
             })
         },
          replaceBody(body){
@@ -238,13 +235,19 @@ export default {
                 this.postPhoto = response.data.foto;
                 this.postLikes  = response.data.likes;   
                 this.postFavorite = response.data.favorite;
+                this.postThumbnails = response.data.thumbnail;
+                this.postComment = response.data.comment;
+                
                this.loaded = true
 
             });
         
     },
-    mounted(){
-        
+    computed: {
+        ...mapGetters({
+            authenticated: 'auth/authenticated',
+            user: 'auth/user'
+        }),
     }
 
 }

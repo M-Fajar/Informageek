@@ -2,11 +2,16 @@ require('./bootstrap');
 
 
 window.Vue = require('vue');
+import Vue from 'vue'
+// import Lightbox from '@morioh/v-lightbox'
+// // stylesheet
+// import '@morioh/v-lightbox/dist/lightbox.css';
+
+// import Plugin from '@morioh/v-lightbox/dist/lightbox';
+// Vue.use(Lightbox)
+// Vue.use(Plugin)
 import store from "./store/index"
 import router from './router';
-import auth from './store/auth'
-import VueSession from 'vue-session'
-Vue.use(VueSession)
 import App from './App.vue';
 import axios from 'axios';
 import Default from './layouts/Default.vue';

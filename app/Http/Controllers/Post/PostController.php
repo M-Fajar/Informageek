@@ -32,24 +32,30 @@ class PostController extends Controller
         $username=array();
         $likes = array();
         $favorite = array();
-        
+        $thumbnail = array();
+        $comment = array();
         foreach ($posts as $post) {
-
             $getfoto = DB::table('users')->where('id', $post['user_id'])->value('foto');
-            array_push($foto,$getfoto);
+            $foto[$post['id']] = $getfoto;
             $getusername = DB::table('users')->where('id', $post['user_id'])->value('username');
-            array_push($username,$getusername);
+            $username[$post['id']] = $getusername;
             $getlikes = Like::where('post_id',$post['id'])->count();
-            array_push($likes,$getlikes);
+            $likes[$post['id']] =$getlikes;
             $getFavorite = Like::where('post_id',$post['id'])->where('user_Id',$user_id)->exists();
-            array_push($favorite,$getFavorite);
+            $favorite[$post['id']] =$getFavorite;
+            $getThumbnail = Thumbnail::where('post_id',$post['id'])->pluck('name')->all();
+            $thumbnail[$post['id']] = $getThumbnail;
+            $getComment = Comment::where('post_id',$post['id'])->count();
+            $comment[$post['id']] = $getComment;
         }
        
         return response()->json([
             'posts' => $posts,
-            'foto' => $foto,
+            'thumbnail' => $thumbnail,
             'likes' => $likes,
             'favorite' => $favorite,
+            'comment' => $comment,
+            'foto' => $foto,
             'username' => $username
 
            
@@ -111,8 +117,8 @@ class PostController extends Controller
             foreach ($files as $file) {
                 $name = time() . '-' . $file->getClientOriginalName();
                 $name = str_replace(' ', '-', $name);
-                $tmb = $file->store('images/posts');
-                $post->thumbnails()->create(['name' => str_replace('images/posts/', '', $tmb)]);
+                $tmb = $file->store('/posts');
+                $post->thumbnails()->create(['name' => str_replace('posts/', '', $tmb)]);
             }
         }
         return response()->json([
@@ -256,8 +262,10 @@ class PostController extends Controller
             'user_id' => $user_id,
             'comment' => $request->comment
         ]);
+        $count = comment::where('post_id',$request->post_id)->count();
         return response()->json([
-            'status' => 'succes'
+            'status' => 'succes',
+            'count' => $count
         ]);
     }
     

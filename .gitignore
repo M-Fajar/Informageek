@@ -1,6 +1,11 @@
 /node_modules
 /public/hot
 /public/storage
+
+/public/media/avatar
+/public/media/cover
+/public/media/posts
+/public/media/profile
 /storage/*.key
 /vendor
 .env

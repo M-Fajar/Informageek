@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.14.0",
+        "@morioh/v-lightbox": "^1.0.3",
         "vue-axios": "^2.1.5",
         "vue-cookies": "^1.7.4",
         "vue-moment": "^4.1.0",

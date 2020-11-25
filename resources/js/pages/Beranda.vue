@@ -50,7 +50,7 @@
                 </div>
                 <div class="timeline mt-3"> 
 
-                    <PostCard  :userPhoto="user.foto" />
+                    <PostCard />
 
                 </div>
             </div>
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="modal fade" id="orangeModalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-notify modal-warning" role="document">
+      <div class="modal-dialog modal-notify modal-warning modal-lg" role="document">
     <!--Content-->
         <div class="modal-content">
       <!--Header-->
@@ -152,7 +152,7 @@
 }
 .status-model{
     display:inline-block;
-    min-height:     100px;
+    min-height:     150px;
     resize: none;
 }
 
