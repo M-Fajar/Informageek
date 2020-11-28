@@ -1,19 +1,22 @@
 <template>
-    <div>
-        <div class="comment" >
-            <img v-bind:src="'/media/avatar/'" alt="avatar" class="img-fluid img-post img-comment">
+    <div >
+        <div v-for="item in commentData" :key="item.id">
+        <div class="comment parrent-comment" >
+            <img v-bind:src="'/media/avatar/'+ item.user.foto" alt="avatar" class="img-fluid img-circle img-comment">
                 <div class="single-comment">
-                    <h6></h6>
-                <br>
+                    <h6>{{item.user.username}}</h6>
+                <p>{{item.comment}}</p>
                 </div>
                                    
-        </div>   
-        <div class="child-comment">
-            <img v-bind:src="'/media/avatar/'" alt="avatar" class="img-fluid img-post img-comment">
+        </div> 
+        
+        <div class="comment child-comment" v-for="child in item.child" :key="child.id">
+            <img v-bind:src="'/media/avatar/'+child.user.foto" alt="avatar" class="img-fluid img-circle">
                 <div class="single-comment">
-                    <h6></h6>
-                <br>
+                    <h6>{{child.user.username}}</h6>
+                <p>{{child.comment}}</p>
                 </div>           
+        </div>
         </div>
         
     </div>
@@ -21,44 +24,30 @@
 </template>
 
 <style scoped>
-.comment p {
-            display: inline;
-         
-        }
-.comment h6 {
-            font-weight: 700;
-            padding: 0;
-            margin: 0 0 .25rem;
-}
-.pointer{
-    cursor: pointer;
-}
-.child-comment {
-            padding-left: 50px;
-        }
-        
-.single-comment{
-    margin-left: 10px;
-    display: inline-block;
-    background: #f9f9f9;
-    font-size: 13pt;
-    flex-grow: 1;
-    padding: 0.5em 10px;    
-    border-radius: 10px;
-}
-.comment{
-    display: flex;
-    margin: 1.5em 10px;
-}
-.img-comment{
-    height: 2.5rem;
-    width: 2.5rem;
-}
+
 </style>
 <script>
+import axios from 'axios';
 export default {
 props:{
     post_id: Number,
 },
+data(){
+    return{
+        commentData:{}
+    }
+},
+
+created:function(){
+    axios.get("auth/posts/comment/"+this.post_id,{
+        headers:{
+            Authorization: 'Bearer ' + this.$store.state.auth.token
+        }
+    }).then(response => {
+        this.commentData = response.data.comments
+        console.log(this.commentData)
+    })
+}
+
 }
 </script>

@@ -247,27 +247,6 @@ class PostController extends Controller
         ]);
         }
 
-    public function comment(Request $request){
-             //VALIDASI DATA YANG DITERIMA
-        $this->validate($request, [
-            'post_id' => 'required',
-            'comment' => 'required',
-        ]);
-         
-        $user_id = $request->user()->id;
-        Comment::create([
-            'post_id' => $request->post_id,
-    
-            'parent_id' => $request->parent_id != '' ? $request->parent_id:NULL,
-            'user_id' => $user_id,
-            'comment' => $request->comment
-        ]);
-        $count = comment::where('post_id',$request->post_id)->count();
-        return response()->json([
-            'status' => 'succes',
-            'count' => $count
-        ]);
-    }
     
 
 }
