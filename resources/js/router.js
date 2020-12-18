@@ -12,11 +12,10 @@ import Post from './pages/Post';
 import Search from './pages/Search';
 import auth from './store/auth';
 import { isNull } from 'lodash';
+import Message from './pages/Message';
 
 Vue.use(VueRouter);
-const Comp = {
-  template: '<div>Hello world</div>'
- }
+
 
 const ifAuthenticated = async (to, from,next) => {
   if(localStorage.getItem('user-token')){
@@ -71,6 +70,13 @@ const router = new VueRouter({
       name: 'beranda',
       path: '/beranda',
       component: Beranda,
+      meta: {layout: "home"},
+      beforeEnter: ifAuthenticated
+    },
+    {
+      name: 'message',
+      path:'/message',
+      component: Message,
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
     },

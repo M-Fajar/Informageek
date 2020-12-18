@@ -75,7 +75,7 @@
                     <div class="comment-reply "> 
                         <span @click="showReply(item.id)" class="text-secondary pointer"> Balas</span>
                         <span class="ml-1">.</span>
-                        <span class="text-secondary ml-1 font-weight-light" >{{item.created_at|dateComment}} </span>
+                    <span class="text-secondary ml-1 font-weight-light" >{{item.created_at|dateComment}} </span>
                     </div>
                
             </div>
@@ -176,6 +176,8 @@ export default {
     methods: {
      
         likePost(key)  {
+            Vue.set(this.postFavorite,key,!this.postFavorite[key])
+            Vue.set(this.postLikes,key,(this.postFavorite[key]== true? this.postLikes[key]+=1:this.postLikes[key]-=1))
             axios.post('auth/posts/like',{
                 post_id: key
             },{
@@ -184,9 +186,9 @@ export default {
                 }
             }
             ).then(response =>{
-                Vue.set(this.postLikes,key,response.data.likes)
+                // Vue.set(this.postLikes,key,response.data.likes)
                 
-                Vue.set(this.postFavorite,key,!this.postFavorite[key])
+                
                 this.clicked = !this.clicked        
                
             })

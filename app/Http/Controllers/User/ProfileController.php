@@ -34,7 +34,8 @@ class ProfileController extends Controller
         $user = $request->user();
         return response()->json([
             'username' => $user->username,
-            'foto' => $user->foto   
+            'foto' => $user->foto,
+            'uid' => $user->id
         ]);
 
 

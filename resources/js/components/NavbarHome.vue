@@ -26,7 +26,7 @@
     
                
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{name: 'profile',params: {username:user.username}}">
+                    <router-link class="nav-link" :to="{name: 'message'}">
                         <i class="far fa-envelope fa-2x"></i>
                     </router-link>
                 </li>

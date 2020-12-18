@@ -82,6 +82,12 @@ Vue.filter('formatDate', function(value) {
     }
   });
 
+  Vue.filter('chatDate', function(value) {
+    if (value) {
+      return moment(String(value)).format('HH:mm  | DD MMMM YYYY')
+    }
+  });
+
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 

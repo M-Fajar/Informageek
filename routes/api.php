@@ -31,6 +31,21 @@ Route::prefix('auth')->group(function () {
         Route::get('posts/getlikes/{id}','Post\LikeController@getLikes');
         Route::post('posts/favorite','Post\LikeController@getFavorite');
 
+        Route::group(['prefix' => 'chat'], function () {
+            Route::get('/conversation/{id}','ContactsController@getMessagesFor');
+            Route::post('/conversation/send','ContactsController@send');
+            Route::get('/contact','ContactsController@get');
+        });	
+
+        Route::group(['prefix'=>'message', 'as' => 'message'], function () {
+            Route::get('/', 'User\MessageController@index');
+            Route::get('/chat/{room}', 'User\MessageController@fetchMessage')->name('.chat');
+            Route::post('/send', 'User\MessageController@sendMessage')->name('.send-message');
+            Route::get('/setread/{id}','User\MessageController@setread');
+            Route::get('/room', 'User\MessageController@fetchroom')->name('.room');
+            Route::get('/room/create', 'User\RoomController@create')->name('.room.create');
+            Route::post('/room/store', 'User\RoomController@store')->name('.room.store');
+        });
         
     });
 });
