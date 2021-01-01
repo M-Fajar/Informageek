@@ -13,8 +13,10 @@ Route::prefix('auth')->group(function () {
         Route::get('profile', 'User\ProfileController@me');
         Route::get('profile/{username}', 'User\ProfileController');
         Route::post('logout', 'Auth\LogoutController');
+
         Route::post('profile/update/avatar','User\ProfileController@updateAvatar'); 
         Route::post('profile/update/cover','User\ProfileController@updateCover'); 
+
         Route::get('posts', 'Post\PostController@index')->withoutMiddleware('auth');
 
         Route::get('posts/last/{value}', 'Post\PostController@lastPostUser');
@@ -25,6 +27,11 @@ Route::prefix('auth')->group(function () {
         Route::patch('posts/{post:id}/edit', 'Post\PostController@update');
         Route::delete('posts/{post:id}/delete', 'Post\PostController@destroy');
         Route::get('posts/{post:id}', 'Post\PostController@show')->withoutMiddleware('auth');
+
+        Route::post('user/follow', 'User\FollowController@follow');
+        Route::post('user/following','User\FollowController@ListFollowing');
+        Route::post('user/follower', 'User\FollowController@ListFollower');
+
         Route::post('posts/comment','Post\CommentController@comment');
         Route::get('posts/comment/{post_id}','Post\CommentController@listComment');
         Route::post('posts/like','Post\LikeController@likePost');
@@ -47,5 +54,6 @@ Route::prefix('auth')->group(function () {
             Route::post('/room/store', 'User\RoomController@store')->name('.room.store');
         });
         
+
     });
 });
