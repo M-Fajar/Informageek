@@ -12,6 +12,7 @@ import Post from './pages/Post';
 import Search from './pages/Search';
 import auth from './store/auth';
 import { isNull } from 'lodash';
+import Message from './pages/Message';
 
 Vue.use(VueRouter);
 
@@ -36,7 +37,6 @@ const ifNotAuthenticated = async (to, from,next) => {
   }
     next()
 }
-
 
 const router = new VueRouter({
   mode: 'history',
@@ -74,6 +74,13 @@ const router = new VueRouter({
       beforeEnter: ifAuthenticated
     },
     {
+      name: 'message',
+      path:'/message',
+      component: Message,
+      meta: {layout: "home"},
+      beforeEnter: ifAuthenticated
+    },
+    {
       name: 'post',
       path: '/post',
       component: Post,
@@ -89,11 +96,11 @@ const router = new VueRouter({
     },
     {
       name: 'profile',
-      path: '/profile',
+      path: '/profile/:username',
       component: Profile,
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
-    }
+    },
   ]
 });
 

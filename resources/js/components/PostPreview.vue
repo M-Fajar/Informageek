@@ -1,6 +1,6 @@
 <template>
     <li class="media my-5 justify-content-between">
-        <img src="/media/frontend/sugiono.png" alt="kakek lejen" class="img-fluid">
+        <img src="/media/avatar/user_1604809534.png" alt="kakek lejen" class="img-fluid">
         <div class="media-object mx-3 text-left">
             <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus repudiandae iure dolores non velit ex qui atque nulla dolorum! A minus ipsum possimus expedita assumenda eligendi voluptate voluptatem optio eveniet?</p>
         </div>

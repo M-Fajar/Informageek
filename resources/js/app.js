@@ -2,11 +2,9 @@ require('./bootstrap');
 
 
 window.Vue = require('vue');
+import Vue from 'vue'
 import store from "./store/index"
 import router from './router';
-import auth from './store/auth'
-import VueSession from 'vue-session'
-Vue.use(VueSession)
 import App from './App.vue';
 import axios from 'axios';
 import Default from './layouts/Default.vue';
@@ -42,10 +40,51 @@ Vue.filter('formatDate', function(value) {
             result = diffDuration.seconds()+' detik yang lalu'
         }
         else{
-            result = 'Null'
+            result = ' Baru saja'
         }
         
       return result.substring(1);
+    }
+  });
+
+  Vue.filter('dateComment', function(value) {
+    if (value) {
+        const now = moment();
+        const created = moment(String(value));
+        const diff = created.diff(now);
+        //express as a duration
+        const diffDuration = moment.duration(diff);
+        // display
+        let result = " ";
+        if(diffDuration.years()<0){
+            result = diffDuration.years()+' tahun';
+        }
+        else if(diffDuration.months()<0){
+            result = diffDuration.months()+' bulan';
+        }
+        else if(diffDuration.days()<0){
+            result = diffDuration.days() + ' hari'
+        } 
+        else if(diffDuration.hours()<0){
+            result = diffDuration.hours()+' jam'
+        }  
+        else if(diffDuration.minutes()<0){
+            result = diffDuration.minutes()+' menit'
+        }
+        else if(diffDuration.seconds()<0){
+            result = diffDuration.seconds()+' detik'
+        }
+        else{
+            result = ' Baru saja'
+        }
+        
+      return result.substring(1);
+    }
+  });
+
+  Vue.filter('chatDate', function(value) {
+    if (value) {
+      return moment(String(value)).format('HH:mm  | DD MMMM YYYY')
     }
   });
 

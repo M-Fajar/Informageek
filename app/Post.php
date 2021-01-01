@@ -27,4 +27,12 @@ class Post extends Model
     {
         return "/storage/" . $this->thumbnails;
     }
+    public function comments()
+    {
+    return $this->hasMany(Comment::class)->whereNull('parent_id');
+    }
+    public function likes()
+    {
+    return $this->hasMany(Like::class);
+    }
 }

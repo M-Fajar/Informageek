@@ -17,31 +17,25 @@
             <ul class="navbar-nav ml-auto align-items-center">
     
                 <li class="nav-item">   
-                    <router-link class="nav-link" :to="{name: 'profile'}">
-                        <span><b> {{user.username}}</b></span>
+                    <a class="nav-link" :href="$router.resolve({name: 'profile',params: {username:user.username}}).href">
 
-                    </router-link>
+                        <b> {{user.username}}</b>
+                        <img v-bind:src="'/media/avatar/'+ user.foto" id="avatar" alt="avatar" class="img-fluid">
+                    </a>
                 </li>    
     
-    
+               
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{name: 'profile'}">
-                        <img v-bind:src="'/media/profile/' + user.foto" alt="avatar" class="img-fluid">
-
-                    </router-link>
-                </li>
-    
-                <li class="nav-item">
-                    <router-link class="nav-link" :to="{name: 'profile'}">
+                    <router-link class="nav-link" :to="{name: 'message'}">
                         <i class="far fa-envelope fa-2x"></i>
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{name: 'profile'}">
+                    <router-link class="nav-link" :to="{name: 'profile',params: {username:user.username}}">
                         <i class="far fa-bell fa-2x "></i>
                     </router-link>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" style="float:right;">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-cog fa-2x"></i> -->
                         <span class="fa-stack">
@@ -49,7 +43,7 @@
                             <i class="fas fa-cog fa-stack-1x fa-inverse"></i>
                         </span>
                     </a>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#" @click.prevent="logOut">Logout</a>
                     </div>
                 </li>
@@ -66,6 +60,17 @@
         border-radius: 45px;
         text-decoration-style: none;
     }
+    #avatar{    
+    width: 2.5rem;
+    margin-left: 7px;
+    object-fit: cover;
+    height: 2.5rem;
+    border-radius: 5vw;
+    border-color: yellow;
+}
+.dropdown-menu{
+    margin-top:18px ;
+}
 </style>
 
 <script>
@@ -93,5 +98,6 @@ export default {
         }),
     }
 }
+
 
 </script>

@@ -18,7 +18,8 @@ class UserSeeder extends Seeder
             'password' => bcrypt('123456'),
             'username' => 'admin',
             'role' => 'admin',
-            'foto' => 'profile.png'
+            'foto' => 'admin.png',
+            'cover'=> 'admin.png'
         
         ]);
 
@@ -27,8 +28,10 @@ class UserSeeder extends Seeder
             'email' => 'user@informageek.tech',
             'password' => bcrypt('123456'),
             'username' => 'user',
-            'role' => 'user',
-            'foto' => 'sugiono.png'
+            'role' => 'user.png',
+            'foto' => 'user.png',
+            'cover'=> 'user.png'
+
         ]);
         
         $user = User::create([

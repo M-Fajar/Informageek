@@ -18,6 +18,11 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
+    protected $attributes = [
+        'role' => 'user',
+        'foto' => 'default.png',
+        'cover'=> 'default.png'
+     ];
     protected $fillable = [
         'name', 'email', 'password','username','role','foto','cover','bio'
     ];
@@ -53,4 +58,19 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Post::class);
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function message()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsToMany(Room::class, 'room_user');
+    }
+    
 }

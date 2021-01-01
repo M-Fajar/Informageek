@@ -3,15 +3,20 @@
         <div class="offset-md-3 col-md-6">
             <div class="card border-0 mx-auto card-shadow">
                 <div class="card-body p-5 text-center">
-                    <form method="post" @submit.prevent="checkForm" class="w-75 mx-auto">
+                  
+                    <form method="post" @submit.prevent="sendRegister" class="w-75 mx-auto">
                         <h1 class="mb-4">Register</h1>
                         <div class="form-group">
                             <input type="text" name="username" v-model="username" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" placeholder="Username">
-                            <span v-if="errors.username" class="text-danger">{{ errors.username }}</span>
+                            <span v-if="errors.username || postE" class="text-danger">{{ errors.username }}</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="name" v-model="name" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" placeholder="Nama">
+                            <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
                         </div>
                         <div class="form-group">
                             <input type="email" name="email" v-model="email" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" placeholder="Email">
-                            <span v-if="errors.email" class="text-danger">{{ errors.email }}</span>
+                            <span v-if="errors.email || postE" class="text-danger">{{ errors.email }}</span>
                         </div>
                         <div class="form-group">
                             <input type="password" name="password" v-model="password" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" placeholder="Password">
@@ -30,19 +35,22 @@
 </template>
 
 <script>
+import axios from 'axios';
     export default {
         data(){
             return{
                 errors: [],
                 username: '',
                 email: '',
+                name,
                 password: '',
-                confirm: ''
+                confirm: '',
+                postE: false
             }
         },
         computed: {
             enableConfirm() {
-                console.log(!this.password.length);
+                
                 return !this.password.length;
             },
             enableBtn() {
@@ -69,15 +77,15 @@
 		},
         methods:{
             validateUsername(value) {
-                let diff = 6 - value.length;
+                let diff = 3 - value.length;
                 if (!value.length) {
                     this.errors['username'] = 'Username harus diisi';
                     return false;
-                }else if (value.length < 6)  {
-                    this.errors['username'] = 'Username > 6 karakter ' + diff + ' tersisa';
+                }else if (value.length < 3)  {
+                    this.errors['username'] = 'Username > 2 karakter ' + diff + ' tersisa';
                     return false;
                 } else {
-                    this.errors['username'] = '';
+                    this.errors['username'] = null;
                     return true;
                 }
             },
@@ -106,7 +114,7 @@
 				}
             },
             validateConfirm() {
-                console.log(this.confirm + " = " + this.password);
+               
                 if (this.confirm != this.password) {
                     this.errors['confirm'] = 'Konfirmasi harus sama';
                     return false;
@@ -115,8 +123,25 @@
                     return true;
                 }
             },
-            sendRegister: function(e){
-                console.log("Submit register");
+            sendRegister(){ 
+                this.postE = false;
+               axios.post('auth/register',{
+                    username: this.username,
+                    email: this.email,
+                    name: this.name,
+                    password: this.password
+                }).then((response) => {
+                  
+                }).catch(error => {
+                if( error.response.data.errors['username']){
+                this.errors['username'] = 'Username sudah digunakan';}
+                if(error.response.data.errors['email']){
+                this.errors['email'] = 'Email sudah terdaftar'}
+                this.postE = true
+
+                
+                });
+                
             },
         },
         mounted() {

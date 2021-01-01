@@ -11,8 +11,10 @@ class RegisterController extends Controller
 {
     public function __invoke(Request $request){
         $v = Validator::make($request->all(), [
+            'name' => 'required',
+            'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
-            'password'  => 'required|min:6|confirmed',
+            'password'  => 'required|min:6',
         ]);
         if ($v->fails())
         {
@@ -20,11 +22,14 @@ class RegisterController extends Controller
                 'status' => 'error',
                 'errors' => $v->errors()
             ], 422);
-        }
+
         $user = new User;
+        $user->name = $request->name;
+        $user->username = $request->username;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
         return response()->json(['status' => 'success'], 200);
+        }
     }
 }

@@ -15,7 +15,7 @@ class CreateThumbnailsTable extends Migration
     {
         Schema::create('thumbnails', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('post_id');
+            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
             $table->string('name');
             $table->timestamps();
         });

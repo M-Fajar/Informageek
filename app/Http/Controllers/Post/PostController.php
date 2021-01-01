@@ -6,12 +6,16 @@ use App\Post;
 use App\User;
 use App\Category;
 use App\Thumbnail;
-use Illuminate\Http\Request;
+use App\Comment;
+use App\Like;
+use Illuminate\Support\Str;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -20,21 +24,42 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::get();
-
+        $user_id = $request->user()->id;
         $posts = Post::orderBy('id', 'DESC')->get();
+        $foto= array();
+        $username=array();
+        $likes = array();
+        $favorite = array();
+        $thumbnail = array();
+        $comment = array();
         foreach ($posts as $post) {
-            $foto = DB::table('users')->where('id', $post['user_id'])->value('foto');
-            $username = DB::table('users')->where('id', $post['user_id'])->value('username');
-            return response()->json([
-                'posts' => $posts,
-                'foto' => $foto,
-                'username' => $username,
-                'categories' => $categories,
-            ]);
+            $getfoto = DB::table('users')->where('id', $post['user_id'])->value('foto');
+            $foto[$post['id']] = $getfoto;
+            $getusername = DB::table('users')->where('id', $post['user_id'])->value('username');
+            $username[$post['id']] = $getusername;
+            $getlikes = Like::where('post_id',$post['id'])->count();
+            $likes[$post['id']] =$getlikes;
+            $getFavorite = Like::where('post_id',$post['id'])->where('user_Id',$user_id)->exists();
+            $favorite[$post['id']] =$getFavorite;
+            $getThumbnail = Thumbnail::where('post_id',$post['id'])->pluck('name')->all();
+            $thumbnail[$post['id']] = $getThumbnail;
+            $getComment = Comment::where('post_id',$post['id'])->count();
+            $comment[$post['id']] = $getComment;
         }
+       
+        return response()->json([
+            'posts' => $posts,
+            'thumbnail' => $thumbnail,
+            'likes' => $likes,
+            'favorite' => $favorite,
+            'comment' => $comment,
+            'foto' => $foto,
+            'username' => $username
+
+           
+         ]);
     }
 
     /**
@@ -64,21 +89,40 @@ class PostController extends Controller
         $post = new Post();
         $data = $request->all();
         $post = $user->posts()->create($data);
+
+        $catIds = [];
+        if($request->categories != null){
+            foreach ( $request->categories as $catName){
+            $cat = Category::where('name', $catName)->first();
+                if (!$cat) {
+            
+                $categories = new Category;
+                $categories->name = $catName;
+                $categories->slug = Str::slug($catName);
+                $categories->save();
+                $cat = Category::where('name', $catName)->first();
+                }
+            array_push($catIds,$cat->id);
+            }   
+        $post->categories()->sync($catIds);
+        }
+
         $request->validate([
             'thumbnail' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
             'thumbnail.*' => 'image|mimes:jpg,jpeg,png,svg|max:3096',
         ]);
-        if ($request->hasFile('photo_id')) {
-            $files = $request->file('photo_id');
+    
+       if ($request->photo_id) {
+            $files = $request->photo_id;
             foreach ($files as $file) {
                 $name = time() . '-' . $file->getClientOriginalName();
                 $name = str_replace(' ', '-', $name);
-                $tmb = $file->store('images/posts');
-                $post->thumbnails()->create(['name' => str_replace('images/posts/', '', $tmb)]);
+                $tmb = $file->store('/posts');
+                $post->thumbnails()->create(['name' => str_replace('posts/', '', $tmb)]);
             }
         }
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
         ]);
     }
 
@@ -90,8 +134,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $username = DB::table('users')->where('id', $post['user_id'])->value('username');
-        $foto = DB::table('users')->where('id', $post['user_id'])->value('foto');
+        $username = DB::table('users')->where('id', $post->user_id)->value('username');
+        $foto = DB::table('users')->where('id', $post->user_id)->value('foto');
         return response()->json([
             'post' => $post,
             'username' => $username,
@@ -132,7 +176,7 @@ class PostController extends Controller
         if ($request->hasFile('photo_id')) {
             $thumb = Thumbnail::where('post_id', $post->id)->get();
             foreach ($thumb as $thu) {
-                \Storage::delete('images/posts/' . $thu->name);
+                Storage::delete('images/posts/' . $thu->name);
             }
             $post->thumbnails()->delete();
             $files = $request->file('photo_id');
@@ -144,8 +188,23 @@ class PostController extends Controller
         // update post keseluruhan 
         $attr = $request->all();
         $post->update($attr);
+
         // update kategori
-        $post->categories()->sync(request('categories'));
+        $catIds = [];
+        foreach ($request->categories as $catName) {
+            $cat = Category::where('name', $catName)->first();
+            if (!$cat) {
+                $categories = new Category;
+                $categories->name = $catName;
+                $categories->slug = Str::slug($catName);
+                $categories->save();
+                $cat = Category::where('name', $catName)->first();
+            }
+            array_push($catIds, $cat->id);
+        }
+        $post->categories()->sync($catIds);
+        // $post->categories()->sync(request('categories'));
+
         return response()->json([
             'status' => 'success'
         ]);
@@ -162,7 +221,7 @@ class PostController extends Controller
         $this->authorize('delete', $post);
         $thumb = Thumbnail::where('post_id', $post->id)->get();
         foreach ($thumb as $thu) {
-            \Storage::delete('images/posts/' . $thu->name);
+            Storage::delete('images/posts/' . $thu->name);
         }
         $post->thumbnails()->delete();
         $post->categories()->detach();
@@ -170,5 +229,24 @@ class PostController extends Controller
         return response()->json([
             'status' => 'success'
         ]);
+
     }
+
+
+
+    public function lastPostUser(Request $request, $value){
+        
+        $user_id = $request->user()->id;
+        $lastpost = Post::where(['user_id'=>$user_id ])->orderBy('id', 'DESC')->take($value)->get();
+        $username = DB::table('users')->where('id', $user_id)->value('username');
+        $foto = DB::table('users')->where('id', $user_id)->value('foto');
+        return response()->json([
+            'posts' => $lastpost,
+            'username'=> $username,
+            'foto' => $foto
+        ]);
+        }
+
+    
+
 }
