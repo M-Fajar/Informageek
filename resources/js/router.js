@@ -28,6 +28,14 @@ const ifAuthenticated = async (to, from,next) => {
       name: 'login'
     })
 }
+const guestAcces = async (to, from,next) => {
+  if(localStorage.getItem('user-token')){
+    await store.dispatch('auth/attempt',localStorage.getItem('user-token'))
+  }
+    
+  return next()
+  
+}
 
 const ifNotAuthenticated = async (to, from,next) => {
     if(store.getters['auth/authenticated']){
@@ -69,7 +77,7 @@ const router = new VueRouter({
     {
       name: 'beranda',
       path: '/beranda',
-      component: Beranda,
+      component: () => import('./pages/Beranda.vue'),
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
     },
@@ -82,10 +90,10 @@ const router = new VueRouter({
     },
     {
       name: 'post',
-      path: '/post',
-      component: Post,
+      path: '/post/:id',
+      component: () =>import('./pages/Post.vue'),
       meta: {layout: "home"},
-      beforeEnter: ifAuthenticated
+      beforeEnter: guestAcces    
     },
     {
       name: 'search',
@@ -97,7 +105,7 @@ const router = new VueRouter({
     {
       name: 'profile',
       path: '/profile/:username',
-      component: Profile,
+      component: () => import('./pages/Profile.vue'),
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
     },

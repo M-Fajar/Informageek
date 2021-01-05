@@ -8,6 +8,7 @@ use App\Category;
 use App\Thumbnail;
 use App\Comment;
 use App\Like;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
@@ -24,10 +25,8 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $posts = Post::orderBy('id', 'DESC')->get();
+
+    public function getDataPost($posts,$auth_id){
         $foto= array();
         $username=array();
         $likes = array();
@@ -41,7 +40,7 @@ class PostController extends Controller
             $username[$post['id']] = $getusername;
             $getlikes = Like::where('post_id',$post['id'])->count();
             $likes[$post['id']] =$getlikes;
-            $getFavorite = Like::where('post_id',$post['id'])->where('user_Id',$user_id)->exists();
+            $getFavorite = Like::where('post_id',$post['id'])->where('user_Id',$auth_id)->exists();
             $favorite[$post['id']] =$getFavorite;
             $getThumbnail = Thumbnail::where('post_id',$post['id'])->pluck('name')->all();
             $thumbnail[$post['id']] = $getThumbnail;
@@ -49,7 +48,7 @@ class PostController extends Controller
             $comment[$post['id']] = $getComment;
         }
        
-        return response()->json([
+        return ([
             'posts' => $posts,
             'thumbnail' => $thumbnail,
             'likes' => $likes,
@@ -60,6 +59,33 @@ class PostController extends Controller
 
            
          ]);
+
+        
+    }
+    public function show($id)
+    {   
+        $id = base64_decode($id);
+        $posts= Post::where('id',$id)->get();
+        return response()->json($this->getDataPost($posts,null));
+        
+    }
+
+    public function index(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        $posts = Post::orderBy('id', 'DESC')->get();
+        return response()->json($this->getDataPost($posts,$auth_id));
+        
+    }
+
+    public function postUser($user){
+        $auth_id = auth()->user()->id;
+        $user_id = User::where('username',$user)->value('id');
+        $posts = Post::where('user_id',$user_id)->orderBy('id', 'DESC')->get();
+        
+       
+        return response()->json($this->getDataPost($posts,$auth_id));
+        
     }
 
     /**
@@ -132,16 +158,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
-    {
-        $username = DB::table('users')->where('id', $post->user_id)->value('username');
-        $foto = DB::table('users')->where('id', $post->user_id)->value('foto');
-        return response()->json([
-            'post' => $post,
-            'username' => $username,
-            'foto' => $foto,
-        ]);
-    }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -246,6 +263,12 @@ class PostController extends Controller
             'foto' => $foto
         ]);
         }
+
+    public function sharePost($id){
+        $encrypted = base64_encode($id);
+        $url = "https://informageek.tech/post/".$encrypted;
+        return response()->json($url);
+    }
 
     
 

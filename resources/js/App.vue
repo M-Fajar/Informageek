@@ -8,7 +8,7 @@
 
 <script>
 
-const default_layout = "default";
+const default_layout = "home";
 
 export default {
     computed:{

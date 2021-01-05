@@ -12,11 +12,14 @@ class FollowController extends Controller
     public function follow (Request $request){
 
       $user_id = $request->user()->id;
-      $user2_id = $request->user2;
+      $username = $request->user;
+      $user2_id = User::where('username',$username)->value('id');
+      
+    
       if($user_id ==$user2_id) {
         return response()->json([
           'error' => 'Gagal Follow'
-        ], 401);
+        ], 400);
       }
       $following = Followers::where('following_id', $user2_id)->where('follower_id',$user_id)->first();
       $status;
@@ -39,37 +42,45 @@ class FollowController extends Controller
     public function getCountFollower($user2_id){
        return  Followers::where('following_id', $user2_id)->count();
     }
-    public function getCountFollowing($user2_id){
-       return  Followers::where('follower_id', $user2_id)->count();
+    public function getCountFollowing($user){
+       return  Followers::where('follower_id', $user)->count();
     }
-    public function ListFollowing (Request $request) {
-      $user2_id = $request->user;
-      $listfollowing = Followers::where('follower_id', $user2_id)->select('following_id')->get();
+    public function ListFollowing ($username) {
+      $user = User::where('username',$username)->value('id'); //get Id
+      $listfollowing = Followers::where('follower_id', $user)->select('following_id')->get();
       $userlist = array();
       foreach ($listfollowing as $value) {
-          $user = User::find($value['following_id']);
+          $user = User::where('id',$value['following_id'])->select('name','username','foto')->first();
           array_push($userlist,$user);
       }
 
       return response()->json([
-        'Total' => $this->getCountFollowing($user2_id),
-        'Following' =>$userlist
+        'total' => count($userlist),
+        'following' =>$userlist
       ]);
     }
-    public function ListFollower(Request $request){
-      $user2_id = $request->user;
-      $listfollower = Followers::where('following_id', $user2_id)->select('follower_id')->get();
+    public function ListFollower($username){
+      $user = User::where('username',$username)->value('id'); //get Id
+      $listfollower = Followers::where('following_id', $user)->select('follower_id')->get();
       $userlist = array();
       foreach ($listfollower as $value) {
-        $user = User::find($value['follower_id']);
+        $user = User::where('id',$value['follower_id'])->select('name','username','foto')->first();
         array_push($userlist,$user);
       }
       return response()->json ([
-        'Total' => $this-> getCountFollower($user2_id),
-        'Follower' =>$userlist
+        'total' => count($userlist),
+        'follower' =>$userlist
       ]);
 
 
+    }
+    public function checkFollow($username){
+      $user1_id = auth()->user()->id;
+      
+      $user2_id = User::where('username',$username)->value('id');
+      
+      $status =  Followers::where('follower_id', $user1_id)->where('following_id',$user2_id)->exists();
+      return response()->json($status);
     }
 
 }

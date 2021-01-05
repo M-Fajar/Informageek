@@ -7,9 +7,11 @@ import store from "./store/index"
 import router from './router';
 import App from './App.vue';
 import axios from 'axios';
+
 import Default from './layouts/Default.vue';
 import Home from './layouts/Home.vue';
 import moment from 'moment'
+import Vuetify from '../plugins/vuetify';
 import { result } from "lodash";
 
 Vue.filter('formatDate', function(value) {
@@ -99,11 +101,12 @@ Vue.component('home-layout', Home)
 
 Vue.config.productionTip = false
 
-
-
 new Vue({
+   
     store,
     router,
     el: '#app',
+     
+    vuetify:Vuetify,
     render: h => h(App)
 });

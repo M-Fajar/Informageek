@@ -1,5 +1,17 @@
 const mix = require('laravel-mix');
 
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const { default: Vuetify } = require('vuetify');
+
+var webpackConfig = {
+    plugins:[
+        new VuetifyLoaderPlugin(),
+        new CaseSensitivePathsPlugin()
+    ]
+}
+
+mix.webpackConfig(webpackConfig);
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

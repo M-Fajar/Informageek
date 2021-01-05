@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\User;
+use App\Followers;
+use App\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,19 +14,32 @@ use File;
 
 class ProfileController extends Controller
 {
-    public function __invoke($username){
+    public function getCountFollower($user){
+        return  Followers::where('following_id', $user)->count();
+     }
+     public function getCountFollowing($user){
+        return  Followers::where('follower_id', $user)->count();
+     }
+     public function getCountPost($user){
+         return Post::where('user_id',$user)->count();
+     }
+     public function index($username){
     
         $user = DB::table('users')->where('username',$username)->first();
+     
         return response()->json(
             [
                 'status' => 'success',
                 'user' => [
-                    
+               
                 'name' => $user->name,
                 'username' =>  $user->username,
                 'bio'=> $user->bio,
                 'foto'=>$user->foto,
-                'cover'=> $user->cover
+                'cover'=> $user->cover,
+                'post' => $this->getCountPost($user->id),
+                'follower' => $this->getCountFollower($user->id),
+                'following' =>$this->getCountFollowing($user->id)
                 ]
 
             ],200
@@ -52,8 +67,8 @@ class ProfileController extends Controller
         ]);
         // Get file from request
       $file = $request->file('image');
-      $imageAvatar =$this->resizeImage($file,'80'); //ratio avatar
-      $imageProfile =$this->resizeImage($file,'480'); //ratio profile
+      $imageAvatar =$this->resizeImage($file,'30'); //ratio avatar
+      $imageProfile =$this->resizeImage($file,'200'); //ratio profile
 
 
       $fileNameToStore =$this->getNamePhoto($file);
@@ -75,7 +90,7 @@ class ProfileController extends Controller
         // Get file from request
       $file = $request->file('image');
       
-      $image = $this->resizeImage($file,'1500');
+      $image = $this->resizeImage($file,'700');
       $fileNameToStore = $this->getNamePhoto($file);
 
       $save =  Image::make($image)->save(public_path('media/cover') . '/' . $fileNameToStore);
@@ -121,6 +136,23 @@ class ProfileController extends Controller
          $image = $hash."jpg";
          return $resize->__toString();
 
+   }
+
+   public function editProfile(Request $request){
+       //parama name,bio,username
+       $username = $request->username;
+
+       $available = User::where('username',$username)->where('id','!=',$request->user()->id)->first();
+       if($available){
+        return response()->json(['error' => 'Username Tidak Tersedia'],422);
+       }
+
+       $user = User::where('id',$request->user()->id)->first();
+       $user->update($request->all());
+       return response()->json([
+        'status' => 'succes'
+       ],200);
+       
    }
 
     

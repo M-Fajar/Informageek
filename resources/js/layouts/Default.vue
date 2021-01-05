@@ -1,11 +1,14 @@
 <template>
+<v-app>
     <div class="container d-flex flex-column justify-content-between vh-100">
         <NavbarLogin/>
 
         <slot/>
         
         <FooterLogin/>
+        
     </div>
+</v-app>
 </template>
 
 <script>
@@ -16,6 +19,10 @@ export default {
     components: {
         NavbarLogin,
         FooterLogin
+    },
+    methods:{
+    
     }
+    
 }
 </script>

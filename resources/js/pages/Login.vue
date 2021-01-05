@@ -17,17 +17,31 @@
 							<span v-if="err" class="text-danger">{{ err }}</span>
 							<span v-if="errors.password" class="text-danger">{{ errors.password }}</span>
 						</div>
-						<button :disabled="!enableBtn" class="mt-4 btn btn-warning rounded-pill text-dark btn-block submit p-3" type="submit" >LOGIN</button>
+						<v-btn
+						class="mt-4 btn rounded-pill btn-block submit p-3 font-weight-bold"
+						:loading="loading"
+						color="yellow"
+						type="submit"
+						large
+						:disabled="!enableBtn"
+						@click="loader = 'loading'"
+						>
+						LOGIN
+						</v-btn>
+						<!-- <button :disabled="!enableBtn"  type="submit" >LOGIN</button> -->
 						
 					</form>
+			
 				</div>
 			</div>
 		</div>
+		
 	</div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import router from '../router'
 	export default {
 		name: 'login',
 		data(){
@@ -36,6 +50,8 @@ import { mapActions } from 'vuex'
 				password: '',
 				errors: [],
 				err: null,
+				 loader: null,
+        		loading: false,
 				
 			}
 		},
@@ -56,6 +72,14 @@ import { mapActions } from 'vuex'
 				this.validate(value);
 				this.err = null
 			},
+			loader () {
+        		const l = this.loader
+        		this[l] = !this[l]
+
+        		setTimeout(() => (this[l] = false), 3000)
+
+        		this.loader = null
+	  	},
 			
 
 		},
@@ -88,7 +112,8 @@ import { mapActions } from 'vuex'
 						name: 'beranda'
 					})
 				}).catch((error) => {
-					this.err = 'Masuk Gagal'
+					this.err = 'username atau password tidak sesuai'
+					this.loading = false
 					}
 				)
 			

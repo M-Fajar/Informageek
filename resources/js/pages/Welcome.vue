@@ -27,7 +27,7 @@
     line-height: 39px;
     text-align: center;
     margin: 0;
-    color: #232B38;
+    color: #070707 !important;
 }
 </style>
 

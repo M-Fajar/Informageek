@@ -26,7 +26,18 @@
                             <input type="password" :disabled="enableConfirm" name="confirm" v-model="confirm" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" :class="{ }" placeholder="Confirm Password">
                             <span v-if="errors.confirm" class="text-danger">{{ errors.confirm }}</span>
                         </div>
-                        <button :disabled="!enableBtn" class="mt-4 btn btn-warning rounded-pill btn-block submit p-3" type="submit">Submit</button>
+                        <v-btn
+						class="mt-4 btn rounded-pill btn-block submit p-3 font-weight-bold"
+						:loading="loading"
+						color="yellow"
+						type="submit"
+						large
+						:disabled="!enableBtn"
+						@click="loader = 'loading'"
+						>
+						DAFTAR
+						</v-btn>
+                        <!-- <button :disabled="!enableBtn" class="mt-4 btn btn-warning rounded-pill btn-block submit p-3" type="submit">Submit</button> -->
                     </form>
                 </div>
             </div>
@@ -35,6 +46,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import axios from 'axios';
     export default {
         data(){
@@ -42,10 +54,13 @@ import axios from 'axios';
                 errors: [],
                 username: '',
                 email: '',
-                name,
+                name:'',
                 password: '',
                 confirm: '',
-                postE: false
+                postE: false,
+                 loader: null,
+        		loading: false,
+				
             }
         },
         computed: {
@@ -54,10 +69,14 @@ import axios from 'axios';
                 return !this.password.length;
             },
             enableBtn() {
-                return this.validateEmail(this.email) && this.validateUsername(this.username) && this.validatePassword(this.password) && this.validateConfirm();
+                return this.validateEmail(this.email) && this.validateUsername(this.username) && this.validatePassword(this.password) && this.validateConfirm() && this.validateName(this.name);
             }
         },
         watch: {
+            name(value){
+                this.name = value
+                this.validateName(value)
+            },
             username(value) {
                 this.username = value;
                 this.validateUsername(value);
@@ -73,19 +92,47 @@ import axios from 'axios';
 			confirm(value) {
                 this.confirm = value;
                 this.validateConfirm();
-			},
+            },
+            loader () {
+        		const l = this.loader
+        		this[l] = !this[l]
+
+        		setTimeout(() => (this[l] = false), 3000)
+
+        		this.loader = null}
 		},
         methods:{
+            ...mapActions({
+				logIn: 'auth/logIn'
+			}),
             validateUsername(value) {
                 let diff = 3 - value.length;
                 if (!value.length) {
                     this.errors['username'] = 'Username harus diisi';
                     return false;
                 }else if (value.length < 3)  {
-                    this.errors['username'] = 'Username > 2 karakter ' + diff + ' tersisa';
+                    this.errors['username'] = 'Minimal 3 karakter ' + diff + ' tersisa';
                     return false;
-                } else {
+                } else if(value.length > 12){
+                    this.errors['username'] = 'Maksimal 12 karakter ';
+                    return false
+                }
+                else {
                     this.errors['username'] = null;
+                    return true;
+                }
+            },
+            validateName(value) {
+                if (!value.length) {
+                    this.errors['name'] = 'Nama harus diisi';
+                    return false;
+                }
+                else if(value.length > 30){
+                    this.errors['name'] = 'Maksimal 20 karakter ';
+                    return false
+                }
+                else {
+                    this.errors['name'] = null;
                     return true;
                 }
             },
@@ -101,7 +148,7 @@ import axios from 'axios';
 				return false;
 			},
 			validatePassword(value) {
-				let diff = 6 - value.length;
+				let diff = 6     - value.length;
 				if (!value.length) {
 					this.errors['password'] = 'Password harus diisi';
 					return false;
@@ -131,18 +178,37 @@ import axios from 'axios';
                     name: this.name,
                     password: this.password
                 }).then((response) => {
-                  
+                   
+                    console.log(this.username)
+                    this.submit()
                 }).catch(error => {
+                    
                 if( error.response.data.errors['username']){
                 this.errors['username'] = 'Username sudah digunakan';}
                 if(error.response.data.errors['email']){
                 this.errors['email'] = 'Email sudah terdaftar'}
                 this.postE = true
-
+                this.loading = false
                 
                 });
                 
             },
+            submit(){
+				let  data = {
+					username: this.username,
+					password: this.password
+				};
+				this.logIn(data).then(()=>{
+					this.$router.replace({
+						name: 'beranda'
+					})
+				}).catch((error) => {
+					this.err = 'username atau password tidak sesuai'
+					this.loading = false
+					}
+				)
+			
+			}
         },
         mounted() {
             console.log('Component mounted.')

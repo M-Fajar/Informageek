@@ -8,29 +8,35 @@ Route::prefix('auth')->group(function () {
     Route::post('register', 'Auth\RegisterController');
     Route::post('login', 'Auth\LoginController');
     Route::get('refresh', 'AuthConstroller@refresh');
-
+    Route::get('posts/share/{id}', 'Post\PostController@sharePost');
+    Route::get('posts/{post:id}', 'Post\PostController@show');
+    Route::get('posts/comment/noauth/{post_id}','Post\CommentController@listComment');
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('profile', 'User\ProfileController@me');
-        Route::get('profile/{username}', 'User\ProfileController');
+        Route::get('profile/{username}', 'User\ProfileController@index');
         Route::post('logout', 'Auth\LogoutController');
 
         Route::post('profile/update/avatar','User\ProfileController@updateAvatar'); 
         Route::post('profile/update/cover','User\ProfileController@updateCover'); 
+        Route::post('profile/update','User\ProfileController@editProfile'); 
 
-        Route::get('posts', 'Post\PostController@index')->withoutMiddleware('auth');
+        Route::get('posts', 'Post\PostController@index');
+        Route::get('posts/user/{user_id}', 'Post\PostController@postUser');
 
         Route::get('posts/last/{value}', 'Post\PostController@lastPostUser');
-
+        
         Route::get('posts/create', 'Post\PostController@create');
         Route::post('posts/store', 'Post\PostController@store');
         Route::get('posts/{post:id}/edit', 'Post\PostController@edit');
         Route::patch('posts/{post:id}/edit', 'Post\PostController@update');
         Route::delete('posts/{post:id}/delete', 'Post\PostController@destroy');
-        Route::get('posts/{post:id}', 'Post\PostController@show')->withoutMiddleware('auth');
+        
 
         Route::post('user/follow', 'User\FollowController@follow');
-        Route::post('user/following','User\FollowController@ListFollowing');
-        Route::post('user/follower', 'User\FollowController@ListFollower');
+        Route::get('user/checkfollow/{username}', 'User\FollowController@checkFollow');
+        Route::get('user/following/{username}','User\FollowController@ListFollowing');
+        Route::get('user/follower/{username}', 'User\FollowController@ListFollower');
+
 
         Route::post('posts/comment','Post\CommentController@comment');
         Route::get('posts/comment/{post_id}','Post\CommentController@listComment');

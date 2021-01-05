@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-                <!-- Sidebar Kanan -->
+                <!-- Sidebar Kiri -->
             <div class="col-md-3">
                 <SidebarLeftHome/>
             </div>
@@ -23,15 +23,7 @@
                                         <li class="list-inline-item" data-toggle="modal" data-target="#orangeModalSubscription" >
                                             <a href="#" class="text-secondary text-decoration-none"><i class="far fa-image"></i></a>
                                         </li>
-                                        <li class="list-inline-item">
-                                            <a href="#" class="text-secondary text-decoration-none"><i class="far fa-map"></i></a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a href="#" class="text-secondary text-decoration-none"><i class="far fa-user"></i></a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a href="#" class="text-secondary text-decoration-none"><i class="far fa-smile-wink"></i></a>
-                                        </li>
+                                            
                                         <li class="list-inline-item float-right">
                                             <button type="button" @click='postCreate' class="btn btn-warning rounded-pill px-4">Kirim</button>
                                         </li>
@@ -50,7 +42,7 @@
                 </div>
                 <div class="timeline mt-3"> 
 
-                    <PostCard />
+                    <PostCard v-if="listPost!=null" :listPost="listPost"/>
 
                 </div>
             </div>
@@ -74,7 +66,16 @@
       <!--Body-->
         <div class="modal-body">
           <div>
-            <textarea name="postData" class="form-control status-model "  v-model="postData" placeholder="Ide apa hari ini"></textarea>
+            <v-textarea
+          label="Ide apa hari ini ?"
+          auto-grow
+          outlined
+          rows="1"
+          row-height="15"
+          name="postData"
+          v-model="postData"
+        ></v-textarea>  
+            <!-- <textarea name="postData" class="form-control status-model "  v-model="postData" placeholder="Ide apa hari ini"></textarea> -->
             
 
              
@@ -82,7 +83,7 @@
             <div class="imagePreviewWrapper"  v-for="(image,key) in previewImage" :key="key">
                 <div class="img-wrap" v-if="image != null">
                         <div class="btn-clear" @click="clearPreview(key)">
-                        <span class="close">&times;</span>               
+                            <v-icon>mdi-close</v-icon>
                         </div>
                         <img  :src="image" :ref="'image'" />
                 </div>        
@@ -90,12 +91,18 @@
             </div>
             </div>
             
-          
-
-           
             <div  class="fileUpload btn">
-            <span >Tambah Foto</span>
+                    <v-btn
+                color="blue-grey"
+                class="ma-2 white--text"
+            > Upload
+            <v-icon dark right>
+                mdi-image-plus
+            </v-icon>
             <input type="file" class="upload" name="file" ref="fileInput" multiple @change="pickFile" />
+            </v-btn>
+            
+            
             </div>
 
         </div>
@@ -103,7 +110,17 @@
 
       <!--Footer-->
                     <div class="modal-footer justify-content-center">
-                          <a type="button"  data-dismiss="modal"  class="btn btn-warning waves-effect" @click="postCreate">Post <i class="fas fa-paper-plane-o ml-1"></i></a>
+                                    <v-btn
+                        color="amber"
+                        dark
+                        style="width:100%"
+                        @click="postCreate" 
+                        data-dismiss="modal"
+                        :disabled="enableBtn"
+                        >
+                        Post
+                        </v-btn>
+                          
                     </div>
                 </div>
             <!--/.Content-->
@@ -167,7 +184,7 @@ div.scroll {
 .fileUpload {
     position: relative;
     overflow: hidden;
-    left: 37%;
+    left: 40%;
     cursor: pointer;
     margin-bottom: -20px;
     color:hsl(51, 100%, 50%) ;
@@ -208,11 +225,10 @@ div.scroll {
     width: 20px;
     height: 20px;
     position: absolute;
-    top: 3px;
-    border-radius: 50%;
-    right: 2px;
+    top: 1px;
+    right: 4px;
     z-index: 100;
-    background: #20202093;
+   
 }
 </style>
 
@@ -235,13 +251,14 @@ export default {
         return{
             
             message:"",
-            postData:'',
+            postData:null,
             hashtag:[],
             postSucces: 0,
             reload: true,
             images:[],
             file:'',
             previewImage: {},
+            listPost:null,
         }
 
     },
@@ -249,6 +266,7 @@ export default {
         
     },
     methods: {
+        
         clearPreview(key){
             let panjangImage = this.images.length
             this.images.splice(key,1)
@@ -339,6 +357,7 @@ export default {
            
             });
         },
+        
 
         redirectPost() {
             console.log('clicked');
@@ -350,6 +369,28 @@ export default {
             authenticated: 'auth/authenticated',
             user: 'auth/user'
         }),
+        enableBtn() {
+        console.log('btn');
+        if(this.postData == null || this.postData.length==0)
+          return true
+        return false
+			},
+    },
+    mounted: function(){
+        
+        axios.get("auth/posts",
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+            })
+            .then(response => {
+                
+                this.listPost = response.data
+                
+                console.log(this.listPost)
+
+            });
     }
 }
 </script>   

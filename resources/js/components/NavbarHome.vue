@@ -1,5 +1,6 @@
-<template>    
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom">
+<template>
+
+    <nav  class="navbar sticky-top navbar-expand-lg navbar-light bg-white border-bottom">
         <router-link class="navbar-brand pl-2" :to="{name: 'beranda'}">
             <i class="fas fa-circle text-warning fa-2x"></i>
         </router-link>
@@ -10,18 +11,23 @@
 
         <div class="collapse navbar-collapse" id="navbarToggler">
             <div class="form-inline ml-auto px-0 mr-0">
-                <form @click.prevent="redirectSearch">
-                    <input class="form-control form-control-lg" type="search" placeholder="Search">
+                <form @keyup="redirectSearch">
+                    <input v-model="find" class="form-control form-control-lg" type="search" placeholder="Search">
                 </form>
             </div>
             <ul class="navbar-nav ml-auto align-items-center">
     
                 <li class="nav-item">   
-                    <a class="nav-link" :href="$router.resolve({name: 'profile',params: {username:user.username}}).href">
+                     <router-link class="nav-link" :to="{name: 'profile',params: {username:user.username}}">
+                        
+                        <!-- <a class="nav-link" :href="$router.resolve({name: 'profile',params: {username:user.username}}).href"> -->
 
                         <b> {{user.username}}</b>
                         <img v-bind:src="'/media/avatar/'+ user.foto" id="avatar" alt="avatar" class="img-fluid">
-                    </a>
+                    <!-- </a> -->
+                     </router-link>
+                    
+                    
                 </li>    
     
                
@@ -30,11 +36,11 @@
                         <i class="far fa-envelope fa-2x"></i>
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <router-link class="nav-link" :to="{name: 'profile',params: {username:user.username}}">
                         <i class="far fa-bell fa-2x "></i>
                     </router-link>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown" style="float:right;">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-cog fa-2x"></i> -->
@@ -51,6 +57,7 @@
 
         </div>
     </nav>
+
 </template>
 
 <style scoped>
@@ -74,11 +81,24 @@
 </style>
 
 <script>
-    import { mapGetters,mapActions } from "vuex"
+import { mapGetters,mapActions } from "vuex"
 export default {
+    components:{
+        
+    },
+    data(){
+        return{
+            find:''
+        }
+    },
+    props:{
+        user:{
+            default: null
+        }
+    },
     methods: {
         redirectSearch() {
-            this.$router.push('/search');
+            this.$router.push('/search/'+this.find);
         },
         ...mapActions({
             logOutAction: 'auth/logOut'
@@ -91,12 +111,6 @@ export default {
             })
         }
     },
-    computed: {
-        ...mapGetters({
-            authenticated: 'auth/authenticated',
-            user: 'auth/user'
-        }),
-    }
 }
 
 

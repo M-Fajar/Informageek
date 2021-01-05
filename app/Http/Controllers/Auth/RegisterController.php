@@ -16,13 +16,14 @@ class RegisterController extends Controller
             'email' => 'required|email|unique:users',
             'password'  => 'required|min:6',
         ]);
+     
         if ($v->fails())
         {
             return response()->json([
                 'status' => 'error',
                 'errors' => $v->errors()
             ], 422);
-
+        }   
         $user = new User;
         $user->name = $request->name;
         $user->username = $request->username;
@@ -30,6 +31,6 @@ class RegisterController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         return response()->json(['status' => 'success'], 200);
-        }
+        
     }
 }

@@ -287,3 +287,26 @@ a:hover, a:active, a:focus {
   text-decoration: none;
   outline: 0;
 }
+.v-btn {
+  text-transform:none !important;
+}
+
+.hrbatas{
+  border: 1px rgba(37, 37, 37, 0.795) solid; height: 10px; width: 2px;
+  margin-left: 8px;
+  margin-right: 8px;
+  
+}
+.count{
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.fixed {position: fixed !important;}
+
