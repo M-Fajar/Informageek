@@ -25,8 +25,8 @@ class RegisterController extends Controller
             ], 422);
         }   
         $user = new User;
-        $user->name = $request->name;
-        $user->username = $request->username;
+        $user->name = ucwords($request->name);
+        $user->username = strtolower($request->username);
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();

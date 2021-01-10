@@ -34,7 +34,7 @@
                     >
                     <v-icon large>mdi-heart</v-icon>
                     </v-btn>
-                    <v-btn v-else
+                    <v-btn v-if="postFavorite[post.id] == false"
                     icon
                   
                     >
@@ -363,6 +363,7 @@ export default {
     },
     mounted:function(){
           this.showComment(this.postData[0].id)
+          console.log(this.listPost)
     },
     computed: {
         ...mapGetters({

@@ -13,7 +13,7 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        $categories = collect(['kategori1', 'kategori2', 'kategori3', 'kategori4', 'kategori5']);
+        $categories = collect(['android', 'web', 'jaringan', 'desain', 'game']);
     	$categories->each(function($c) {
     		\App\Category::create([
     			'name' => $c,

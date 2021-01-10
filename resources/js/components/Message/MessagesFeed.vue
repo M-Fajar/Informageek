@@ -1,21 +1,52 @@
 <template>
 <div v-if="messages !=null">
-        <h1>{{contact[0].name}}</h1>    
- <div class="msg_history" ref="feed">
  
-        <div v-for="message in messages" :key="message.id">
-            <div class="incoming_msg" v-if="message.user_id == contact[0].id">
-              <div class="incoming_msg_img"> <img v-bind:src="'/media/avatar/' + contact[0].foto"  class="img-circle" alt="sunil"> </div>
+        <v-list style="margin-bottom:-20px;margin-top:-25px">
+      
+
+      <v-list-item
+      >
+        <v-list-item-avatar v-if="messages.user != null">
+          <v-img   v-if="messages.user.length == 1"
+            :src="'/media/avatar/' + messages.user[0].foto"
+          ></v-img>
+          <v-img v-else
+          
+            src="/media/frontend/group.png"
+          ></v-img>
+        </v-list-item-avatar>
+
+         <h2 v-if="messages.room_name==null">{{messages.user[0].name}}</h2>   
+        <h2 v-else>{{messages.room_name}}</h2>
+        
+      </v-list-item>
+    </v-list>
+  <hr>
+<!-- 
+            -->
+      
+       
+ <div class="msg_history" id="feed" ref="feed">
+ 
+        
+        <div v-for="message in messages.chat" :key="message.id">
+            <div class="incoming_msg mt-2" v-if="message.user_id != auth.uid">
+              <div class="incoming_msg_img"> <img v-bind:src="'/media/avatar/' + message.user.foto"  alt="sunil"> </div>
               <div class="received_msg">
+                  <p class="font-weight-normal pl-1" style="margin-bottom:-3px;">{{message.user.name}}</p>
                 <div class="received_withd_msg">
-                  <p>{{message.message}}</p>
+
+                  <p class="shadow">{{message.message}}</p>
                   <span class="time_date">{{ message.created_at | chatDate}}</span></div>
               </div>
             </div>
-            <div class="outgoing_msg" v-else>
-              <div class="sent_msg">
-                <p>{{message.message}}</p>
-                <span class="time_date"> {{ message.created_at | chatDate}}</span> </div>
+            <div class="outgoing_msg mt-2" v-else>
+              <div class="sent_msg rounded ">
+                <p class="shadow">{{message.message}}</p>
+                <span class="time_date"> {{ message.created_at | chatDate}}
+                  <v-icon v-if="message.read == 0" small>mdi-check</v-icon>
+                  <v-icon v-else small color="primary">mdi-check</v-icon>
+                  </span> </div>
             </div>
           </div>
         </div>
@@ -53,46 +84,59 @@
                 </ul>
             -->
 <div class="type_msg">
+            	<!-- <form class="d-flex">
+							<input
+								class="form-control form-control-lg flex-grow-1 mr-2"
+								type="search"
+								placeholder="Search"
+							/>
+							<button class="btn btn-primary">Kirim</button>
+						</form> -->
             <div class="input_msg_write">
-              <input v-model="message" type="text"  @keyup.enter="send" class="write_msg" placeholder="Type a message" />
+            
+						
+              <input v-model="message" type="text"  @keyup.enter="send" class="write_msg form-control" placeholder="Tulis Pesan" />
               
-              <button @click="send" class="msg_send_btn" type="button"><i class="fas fa-paper-plane" aria-hidden="true"></i></button>
+              <button @click="send" class="msg_send_btn" type="button"><v-icon x-large color="yellow" dark>mdi-send-circle</v-icon></button>
             </div>
 </div>
 </div>
 </template>
 
 <script>
+import { mapGetters,mapActions } from "vuex"
     export default {
-        props: {
-            contact: {
-                type: Array
-            },
-            messages: {
-                type: Array,
-                
-            }
-        },
+        props: ['messages','scroll'],
         data() {
             return {
-                message: ''
+                message: '',
+                
             };
         },
         methods: {
             scrollToBottom() {
                 setTimeout(() => {
-                    this.$refs.feed.scrollTop = this.$refs.feed.scrollHeight - this.$refs.feed.clientHeight;
-                }, 50);
+                    this.$refs.feed.scrollTop = this.$refs.feed.scrollHeight + 1000;
+                
+                },50);
+            },
+             scrollToEnd() {
+                setTimeout(() => {
+                    this.$refs.feed.scrollTop = this.$refs.feed.scrollHeight + 1000;
+                
+                },1300);
             },
             send(e) {
+                this.scrollToEnd();
                 e.preventDefault();
                 
                 if (this.message == '') {
                     return;
                 }
-                console.log(this.message)
+                   
                 this.$emit('send', this.message);
                 this.message = '';
+               
             }
         },
         watch: {
@@ -100,18 +144,36 @@
                 this.scrollToBottom();
             },
             messages(messages) {
+              
                 this.scrollToBottom();
+            },
+            scroll(scroll){
+               this.scrollToBottom();
             }
+           
+        },
+        computed:{
+              ...mapGetters({
+            authenticated: 'auth/authenticated',
+            auth: 'auth/user'
+            }
+              )
         }
     }
 </script>
 <style lang="scss" scoped>
 
    
+
+
+
 .incoming_msg_img {
   display: inline-block;
   width: 6%;
+  max-width: 40px;
+  padding-top: 10px;
 }
+
 .received_msg {
   display: inline-block;
   padding: 0 0 0 10px;
@@ -119,19 +181,19 @@
   width: 92%;
  }
  .received_withd_msg p {
-  background: #ebebeb none repeat scroll 0 0;
-  border-radius: 3px;
-  color: #646464;
-  font-size: 14px;
-  margin: 0;
+  background: #F7CA18 none repeat scroll 0 0;
+   border-radius: 10px;
+  min-height: 20px;
+  font-size: 16px;
+  margin: 0; color:white;
   padding: 5px 10px 5px 12px;
-  width: 100%;
+  width:100%;
 }
 .time_date {
   color: #747474;
   display: block;
   font-size: 12px;
-  margin: 8px 0 0;
+  margin: 3px 2px 0;
 }
 .received_withd_msg { width: 57%;}
 .mesgs {
@@ -141,9 +203,10 @@
 }
 
  .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
-  border-radius: 3px;
-  font-size: 14px;
+  background: #94C2ED none repeat scroll 0 0;
+  border-radius: 10px;
+  min-height: 20px;
+  font-size: 16px;
   margin: 0; color:#fff;
   padding: 5px 10px 5px 12px;
   width:100%;
@@ -165,30 +228,24 @@ px;}
 
 .type_msg {border-top: 1px solid #c4c4c4;position: relative;}
 .msg_send_btn {
-  background: #05728f none repeat scroll 0 0;
+ 
   border: medium none;
-  border-radius: 50%;
-  color: #fff;
+ 
+ 
   cursor: pointer;
-  font-size: 17px;
-  height: 33px;
+ 
+ 
   position: absolute;
-  right: 0;
-  top: 11px;
-  width: 33px;
+  right: 5px;
+  top: 7px;
+ 
 }
 .messaging { padding: 0 0 50px 0;}
 .msg_history {
-  height: 470px;
+  height: 440px;
   overflow-y: auto;
 }
-    h1 {
-        font-size: 18px;
-        margin: 0;
-        padding-bottom: 5px;
-        border-bottom: 1px solid lightgray;
-        
-    }
+  
 </style>
 
 

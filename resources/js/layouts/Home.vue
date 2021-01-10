@@ -2,10 +2,10 @@
 <v-app>
     <div>
         
-        <div v-if="authenticated">
-        <NavbarHome v-if="user!=null" :user="user"/>
-        <NavbarLogin v-if="user == null"/>
-        </div>
+        
+        <NavbarHome v-if="auth == true || user!=null" :user="user"/>
+        <NavbarLogin v-if="auth == false && user==null"/>
+        
       
         <slot/>
         
@@ -24,7 +24,7 @@ export default {
     }
     ,data(){
         return{
-            
+            auth: null
         }
     }
     , 
@@ -36,8 +36,14 @@ export default {
 
     
     },
-    watch:{
+    mounted :function(){
+        
+            
+            setTimeout(() => (  this.user == null? this.auth = false:  this.auth =  true), 900)
+            console.log(this.user)
+            
         
     }
+    
 }
 </script>

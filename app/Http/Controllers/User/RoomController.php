@@ -22,18 +22,32 @@ class RoomController extends Controller
     }
 
     public function store(Request $request)
-    {
-    	$id_user = $request->user()->id;
-    	$request->validate([
+    {   
+        $id_user = $request->user()->id;
+        $request->validate([
     		'user' => 'required'
-    	]);
-        if (!$this->hasRoom($request->user)) {
+        ]);
+        
+        if($request->roomName != null){
+            $users = $request->user;
+            array_push($users,$id_user);
             $room = Room::create([
-                'name' => null
+                'name' => $request->roomName ,
+                'group' => true
             ]);
-
-            $room->user()->sync([$id_user, $request->user]);
+            $room->user()->sync($users);
         }
+        
+    	else{
+            if (!$this->hasRoom($request->user[0])) {
+                $room = Room::create([
+                    'name' => null
+                ]);
+    
+                $room->user()->sync([$id_user, $request->user[0]]);
+            }
+        }
+        
     	
     	return redirect()->route('message.room');
     }
@@ -58,5 +72,12 @@ class RoomController extends Controller
         } else {
             return false;
         }
+
+    }
+    public function deleteRoom($id){
+        $room = auth()->user()->room()
+                ->where(['id' => $id,'group'])
+                ->first();
+                dd($room);
     }
 }

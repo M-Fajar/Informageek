@@ -35,8 +35,8 @@
       </div>
     </div>
     
-    <div class="container p-5">
-      <div class="row text-center">
+    <div class="container p-5" >
+      <div class="row text-center" style="margin-top:-40px">
         <div class="col-md-8 offset-md-2">
           <h1>{{user['name']}}</h1>
           <h5>{{user['username']}}</h5>
@@ -59,6 +59,9 @@
           v-bind="attrs"
           v-on="on"
           @click="showEdit()"
+          color="yellow"
+          dark
+          elevation="4"
         >
           Edit Profile
         </v-btn>
@@ -129,11 +132,11 @@
         <!-- Follow Button -->
          <div v-if="user['username'] != auth.username && user['username'] != null">
 
-           <v-btn v-if="followed == false" color="primary" @click="follow()">Ikuti</v-btn>
+           <v-btn v-if="followed == false" color="yellow" dark elevation="4" style="width:120px" @click="follow()">Ikuti</v-btn>
             <div v-if="followed == true">
 
-                   <v-btn class="btn btn-light"> Kirim Pesan</v-btn>
-                  <v-btn class="btn btn-light"  @click.stop="dialog = true">
+                   <v-btn class="btn btn-light" color="yellow" dark @click="kirimPesan()"> Kirim Pesan</v-btn>
+                  <v-btn class="btn btn-light" color="yellow"  @click.stop="dialog = true">
                   <i class="fa fa-user-check"></i>                  </v-btn>
                   
                   <v-dialog v-model="dialog" max-width="350"
@@ -187,7 +190,7 @@
         </div>
       </div>
        <div class="row" style="margin-top:-40px">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-8 offset-md-2 ">
           <TabProfile v-if="username!=null" :user="username" />
         </div>
        </div>
@@ -314,8 +317,8 @@
 }
 .fotoprofil .edit{
   position: absolute;
-  left: 26%;
-  bottom: -36%;
+  left: 15%;
+  bottom: -25%;
   height: 40px;
   width: 40px;
   background-color:white ; 
@@ -330,8 +333,8 @@
 }
 #foto{
   
-  width: 16rem;
-  height: 16rem;
+  width: 14rem;
+  height: 14rem;
   overflow: hidden;
   border-radius: 5vw;
    object-fit:cover;
@@ -467,7 +470,7 @@ export default {
                   
                 })
                 .then((response) => {
-                  window.location.reload()
+                  this.getDataUser(this.username)
                   
                 })
                 }
@@ -511,6 +514,7 @@ export default {
           this.dialog = false
           return 
         }
+        if(this.userEdit['username'].length >12) return
       console.log(this.userEdit)
       axios.post('auth/profile/update',this.userEdit,
        {
@@ -526,6 +530,7 @@ export default {
           }
           else{
             this.$router.push({ name: 'profile' ,params:{username:this.userEdit['username']}})
+            this.overlay = true
                  window.location.reload()    
           }
           
@@ -542,7 +547,7 @@ export default {
                     Authorization: 'Bearer ' + this.$store.state.auth.token
                 }
         }).then(response=> {
-          this.followed = response.data
+          this.followed = response.data.status
          
         })
         //get data user profil
@@ -581,17 +586,20 @@ export default {
           this.items['Followers'] = response.data.follower
             console.log(this.items)
       })
+      },
+      kirimPesan(){
+        this.$router.push('/message/'+this.username);
       }
 
   },
   created: function(){
-      this.username = this.$route.params.username
-      //cehck condition follow
-      this.getDataUser(this.username)
+      
 
 
   },mounted:function(){
-
+      this.username = this.$route.params.username
+      //cehck condition follow
+      this.getDataUser(this.username)
       this.getDataFollow(this.username)
   },
 
@@ -601,7 +609,7 @@ export default {
       overlay (val) {
         val && setTimeout(() => {
           this.overlay = false
-        }, 7000)
+        }, 3000)
       },
       $route(to, from) {
         console.log(from)

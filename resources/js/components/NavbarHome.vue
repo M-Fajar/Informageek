@@ -4,7 +4,10 @@
         <router-link class="navbar-brand pl-2" :to="{name: 'beranda'}">
             <i class="fas fa-circle text-warning fa-2x"></i>
         </router-link>
-        <h2 class="pl-3">Informageek</h2>
+         
+        <h2 class="pl-3"  >   <router-link style="color:black"  :to="{name: 'beranda'}">  Informageek </router-link></h2>
+         
+        
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -12,7 +15,7 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <div class="form-inline ml-auto px-0 mr-0">
                 <form @keyup="redirectSearch">
-                    <input v-model="find" class="form-control form-control-lg" type="search" placeholder="Search">
+                    <input v-model="find" class="form-control form-control-lg" type="search" placeholder="Cari">
                 </form>
             </div>
             <ul class="navbar-nav ml-auto align-items-center">
@@ -33,7 +36,14 @@
                
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{name: 'message'}">
-                        <i class="far fa-envelope fa-2x"></i>
+                        <i class="far fa-envelope fa-2x">
+                            <v-badge v-if="countMessage > 0"
+                            color="red"
+                            :content="countMessage"
+                            >
+                            </v-badge>
+                        </i>
+                        
                     </router-link>
                 </li>
                 <!-- <li class="nav-item">
@@ -50,7 +60,7 @@
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" @click.prevent="logOut">Logout</a>
+                    <a class="dropdown-item" href="#" @click.prevent="logOut">Keluar</a>
                     </div>
                 </li>
             </ul>
@@ -73,7 +83,6 @@
     object-fit: cover;
     height: 2.5rem;
     border-radius: 5vw;
-    border-color: yellow;
 }
 .dropdown-menu{
     margin-top:18px ;
@@ -82,13 +91,16 @@
 
 <script>
 import { mapGetters,mapActions } from "vuex"
+import axios from 'axios'
+import router from '../router'
 export default {
     components:{
         
     },
     data(){
         return{
-            find:''
+            find:'',
+            countMessage:null
         }
     },
     props:{
@@ -109,8 +121,54 @@ export default {
                     name: 'welcome'
                 })
             })
+        },
+        hanleIncoming(message){
+            if(this.countMessage != null){
+                this.countMessage +=1
+                }
+            
+            
+            },
+       
+    },
+    
+   watch:{
+    $route(to, from) {
+        if(to.name != "search"){
+            this.find = ''
+        }
+        if(to.name == "message"){
+            this.countMessage = null
+        }
+         if(from.name == "message"){
+            
+             axios.get('auth/message/unread',{
+                headers: {
+                         Authorization: 'Bearer ' + this.$store.state.auth.token  
+                },
+                 }).then(response =>{
+                 this.countMessage = response.data
+                })
         }
     },
+    
+   },
+   mounted(){
+        axios.get('auth/message/unread',{
+                headers: {
+                         Authorization: 'Bearer ' + this.$store.state.auth.token  
+                },
+        }).then(response =>{
+            this.countMessage = response.data
+        })
+
+         Echo.private(`messages.${this.user.uid}`)
+                .listen('NewMessage', (e) => {
+                     this.hanleIncoming(e.message);
+                });
+       
+   }
+    
 }
 
 

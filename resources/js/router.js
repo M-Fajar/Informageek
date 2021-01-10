@@ -6,6 +6,7 @@ import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Forgot from './pages/Forgot';
+import Hastag  from './pages/Hastag';
 import Beranda from './pages/Beranda';
 import Profile from './pages/Profile';
 import Post from './pages/Post';
@@ -38,9 +39,12 @@ const guestAcces = async (to, from,next) => {
 }
 
 const ifNotAuthenticated = async (to, from,next) => {
-    if(store.getters['auth/authenticated']){
+  if(localStorage.getItem('user-token')){
+    await store.dispatch('auth/attempt',localStorage.getItem('user-token'))
+  }
+  if(store.getters['auth/authenticated']){
     return next({
-      name: 'beranda'
+      name:'beranda'
     })
   }
     next()
@@ -53,26 +57,31 @@ const router = new VueRouter({
       name: 'welcome',
       path: '/',
       component: Welcome,
-      meta: {layout: 'default'}
+      meta: {layout: 'default'},
+      beforeEnter: ifNotAuthenticated
     },
     {
       name: 'login',
       path: '/login',
       component: Login,
       meta: {layout: 'default'},
+      beforeEnter: ifNotAuthenticated
       
     },
     {
       name: 'register',
       path: '/register',
       component: Register,
-      meta: {layout: 'default'}
+      meta: {layout: 'default'},
+      beforeEnter: ifNotAuthenticated
+      
     },
     {
       name: 'forgot',
       path: '/forgot',
       component: Forgot,
-      meta: {layout: 'default'}
+      meta: {layout: 'default'},
+      beforeEnter: ifNotAuthenticated
     },
     {
       name: 'beranda',
@@ -83,8 +92,8 @@ const router = new VueRouter({
     },
     {
       name: 'message',
-      path:'/message',
-      component: Message,
+      path:'/message/:userTo?',
+      component: () =>import('./pages/Message.vue'),
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
     },
@@ -97,8 +106,8 @@ const router = new VueRouter({
     },
     {
       name: 'search',
-      path: '/search',
-      component: Search,
+      path: '/search/:key?',
+      component:()=>import('./pages/Search.vue'),
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
     },
@@ -109,7 +118,15 @@ const router = new VueRouter({
       meta: {layout: "home"},
       beforeEnter: ifAuthenticated
     },
+    {
+      name: 'hastag',
+      path: '/hastag/:key?',
+      component:()=>import('./pages/Hastag.vue'),
+      meta: {layout: "home"},
+      beforeEnter: ifAuthenticated
+    },
   ]
+
 });
 
 

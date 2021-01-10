@@ -28,7 +28,7 @@
       <div class="card-body">
           <div class="d-flex justify-content-around h3      ">
               <a  class="text-secondary text-decoration-none pointer" @click="likePost(post.id)">
-                   <v-btn v-if="postFavorite[post.id] == true"
+                   <v-btn v-if="postFavorite[post.id] == true  "
                     icon
                     color='red'
                     >

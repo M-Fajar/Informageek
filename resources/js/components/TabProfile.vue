@@ -24,7 +24,7 @@
         :key="item"
       >
        <PostCard v-if="item=='Post' && listPost!=null" :listPost="listPost" />
-        
+        <Hastag v-if="item=='Tagar' && hastags!=null" :items="hastags" />
        
       </v-tab-item>
     </v-tabs-items>
@@ -33,18 +33,21 @@
 
 <script>
 import PostCard from '../components/PostCard';
+import Hastag from '../components/HastagFollowed';
   export default {
     components:{
-        PostCard
+        PostCard,
+        Hastag
     },
     data () {
       return {
         tab: null,
         listPost:null,
         items: [
-          'Post', 'Hastag',
+          'Post', 'Tagar',
         ],
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        hastags:null
+       
       }
     },
     props:{
@@ -64,13 +67,25 @@ import PostCard from '../components/PostCard';
                 
                 this.listPost = response.data
                 
-                console.log(this.listPost)
-
+            });
+        },
+        getHastag(user){
+             axios.get("auth/hastag/user/"+user,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+            })
+            .then(response => {
+                
+                this.hastags = response.data
+                
             });
         }
     },
     mounted:function(){
         this.getPost(this.user)
+        this.getHastag(this.user)
          
     },
     watch:{

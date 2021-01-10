@@ -25,7 +25,8 @@
                                         </li>
                                             
                                         <li class="list-inline-item float-right">
-                                            <button type="button" @click='postCreate' class="btn btn-warning rounded-pill px-4">Kirim</button>
+                                            <v-btn color="yellow" @click='postCreate' dark rounded elevation="4" >Kirim</v-btn>
+                                            <!-- <button type="button" @click='postCreate' class="btn btn-warning rounded-pill px-4">Kirim</button> -->
                                         </li>
                                     </ul>
                                 </div>
@@ -33,13 +34,22 @@
                         </div>
                     </div>
                 </div>
+                <div v-if="inUpload">
+                    <span>Mengunggah...</span>
+                 <v-progress-linear
+                    indeterminate
+                    color="yellow darken-2"
+                    height="7px"
+                    rounded
 
-                <div class="timeline mt-3"  v-if="postSucces > 0 && reload" >   
-
-                <PostUpdate  :userPhoto="user.foto"  :lastPost="postSucces"/>
+                    ></v-progress-linear>
+                </div>
+                
+                
+                <PostUpdate v-if="postUpdated != null" :listPost="postUpdated"/>
                 
                  
-                </div>
+
                 <div class="timeline mt-3"> 
 
                     <PostCard v-if="listPost!=null" :listPost="listPost"/>
@@ -70,12 +80,12 @@
           label="Ide apa hari ini ?"
           auto-grow
           outlined
-          rows="1"
-          row-height="15"
+          rows="2"
+          row-height="12"
           name="postData"
           v-model="postData"
         ></v-textarea>  
-            <!-- <textarea name="postData" class="form-control status-model "  v-model="postData" placeholder="Ide apa hari ini"></textarea> -->
+            
             
 
              
@@ -132,6 +142,167 @@
     
 </template>
 
+
+<script>
+import { mapGetters,mapActions } from "vuex"
+import SidebarLeftHome from '../components/SidebarLeftHome';
+import SidebarRightHome from '../components/SidebarRightHome';
+import PostCard from '../components/PostCard';
+import PostUpdate from '../components/PostUpdate';
+import axios from 'axios';
+export default {
+    components: {
+        SidebarLeftHome,
+        SidebarRightHome,
+        PostCard,
+        PostUpdate
+    },
+    
+    data(){
+        return{
+            
+           
+            postData:null,
+            hashtag:[],
+            images:[],
+            file:'',
+            previewImage: {},
+            postUpdated:null,
+            listPost:null,
+            inUpload:false
+        }
+
+    },
+    watch:{     
+        
+    },
+    methods: {
+        
+        clearPreview(key){
+            let panjangImage = this.images.length
+            this.images.splice(key,1)
+            for(let i=0;i<panjangImage;i++){
+               
+                if(i == key){
+                    key++
+                    if(key == this.panjangImage ){
+                        Vue.delete(this.previewImage,i)
+                    }
+                    else{
+                    Vue.set(this.previewImage,i,this.previewImage[key])
+                    }
+                    
+               }
+            }
+            
+        },
+        pickFile () {
+        
+        let input = this.$refs.fileInput;
+        let file = input.files;
+        let index;
+        
+        for(let i = 0 ;i<file.length;i++){
+            if(file[i]['size'] < 3111775){                
+            if (file && file[i]) {
+            let reader = new FileReader
+            reader.onload = e => {
+                this.images.push(input.files[i])
+                this.file = file[0];
+                
+            
+                    Vue.set(this.previewImage,this.images.length-1,URL.createObjectURL(input.files[i]))
+               
+                           }
+
+            reader.readAsDataURL(file[i])
+            this.$emit('input', file[i])
+            }
+            }else{
+            alert('Ukuran tidak lebih dari 2 MB')
+            }
+        
+        }
+      
+     
+
+    },
+      
+        postCreate(){
+            this.inUpload = true
+            var regexp = /#(\w+)/g;
+            var match = regexp.exec(this.postData);
+           
+            let formData = new FormData();
+            formData.append('body',this.postData);
+
+            let i= -1;
+            while (match != null){
+                i++;
+                formData.append('categories['+i+']',match[1]);
+                match = regexp.exec(this.postData)
+            } 
+              
+            
+            for(i=0;i < this.images.length;i++){
+                
+                formData.append('photo_id['+i+']',this.images[i]);
+            }
+            
+            axios.post("http://localhost:8000/api/auth/posts/store",formData,
+            {
+                headers: {
+                     'content-type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + this.$store.state.auth.token,
+              
+                }
+            })
+            .then(response => {    
+                this.previewImage = {}
+                this.postUpdated = response.data
+                this.postData = null
+                this.hashtag =[]
+                this.images = []
+                this.inUpload=false
+            });
+        },
+        
+
+        redirectPost() {
+            console.log('clicked');
+            this.$router.push('/post');
+        }
+    },
+     computed: {
+        ...mapGetters({
+            authenticated: 'auth/authenticated',
+            user: 'auth/user'
+        }),
+        enableBtn() {
+       
+        if(this.postData == null || this.postData.length==0)
+          return true
+        return false
+			},
+    },
+    mounted: function(){
+        
+        axios.get("auth/posts",
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+            })
+            .then(response => {
+                
+                this.listPost = response.data
+                console.log(this.listPost)    
+
+
+            });
+    }
+}
+</script>   
 <style scoped>
 .container-fluid {
     overflow: hidden;
@@ -231,166 +402,3 @@ div.scroll {
    
 }
 </style>
-
-<script>
-import { mapGetters,mapActions } from "vuex"
-import SidebarLeftHome from '../components/SidebarLeftHome';
-import SidebarRightHome from '../components/SidebarRightHome';
-import PostCard from '../components/PostCard';
-import PostUpdate from '../components/PostUpdate';
-import axios from 'axios';
-export default {
-    components: {
-        SidebarLeftHome,
-        SidebarRightHome,
-        PostCard,
-        PostUpdate
-    },
-    
-    data(){
-        return{
-            
-            message:"",
-            postData:null,
-            hashtag:[],
-            postSucces: 0,
-            reload: true,
-            images:[],
-            file:'',
-            previewImage: {},
-            listPost:null,
-        }
-
-    },
-    watch:{     
-        
-    },
-    methods: {
-        
-        clearPreview(key){
-            let panjangImage = this.images.length
-            this.images.splice(key,1)
-            for(let i=0;i<panjangImage;i++){
-               
-                if(i == key){
-                    key++
-                    if(key == this.panjangImage ){
-                        Vue.delete(this.previewImage,i)
-                    }
-                    else{
-                    Vue.set(this.previewImage,i,this.previewImage[key])
-                    }
-                    
-               }
-            }
-            
-        },
-        pickFile () {
-        
-        let input = this.$refs.fileInput;
-        let file = input.files;
-        let index;
-        
-        for(let i = 0 ;i<file.length;i++){
-            if(file[i]['size'] < 3111775){                
-            if (file && file[i]) {
-            let reader = new FileReader
-            reader.onload = e => {
-                this.images.push(input.files[i])
-                this.file = file[0];
-                
-            
-                    Vue.set(this.previewImage,this.images.length-1,URL.createObjectURL(input.files[i]))
-               
-                           }
-
-            reader.readAsDataURL(file[i])
-            this.$emit('input', file[i])
-            }
-            }else{
-            alert('Ukuran tidak lebih dari 2 MB')
-            }
-        
-        }
-        console.log(this.previewImage)
-     
-
-    },
-      
-        postCreate(){
-            
-            var regexp = /#(\w+)/g;
-            var match = regexp.exec(this.postData);
-            console.log(this.postData)
-
-            while (match != null){
-            
-            this.hashtag.push(match[1])
-            match = regexp.exec(this.postData)
-            } 
-              
-            let formData = new FormData();
-            for(let i=0;i < this.images.length;i++){
-                
-            formData.append('photo_id['+i+']',this.images[i]);
-            }
-            formData.append('body',this.postData);
-            formData.append('categories',this.hashtag);
-            
-            this.reload= false
-            axios.post("http://localhost:8000/api/auth/posts/store",formData,
-            {
-                headers: {
-                     'content-type': 'multipart/form-data',
-                    Authorization: 'Bearer ' + this.$store.state.auth.token,
-              
-                }
-            })
-            .then(response => {
-                this.message = response.data.status;
-                
-                this.postSucces += 1
-                this.reload= true
-                this.postData = null
-                this.hashtag =[]
-             
-           
-            });
-        },
-        
-
-        redirectPost() {
-            console.log('clicked');
-            this.$router.push('/post');
-        }
-    },
-     computed: {
-        ...mapGetters({
-            authenticated: 'auth/authenticated',
-            user: 'auth/user'
-        }),
-        enableBtn() {
-        console.log('btn');
-        if(this.postData == null || this.postData.length==0)
-          return true
-        return false
-			},
-    },
-    mounted: function(){
-        
-        axios.get("auth/posts",
-            {
-                headers: {
-                    Authorization: 'Bearer ' + this.$store.state.auth.token
-                }
-            })
-            .then(response => {
-                
-                this.listPost = response.data
-                
-                console.log(this.listPost)
-
-            });
-    }
-}
-</script>   

@@ -13,5 +13,10 @@ class UserController extends Controller
         return view ('backend.user.profile',$user);
     }
 
+    public function getUsers(){
+        $users = User::where('id','!=', auth()->user()->id)->select('username','name','foto')->get();
+        return response()->json($users);
+    }
+
     
 }

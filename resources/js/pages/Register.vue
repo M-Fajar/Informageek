@@ -7,7 +7,7 @@
                     <form method="post" @submit.prevent="sendRegister" class="w-75 mx-auto">
                         <h1 class="mb-4">Register</h1>
                         <div class="form-group">
-                            <input type="text" name="username" v-model="username" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" placeholder="Username">
+                            <input type="text" @keydown.space.prevent name="username" v-model="username" class="form-control form-control-lg rounded-pill bg-dark px-3 py-2 text-light text-center" placeholder="Username">
                             <span v-if="errors.username || postE" class="text-danger">{{ errors.username }}</span>
                         </div>
                         <div class="form-group">

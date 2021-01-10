@@ -67,7 +67,7 @@ class ProfileController extends Controller
         ]);
         // Get file from request
       $file = $request->file('image');
-      $imageAvatar =$this->resizeImage($file,'30'); //ratio avatar
+      $imageAvatar =$this->resizeImage($file,'70'); //ratio avatar
       $imageProfile =$this->resizeImage($file,'200'); //ratio profile
 
 
@@ -90,7 +90,7 @@ class ProfileController extends Controller
         // Get file from request
       $file = $request->file('image');
       
-      $image = $this->resizeImage($file,'700');
+      $image = $file;
       $fileNameToStore = $this->getNamePhoto($file);
 
       $save =  Image::make($image)->save(public_path('media/cover') . '/' . $fileNameToStore);
@@ -141,6 +141,10 @@ class ProfileController extends Controller
    public function editProfile(Request $request){
        //parama name,bio,username
        $username = $request->username;
+       $request->merge([
+        'name' => ucwords($request->name),
+        'username' => strtolower($request->username)
+    ]);
 
        $available = User::where('username',$username)->where('id','!=',$request->user()->id)->first();
        if($available){

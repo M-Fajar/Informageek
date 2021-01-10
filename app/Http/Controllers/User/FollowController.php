@@ -46,7 +46,10 @@ class FollowController extends Controller
        return  Followers::where('follower_id', $user)->count();
     }
     public function ListFollowing ($username) {
-      $user = User::where('username',$username)->value('id'); //get Id
+     
+        $user = User::where('username',$username)->value('id');//get Id
+     
+        
       $listfollowing = Followers::where('follower_id', $user)->select('following_id')->get();
       $userlist = array();
       foreach ($listfollowing as $value) {
@@ -59,6 +62,21 @@ class FollowController extends Controller
         'following' =>$userlist
       ]);
     }
+    public function ListFollowingMe () {   
+    $user = auth()->user()->id;
+   
+    $listfollowing = Followers::where('follower_id', $user)->select('following_id')->get();
+    $userlist = array();
+    foreach ($listfollowing as $value) {
+        $user = User::where('id',$value['following_id'])->select('name','username','foto','id')->first();
+        array_push($userlist,$user);
+    }
+
+    return response()->json([
+      'total' => count($userlist),
+      'following' =>$userlist
+    ]);
+  }
     public function ListFollower($username){
       $user = User::where('username',$username)->value('id'); //get Id
       $listfollower = Followers::where('following_id', $user)->select('follower_id')->get();
@@ -80,7 +98,10 @@ class FollowController extends Controller
       $user2_id = User::where('username',$username)->value('id');
       
       $status =  Followers::where('follower_id', $user1_id)->where('following_id',$user2_id)->exists();
-      return response()->json($status);
+      return response()->json([
+        'status' => $status,
+        'id' => $user2_id
+      ]);
     }
 
 }

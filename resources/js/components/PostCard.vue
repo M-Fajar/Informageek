@@ -1,9 +1,9 @@
   
  <template>
-<div>
+<div ref="timeline" id="timeline">
     
-  <div class="card"   v-for="(post) in postData" :key="post.id">
-      <div class="card-body " >
+  <div class="card "   v-for="(post,index) in postData" :key="post.id" v-show="index<postShow" :class="postDelete[post.id] == true? 'hide': ''">
+      <div class="card-body "  >
           <div class="media position-relative" >
               <router-link :to="{name: 'profile',params: {username:postUser[post.id]}}">
               <img v-bind:src="'/media/avatar/'+ postPhoto[post.id]" id="avatar" alt="avatar" class="mr-3 img-post">
@@ -15,19 +15,63 @@
                      </router-link> 
                     <p >{{post.created_at | formatDate}}</p>
                 
-                  <a href="" class="position-absolute" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
+                  
+                                <v-menu
+                                transition="slide-y-transition"
+                                bottom
+                                >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <a v-bind="attrs"
+                                        v-on="on" 
+                                        class="position-absolute pointer" style="top:0; right: 0;"><i class="fas fa-ellipsis-h fa-lg"></i></a>
+                                </template>
+                                <v-list v-if="postUser[post.id] == user.username">
+                                    <v-list-item
+                                    >
+                                    <v-list-item-title class="pointer" @click.stop="openDialogDelete(post.id)">Hapus postingan ini </v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                                </v-menu>
+                                <v-dialog v-model="deleteDialog" max-width="350" :retain-focus="false"
+                  >
+                                    <v-card>
+                                    <v-card-title>
+                                        Apakah anda yakin menghapus postingan ini ?
+                                    </v-card-title>
+
+                                    <v-card-actions>
+                                        <v-btn class="text-transform-none"
+                                        color="green darken-1"
+                                        dark width="50%"
+                                        @click.stop="deleteDialog = false"
+                                        >
+                                        Batal
+                                        </v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                        color="red darken-1"
+                                        dark
+                                        width="50%"
+                                        @click="deletePost(post.id)"
+                                        
+                                        >
+                                        Hapus
+                                        </v-btn>
+                                    </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
               </div>    
           </div>
-              <div @click="redirectPost(post.id)">
+              <div @click="redirectPost(post.id)" style="margin-bottom:-20px">
              <p v-html="replaceBody(post.body)" ></p>
               </div>
             
       </div>
-      <div class="card-img-top ">
+      <div class="card-img-top "  v-if="postThumbnails[post.id].length > 0">
           <lightbox :items="postThumbnails[post.id]"></lightbox>
       </div>
 
-      <div class="card-body">
+      <div class="card-body" :class="postThumbnails[post.id].length > 0 ? '': 'marginNoThumnail' " >
           <div class="d-flex justify-content-around h3      ">
               <a  class="text-secondary text-decoration-none pointer" @click="likePost(post.id)">
                    <v-btn v-if="postFavorite[post.id] == true"
@@ -48,7 +92,7 @@
           
               <a   @click="showComment(post.id)" class="text-secondary text-decoration-none pointer"><v-icon large>mdi-chat-outline</v-icon>
               {{postComment[post.id]}} </a>
-          
+        
               <a @click="sharePost(post.id)" data-toggle="modal" data-target="#exampleModalCenter" class="text-secondary text-decoration-none"><v-icon large>mdi-share-variant</v-icon></a>
 
               <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -152,6 +196,7 @@
           </div>
       </div>
   </div>
+  <v-btn v-if="postData.length > postShow" color="yellow" class="mb-2" dark block @click="morePost()"> Lihat Selanjutnya</v-btn>
   </div>
 </template>
 
@@ -175,6 +220,9 @@
 .close { 
   position: absolute; 
   right: 1rem;
+}
+.marginNoThumnail{
+    margin-top: -20px;
 }
         
 
@@ -221,8 +269,15 @@ export default {
             moreReply:{},
             replyComment:{},
             textReply:{},
+            postDelete:{},
+            sigleDelete:null,
             shareUrl:'',
-            dialog:false
+            dialog:false,
+            deleteDialog:false,
+            postShow:3,
+            toBottomValue:0,
+            windowTop: window.top.scrollY
+
 
             }   
 
@@ -296,8 +351,16 @@ export default {
             })
         },
          replaceBody(body){
+             if(body.length>200){
+                 body =  body.substring(0,200)+'<span link class="text-primary pointer">..Lihat Selengkapnya</span>';
+             }
              const hasil =  body.replace(/(?:\r\n|\r|\n)/g, '<br />')
-            return hasil.replace(/#([\w]+)/g,'<a href="">#$1</a>')
+            return hasil.replace(/#([\w]+)/g,'<a href="/hastag/$1">#$1</a>')
+            
+        },
+        redirectHastag(name){
+             this.$router.push('/hastag/'+name)
+      
         },
         showComment(key){
             if(this.expandComment[key] == null || this.expandComment[key]== false){
@@ -357,7 +420,34 @@ export default {
         },
         copyText () {
           navigator.clipboard.writeText(this.shareUrl);
+        },
+        openDialogDelete(id){
+            this.sigleDelete = id
+            this.deleteDialog = true
+        },
+        deletePost(id){
+            Vue.set(this.postDelete,this.sigleDelete,true)
+            this.deleteDialog = false
+            axios.get('auth/posts/'+this.sigleDelete+'/delete',{
+                    headers:{
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+                })
+        },
+        morePost(){
+            this.postShow += 3
+            this.toBottomValue += 420
+            this.onScroll()
+            this.$vuetify.goTo(this.windowTop+=420)   
+            
+            
+        },
+       
+        onScroll(e) {
+        this.windowTop = window.top.scrollY /* or: e.target.documentElement.scrollTop */
+        
         }
+        
 
     },
     created: function(){
@@ -375,6 +465,9 @@ export default {
             this.storeData(value)
         }
     },
+    mounted(){
+        window.addEventListener("scroll", this.onScroll)
+    }
 
     
 

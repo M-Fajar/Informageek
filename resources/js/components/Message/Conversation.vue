@@ -4,7 +4,7 @@
 
       </div>
 
-        <MessagesFeed :contact="messages.user" :messages="messages.chat" @send="sendMessage"/>
+        <MessagesFeed :scroll="scroll" :messages="messages" @send="sendMessage"/>
         <!-- <MessageComposer @send="sendMessage"/> -->
     
         
@@ -17,13 +17,7 @@
     import MessageComposer from './MessageComposer';
 
     export default {
-        props: {
-            
-            messages: {
-                type: Object,
-                default: null
-            }
-        },
+        props: ['messages','scroll'],
         methods: {
             sendMessage(text) {
                 if (!this.messages) {
@@ -47,7 +41,13 @@
                 })
             }
         },
-        components: {MessagesFeed, MessageComposer}
+        components: {MessagesFeed, MessageComposer},
+        watch:{
+          scroll(value){
+           console.log('lol')
+           console.log(this.messages)
+          }
+        }
     }
 </script>
 

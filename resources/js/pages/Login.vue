@@ -26,7 +26,7 @@
 						:disabled="!enableBtn"
 						@click="loader = 'loading'"
 						>
-						LOGIN
+						MASUK
 						</v-btn>
 						<!-- <button :disabled="!enableBtn"  type="submit" >LOGIN</button> -->
 						

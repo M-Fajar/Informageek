@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
@@ -66,7 +67,11 @@ class PostController extends Controller
     {   
         $id = base64_decode($id);
         $posts= Post::where('id',$id)->get();
-        return response()->json($this->getDataPost($posts,null));
+        if(auth()->user()->id != null)
+            return response()->json($this->getDataPost($posts,auth()->user()->id));
+        else{
+            return response()->json($this->getDataPost($posts,null));
+        }
         
     }
 
@@ -119,6 +124,7 @@ class PostController extends Controller
         $catIds = [];
         if($request->categories != null){
             foreach ( $request->categories as $catName){
+                $catName = strtolower($catName);
             $cat = Category::where('name', $catName)->first();
                 if (!$cat) {
             
@@ -147,9 +153,8 @@ class PostController extends Controller
                 $post->thumbnails()->create(['name' => str_replace('posts/', '', $tmb)]);
             }
         }
-        return response()->json([
-            'status' => 'success',
-        ]);
+        $post = Post::where('id',$post['id'])->get();
+        return response()->json($this->getDataPost($post,auth()->user()->id));
     }
 
     /**
@@ -209,6 +214,7 @@ class PostController extends Controller
         // update kategori
         $catIds = [];
         foreach ($request->categories as $catName) {
+            $catName = strtolower($catName);
             $cat = Category::where('name', $catName)->first();
             if (!$cat) {
                 $categories = new Category;
@@ -233,9 +239,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
-    {
-        $this->authorize('delete', $post);
+    public function destroy($id)
+    {     
+        $post = Post::where('id',$id)->first();
+       
         $thumb = Thumbnail::where('post_id', $post->id)->get();
         foreach ($thumb as $thu) {
             Storage::delete('images/posts/' . $thu->name);
@@ -268,6 +275,32 @@ class PostController extends Controller
         $encrypted = base64_encode($id);
         $url = "https://informageek.tech/post/".$encrypted;
         return response()->json($url);
+    }
+
+    public function trendingToday(){
+        $today = Carbon::today();
+        $data = Post::where('created_at',">=",$today)->with('likes')->get();
+        if(!count($data) > 0){
+            $yesterday = Carbon::today()->subDays(1);
+            $data = Post::where('created_at',">=",$yesterday)->with('likes')->get();
+           
+            if(!count($data) > 0){
+                $yesterday = Carbon::today()->subDays(2);
+                $data = Post::where('created_at',">=",$yesterday)->with('likes')->get();
+           
+                if(!count($data) > 0){
+                    $yesterday = Carbon::today()->subDays(3);
+                    $data = Post::where('created_at',">=",$yesterday)->with('likes')->get();
+           
+                }
+            }
+
+        }
+        $data =  collect($data);
+        $sorted = $data->sortByDesc('likes');
+        $data = $sorted->values()->toArray();
+        return response()->json($this->getDataPost(array_slice($data,0,1),auth()->user()->id));
+        
     }
 
     

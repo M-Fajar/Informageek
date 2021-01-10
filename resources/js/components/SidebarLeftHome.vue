@@ -1,25 +1,37 @@
 <template>
   <div class="pb-2 b-right h-100">
-    <p class="pop-tag pl-4">Popular Tags</p>
+    <p class="pop-tag pl-4 mt-4">Tagar Populer</p>
     <ol type="1" class="pt-0 mt-0">
-        <li>
-            <a href="#"> #CodingGarisKeras</a>
+        <li  v-for="(item) in items.slice(0, 5)" :key="item.id">
+           <router-link :to="{name: 'hastag',params:{key:item.name}}">
+             <h6>  #{{item.name}}</h6>  
+           </router-link>
         </li>
-        <li>
-            <a href="#"> #BuwungPuyuh</a>
-        </li>
-        <li>
-            <a href="#"> #CintaIepSejati</a>
-        </li>
-        <li>
-            <a href="#"> #IepGarisKhatulistiwa</a>
-        </li>
+        
     </ol>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+    data(){
+        return{
+            items:null
+        }
+    },
+
+    created:function(){
+        axios.get('auth/hastag/trending', {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.auth.token
+                }
+            })
+            .then(response => {
+                    this.items = response.data
+            })
+    }
+
 
 }
 </script>

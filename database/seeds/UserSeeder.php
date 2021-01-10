@@ -18,28 +18,30 @@ class UserSeeder extends Seeder
             'password' => bcrypt('123456'),
             'username' => 'admin',
             'role' => 'admin',
-            'foto' => 'admin.png',
-            'cover'=> 'admin.png'
+            'foto' => 'default.png',
+            'cover'=> 'default.jpg'
         
         ]);
 
         $user = User::create([
             'name' => 'User',
-            'email' => 'user@informageek.tech',
+            'email' => 'user1@informageek.tech',
             'password' => bcrypt('123456'),
             'username' => 'user',
-            'role' => 'user.png',
-            'foto' => 'user.png',
-            'cover'=> 'user.png'
+            'role' => 'user',
+            'foto' => 'default.png',
+            'cover'=> 'default.jpg'
 
         ]);
         
         $user = User::create([
-            'name' => 'UserPlus',
-            'email' => 'userplus@informageek.tech',
+            'name' => 'User2',
+            'email' => 'userp2@informageek.tech',
             'password' => bcrypt('123456'),
-            'username' => 'userplus',
-            'role' => 'userplus'
+            'username' => 'user2',
+            'role' => 'user',
+            'foto' => 'default.png',
+            'cover'=> 'default.jpg'
         ]);
 
     }
