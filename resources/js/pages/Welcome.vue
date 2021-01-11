@@ -8,7 +8,7 @@
         </p>
         <div class="row">
             <div class="col-sm-6">
-                <router-link class="btn btn-warning btn-lg rounded-pill join px-4 py-2" :to="{name: 'register'}">Bergabung Sekarang</router-link>
+                <router-link class="btn btn-warning btn-lg rounded-pill join px-4 py-2" :to="{name: 'register'}">Bergabung Aja Sekarang</router-link>
             </div>
             <div class="col-sm-6">
                 <div class="image">
