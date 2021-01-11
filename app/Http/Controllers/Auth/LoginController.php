@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 
+
 class LoginController extends Controller
 {
     public function __invoke (Request $request){
@@ -19,7 +20,7 @@ class LoginController extends Controller
             if($user->role == 'admin'){
                 DB::table('users')->where('username',$user->username)
                                   ->update(['token' => md5($token)]);
-                
+            
             }
             return response()->json(['status' => 'success','token' => $token ], 200)->header('Authorization', $token);
         }

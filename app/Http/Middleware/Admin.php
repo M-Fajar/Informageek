@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Auth\Middleware\Admin as Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class Admin
 {
@@ -19,17 +20,18 @@ class Admin
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {   if(isset($_COOKIE['userid'])){
-        $token = md5($_COOKIE['userid']);
-        $user = DB::table('users')->where('token', $token)->first();
-    
-            if($user){
-            return $next($request);
-            }
-        }
-        
-         return redirect('/beranda');
-    }
+    {   
+            if(isset($_COOKIE['userid'])){
+                $token = md5($_COOKIE['userid']);
+                $user = User::where('token',$token)->first();
 
+                if($user->role == 'admin'){
+                    return $next($request);
+                    }
+            }    
+        
+        return redirect('/beranda');
+    
+    }
    
 }

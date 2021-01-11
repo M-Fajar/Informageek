@@ -61,6 +61,7 @@ export default {
 
                     localStorage.setItem('user-token',token)    
                     $cookies.set('userid',token)
+                    
                 }
                 
             } catch (err){

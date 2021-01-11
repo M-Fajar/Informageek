@@ -42,6 +42,12 @@ Route::group(['middleware' => ['admin'],'prefix' => 'admin'],function(){
     	Route::delete('/userdelete/{id}', 'Admin\UserController@userdelete');  
 		
 	});	
+	Route::group(['prefix' => 'post'], function () {
+		Route::get('/', 'Admin\PostController@index')->name('admin.post');
+		Route::get('/show/{id}', 'Admin\PostController@show');
+    	Route::delete('/delete/{id}', 'Admin\PostController@delete');  
+		
+	});	
 });
 
 //Route Frontend

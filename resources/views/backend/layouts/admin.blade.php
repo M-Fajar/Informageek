@@ -68,7 +68,7 @@
                             </a>
                         </li>
                         <li class="{{Request::path() == 'admin/post' ? 'active' : '' }}">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ route('admin.post') }}">
                                 <i class="fas fa-newspaper"></i><span>Post</span>
                             </a>
                         </li>
